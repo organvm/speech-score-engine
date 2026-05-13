@@ -1,3 +1,14 @@
+---
+title: "Dialogue audio workbench pitch"
+source_path: "dramaturgist-tuning-markdown-archive/sources/dialogue-audio-workbench-pitch.md"
+source_sha1: "51f7a226ca6d"
+project_save_id: null  # truncated in saves-list before capture; recovered from gizmo files array
+conversation_id: null
+conversation_title: "Speech-based Performance System lineage"
+canvas_index: 11
+date_in_chatgpt: "2026-03-27"
+recovered_at: "2026-05-13"
+---
 Yes. That is not a side feature. It is one of the strongest product entry points.
 
 What I described before is the deeper system-form. But as a product, the most adoptable surface is probably much simpler:

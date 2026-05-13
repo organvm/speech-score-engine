@@ -1,4 +1,5 @@
 ---
+# Canvas-authored fields (preserved from original ChatGPT canvas content):
 title: Lexicon and Style Guide
 document_id: speech-score-engine_lexicon-and-style-guide_20260327
 doc_type: architecture
@@ -16,6 +17,14 @@ summary: >-
   Canonical lexicon, naming policy, and writing rules for the Speech-Score
   Composition System, covering ontology, UI aliases, forbidden drift terms,
   repository naming conventions, and documentation style.
+# Cross-reference fields (added 2026-05-13; document this copy's provenance):
+source_path: "dramaturgist-tuning-markdown-archive/sources/lexicon-and-style-guide.md"
+source_sha1: "26c329e4a3c3"
+conversation_id: "69c700a2-2b2c-832f-bb09-8a6d069b352b"
+conversation_title: "Gap Analysis and Merging"
+canvas_index: 0  # not a canvas-saves-endpoint artifact; reconstructed from chat inline content
+recovered_at: "2026-05-13"
+note: "Reconstructed from inline content in conversations-019.json — not pulled from the canvas saves endpoint. See dramaturgist-tuning-markdown-archive/sources/SOURCES-INDEX.md."
 ---
 
 # Lexicon and Style Guide

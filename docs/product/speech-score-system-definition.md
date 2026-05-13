@@ -1,3 +1,14 @@
+---
+title: "Speech score system definition"
+source_path: "dramaturgist-tuning-markdown-archive/sources/speech-score-system-definition.md"
+source_sha1: "5c7505dd22a1"
+project_save_id: "ProjectSave_abe7784cf8e08191afad301df5e8026a"
+conversation_id: "69c700a2-2b2c-832f-bb09-8a6d069b352b"
+conversation_title: "Gap Analysis and Merging"
+canvas_index: 3
+date_in_chatgpt: "2026-03-27"
+recovered_at: "2026-05-13"
+---
 ## $CANONICAL_PROJECT_DEFINITION_STATEMENT
 
 **Preferred canonical name:** **$SPEECH_SCORE_ENGINE**.

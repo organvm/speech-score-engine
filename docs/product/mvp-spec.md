@@ -1,3 +1,14 @@
+---
+title: "Audio dramaturgical MVP specification"
+source_path: "dramaturgist-tuning-markdown-archive/sources/audio-dramaturgical-mvp-specification.md"
+source_sha1: "eecc589d7127"
+project_save_id: null  # truncated in saves-list before capture; recovered from gizmo files array
+conversation_id: null
+conversation_title: "Speech-based Performance System lineage"
+canvas_index: 7
+date_in_chatgpt: "2026-03-27"
+recovered_at: "2026-05-13"
+---
 # Formal MVP Specification
 
 ## $PRODUCT_ID

@@ -1,3 +1,14 @@
+---
+title: "Speech score engine overview"
+source_path: "dramaturgist-tuning-markdown-archive/sources/speech-score-engine-overview.md"
+source_sha1: "5b0a7299dd0b"
+project_save_id: null  # truncated in saves-list before capture; recovered from gizmo files array
+conversation_id: null
+conversation_title: "Speech-based Performance System lineage"
+canvas_index: 9
+date_in_chatgpt: "2026-03-27"
+recovered_at: "2026-05-13"
+---
 # $SPEECH_SCORE_ENGINE
 
 ## System concept

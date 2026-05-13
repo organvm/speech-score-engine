@@ -13,31 +13,52 @@ The scaffold is structural, not feature-complete. The build runs (`pnpm install 
 ```
 .
 ├── apps/
-│   ├── web/                                    # Next.js 15 app router
-│   ├── api/                                    # Fastify (only /health endpoint so far)
-│   └── worker/                                 # BullMQ + ioredis (queues declared, no processors yet)
+│   ├── web/                                    # Next.js 15 app router; src/{components,hooks,lib,state,styles,types} carry anchor READMEs
+│   ├── api/                                    # Fastify (only /health endpoint so far); src/{server,modules,services,repositories,policies,contracts,bootstrap} anchored
+│   └── worker/                                 # BullMQ + ioredis (queues declared, no processors yet); src/{bootstrap,jobs,providers,pipelines,services,telemetry} anchored
 ├── packages/
-│   ├── domain/                                 # TS contracts + zod schemas (runtime-neutral)
-│   ├── database/                               # 6 SQL migrations + pg client + migrate runner
-│   └── config/                                 # zod-validated env loader
+│   ├── domain/                                 # TS contracts + zod schemas + event constants (runtime-neutral)
+│   ├── database/                               # 6 SQL migrations + pg client + migrate + seed runner; src/{schema,queries,repositories,transactions} anchored
+│   ├── config/                                 # zod-validated env loader
+│   ├── client-sdk/                             # Fetch wrapper for API access (browser-or-Node)
+│   ├── ui/                                     # Shared React UI primitives (cn helper to start)
+│   └── observability/                          # pino logger factory; shared structured logging
 ├── docs/
-│   ├── product/                                # Verbatim copies of the design canvases
-│   └── adr/                                    # Architecture decision records (0001 onward)
+│   ├── conventions/                            # naming, frontmatter, directory-readme — DURABLE rules
+│   ├── architecture/                           # 001-system-context through 005-api-contracts
+│   ├── adr/                                    # ADR 0001-0004 (monorepo, JSONB snapshots, async worker, immutability)
+│   └── product/                                # Verbatim copies of the design canvases (with cross-reference frontmatter)
 ├── infrastructure/
-│   └── docker/compose.yaml                     # Local Postgres 16 + Redis 7 + MinIO
+│   ├── docker/compose.yaml                     # Local Postgres 16 + Redis 7 + MinIO
+│   ├── terraform/README.md                     # Anchor for future production IaC
+│   └── scripts/README.md                       # Anchor for utility scripts
+├── test/
+│   ├── fixtures/README.md                      # Anchor for shared test fixtures
+│   ├── integration/README.md                   # Anchor for parsing/versioning/rendering integration tests
+│   └── e2e/README.md                           # Anchor for browser-driven e2e tests
 ├── .github/workflows/ci.yml                    # install, typecheck, lint, build, migration-syntax check
 ├── dramaturgist-tuning-markdown-archive/       # The provenance-preserving canonical archive
 │   ├── codex-conversation-inventory.{md,tsv}   # Auxiliary Codex inventory (different schema from manifest)
-│   ├── dramaturgist-tuning-00--{README,manifest.json,metadata.tsv,full-prompt-response-archive.md}
-│   ├── dramaturgist-tuning-NN--{title}--MMM-prompt-response.md   # 36 per-pair files
-│   └── sources/                                # All 14 panel-sources from the ChatGPT project
-│       ├── SOURCES-INDEX.md                    # Recovery index, sizes, SHA-1s, ProjectSave IDs
+│   ├── 00-{README.md,manifest.json,metadata.tsv,full-archive.md}   # Renamed 2026-05-13 from dramaturgist-tuning-00--*
+│   ├── dt-NN-MMM--{topic-slug}.md              # 36 per-pair files; renamed 2026-05-13 to be self-describing in Finder
+│   └── sources/                                # All 14 panel-sources from the ChatGPT project (SHA-1-tracked, byte-frozen)
+│       ├── SOURCES-INDEX.md                    # Recovery index
 │       ├── *.md                                # 12 canvas docs + 1 reconstructed lexicon
 │       └── *.html                              # 2 SingleFile HTML captures (61KB + 1MB fidelities)
 ├── .claude/plans/YYYY-MM-DD-{slug}.md          # Per-session plan history (never overwrite)
 ├── CLAUDE.md                                   # This file
 └── README.md                                   # Bootstrap + service URLs
 ```
+
+## Conventions
+
+Three durable conventions live in `docs/conventions/`. Read them before adding or renaming files.
+
+| Convention | Doc | When it applies |
+|---|---|---|
+| Filename structure | [`docs/conventions/naming.md`](docs/conventions/naming.md) | Any new file in the repo. Especially: archive files (`dt-NN-MMM--{slug}.md` for chat pairs), ADRs (`NNNN-*.md`), architecture docs (`NNN-*.md`), migrations (`NNNN_snake_case.sql`). |
+| YAML frontmatter | [`docs/conventions/frontmatter.md`](docs/conventions/frontmatter.md) | Any Markdown under `docs/`, the chat archive, or `.claude/plans/`. Type-specific schemas (ADR, architecture doc, canvas copy, plan, directory anchor). |
+| Directory anchor READMEs | [`docs/conventions/directory-readme.md`](docs/conventions/directory-readme.md) | Any blueprint-anticipated directory that doesn't have implementation files yet. The README is the artifact — not a stub. |
 
 ## Common commands
 

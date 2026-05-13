@@ -1,3 +1,14 @@
+---
+title: "System design package"
+source_path: "dramaturgist-tuning-markdown-archive/sources/system-design-package.md"
+source_sha1: "4f6d6eec1d8b"
+project_save_id: null  # truncated in saves-list before capture; recovered from gizmo files array
+conversation_id: "69c6ec6f-164c-8329-ac9c-6734aeda8e5b"
+conversation_title: "Branch · Speech-based Performance System"
+canvas_index: 6
+date_in_chatgpt: "2026-03-27"
+recovered_at: "2026-05-13"
+---
 # Product-Design and Systems Package
 
 ## $DOCUMENT_ID

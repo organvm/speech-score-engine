@@ -1,3 +1,14 @@
+---
+title: "Repository blueprint handoff package"
+source_path: "dramaturgist-tuning-markdown-archive/sources/repository-blueprint-handoff-package.md"
+source_sha1: "5b2202b570bf"
+project_save_id: "ProjectSave_6384200fb5d081918417ce75e3660d2f"
+conversation_id: "69c6ec6f-164c-8329-ac9c-6734aeda8e5b"
+conversation_title: "Branch · Speech-based Performance System"
+canvas_index: 5
+date_in_chatgpt: "2026-03-27"
+recovered_at: "2026-05-13"
+---
 # Repository Blueprint and Implementation Handoff Package
 
 ## $DOCUMENT_ID

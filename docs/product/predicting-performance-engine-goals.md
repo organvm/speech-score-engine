@@ -1,3 +1,14 @@
+---
+title: "Predicting performance engine goals"
+source_path: "dramaturgist-tuning-markdown-archive/sources/predicting-performance-engine-goals.md"
+source_sha1: "9948dcc8ab07"
+project_save_id: null  # truncated in saves-list before capture; recovered from gizmo files array
+conversation_id: null
+conversation_title: "Speech-based Performance System lineage"
+canvas_index: 10
+date_in_chatgpt: "2026-03-27"
+recovered_at: "2026-05-13"
+---
 ## Prediction
 
 You want to build **a text-performance engine**: a system where language is treated not primarily as dialogue or literature, but as **score**.

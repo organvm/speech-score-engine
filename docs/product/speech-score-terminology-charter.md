@@ -1,3 +1,14 @@
+---
+title: "Speech score terminology charter"
+source_path: "dramaturgist-tuning-markdown-archive/sources/speech-score-terminology-charter.md"
+source_sha1: "c938bec2eb0c"
+project_save_id: "ProjectSave_b998d54ce67c819189cf42e060142ae0"
+conversation_id: "69c700a2-2b2c-832f-bb09-8a6d069b352b"
+conversation_title: "Gap Analysis and Merging"
+canvas_index: 2
+date_in_chatgpt: "2026-03-27"
+recovered_at: "2026-05-13"
+---
 # $TERMINOLOGY_CHARTER
 
 ## $DOCUMENT_PURPOSE

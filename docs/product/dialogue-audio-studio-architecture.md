@@ -1,3 +1,14 @@
+---
+title: "Dialogue audio studio architecture"
+source_path: "dramaturgist-tuning-markdown-archive/sources/dialogue-audio-studio-architecture.md"
+source_sha1: "8a5f2b9f2403"
+project_save_id: null  # truncated in saves-list before capture; recovered from gizmo files array
+conversation_id: null
+conversation_title: "Speech-based Performance System lineage"
+canvas_index: 8
+date_in_chatgpt: "2026-03-27"
+recovered_at: "2026-05-13"
+---
 # Product Architecture
 
 ## Working Product Frame

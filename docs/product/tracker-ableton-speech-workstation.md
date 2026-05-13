@@ -1,3 +1,14 @@
+---
+title: "Tracker Ableton speech workstation"
+source_path: "dramaturgist-tuning-markdown-archive/sources/tracker-ableton-speech-workstation.md"
+source_sha1: "d4ca0c13fb10"
+project_save_id: "ProjectSave_2722638f3194819181841819435a497e"
+conversation_id: "69c75434-4510-832f-aa2d-381db758c106"
+conversation_title: "Tracker and Ableton Features"
+canvas_index: 1
+date_in_chatgpt: "2026-03-28"
+recovered_at: "2026-05-13"
+---
 Yes. That is the right move.
 
 The product should be **tracker-brained and Ableton-bodied**.

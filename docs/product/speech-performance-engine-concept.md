@@ -1,3 +1,15 @@
+---
+title: "Speech performance engine concept"
+source_path: "dramaturgist-tuning-markdown-archive/sources/speech-performance-engine-concept.md"
+source_sha1: "96e52023ca5d"
+project_save_id: null  # truncated in saves-list before capture; recovered from gizmo files array
+conversation_id: "69c6e938-f0b8-832b-9f51-361505af6b25"
+conversation_title: "Speech-based Performance System"
+canvas_index: 12
+date_in_chatgpt: "2026-03-27"
+recovered_at: "2026-05-13"
+note: "Byte-identical to speech-score-engine-system.md (canvas #4); same source message, two distinct ProjectSave records."
+---
 You appear to want to build a **theatrical-musical composition system** in which **language is treated as score**, **dialogue becomes rhythm**, and **performance sits between play, chamber music, and software system**.
 
 More precisely: I think you are moving toward a platform, method, or engine for **speech-based minimalist performance**.
