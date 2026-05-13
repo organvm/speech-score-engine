@@ -4,13 +4,16 @@ Source: ChatGPT project "dramaturgist-tuning" → **Sources** tab (screenshot da
 
 All 14 sources visible in the panel are now recoverable. The 2 file uploads (lexicon, Tracker HTML) were reconstructed from inline conversation content. The 12 canvas docs were pulled directly from the authenticated ChatGPT project via its internal `/backend-api/projects/{project_id}/saves` endpoint on 2026-05-13.
 
-## Recovered file uploads (2)
+## Recovered file uploads (2 panel-sources, 3 files)
+
+The Tracker HTML appears here as **two** files: the 61KB version preserved inside the ChatGPT chat-export (canonical "what ChatGPT stored"), plus the 1MB local SingleFile capture (canonical "what was likely uploaded"). One panel-source, two fidelities.
 
 Reconstructed from inline content in `conversations-019.json`. The actual file uploads themselves were not exported as standalone files; their content was preserved inside the conversation messages that referenced them.
 
 | Source | Date | Origin | Output | Bytes | SHA-1 (12) |
 |---|---|---|---|---|---|
 | Tracker vs Modern DAW - Google Search (3_28_2026 12:07:50 AM).html | Mar 28, 2026 | conv "Tracker and Ableton Features" → msg `1d92dbb9-e29c-44e9-94b8-c344436c8e86` parts[1] (largest of 12 distinct SingleFile HTML captures across the export — selected by byte size) | `Tracker vs Modern DAW - Google Search (3_28_2026 12-07-50 AM).html` (colon replaced with dash for filesystem safety) | 61,427 | `30e90df9aafd` |
+| Tracker vs Modern DAW - Google Search (3_28_2026 12:07:50 AM).html *(high-fidelity local SingleFile capture)* | Mar 28, 2026 | Local SingleFile capture of the same Google-search URL as above; ~17× larger because data: URIs (images, fonts, inlined CSS) are preserved. Predates the chat-export's trimmed copy. Was at repo root pre-2026-05-13 resolution; promoted into `sources/` for organization. Inspected: 1 `<script>` tag (SingleFile-internal), no analytics/tracking domains. | `Tracker vs Modern DAW - Google Search (3_28_2026 12-07-50 AM).singlefile-full.html` | 1,064,948 | `061589a08957` |
 | lexicon-and-style-guide.md | Mar 28, 2026 | conv "Gap Analysis and Merging" → msg `a1760d4e-f7a4-4e0a-bdfe-20a9ad430624` content.text (bash heredoc creating `/mnt/data/lexicon-and-style-guide.md`) | `lexicon-and-style-guide.md` | 17,821 | `26c329e4a3c3` |
 
 ## Recovered canvas docs (12)

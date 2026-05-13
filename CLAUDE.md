@@ -36,18 +36,15 @@ Future agents must treat the following as constraints, not suggestions:
 4. **Canvases #4 (`speech-score-engine-system.md`) and #12 (`speech-performance-engine-concept.md`) are byte-identical** (both SHA-1 `96e52023ca5d`). This is intentional — they are distinct ProjectSave records under distinct panel titles. Do not dedupe; cross-reference in the index instead.
 5. **`preview.text` from the ChatGPT saves endpoint is full content**, not truncated. The API field name is misleading. Documented in `SOURCES-INDEX.md` and the recovery plan.
 
-## Pending disposition: root-level stray files
+## Stray-file resolution (settled 2026-05-13)
 
-These files at the repo root pre-date the git-init and are **duplicates with byte-diffs** vs. their in-archive counterparts. The user owns the resolution; do not delete or overwrite without explicit instruction.
+The pre-git-init root-level strays were resolved in the commit immediately following the initial commit:
 
-| Root file | Bytes | Counterpart in `sources/` | Bytes | Notes |
-|---|---|---|---|---|
-| `Tracker vs Modern DAW … (1).html` | 1,064,948 | `Tracker vs Modern DAW … .html` | 61,427 | Different SingleFile captures of the same Google-Search page. Root version is much larger; review for tracking pixels before promoting. |
-| `lexicon-and-style-guide.md` | 17,822 | `lexicon-and-style-guide.md` | 17,821 | 1-byte trailing-newline diff. SHAs `f3fadcd6…` vs `26c329e4…`. |
-| `canvas-01--tracker-ableton-speech-workstation.md` | 10,684 | `tracker-ableton-speech-workstation.md` | 10,595 | 89-byte diff from a failed earlier browser-bulk-download attempt. |
-| `dramaturgist-tuning-conversation-inventory.{md,tsv}` | — | (no counterpart) | — | Codex-produced auxiliary inventory; not redundant with the archive's manifest. |
+- **Deleted as redundant**: `lexicon-and-style-guide.md` (1-byte newline diff vs `sources/lexicon-and-style-guide.md`) and `canvas-01--tracker-ableton-speech-workstation.md` (89-byte trailing-whitespace diff vs `sources/tracker-ableton-speech-workstation.md` from a failed earlier extraction).
+- **Promoted into `sources/`**: the 1MB Tracker HTML at root became `sources/Tracker vs Modern DAW - Google Search (3_28_2026 12-07-50 AM).singlefile-full.html` (SHA-1 `061589a08957`). The chat-export 61KB version is unchanged; both are now indexed in `SOURCES-INDEX.md` as one panel-source with two fidelities.
+- **Moved into the archive dir**: `dramaturgist-tuning-conversation-inventory.{md,tsv}` → `dramaturgist-tuning-markdown-archive/codex-conversation-inventory.{md,tsv}`. Different schema from the archive's `00--manifest.json` — kept for the share-anchor mapping and the per-conversation provenance set classification.
 
-Resolution path is documented in `.claude/plans/2026-05-13-dramaturgist-canvas-recovery-handoff.md`. Read that handoff before acting on any of these files.
+Repo root is now clean (no archive-adjacent strays).
 
 ## Reproducible operation: ChatGPT canvas recovery
 
