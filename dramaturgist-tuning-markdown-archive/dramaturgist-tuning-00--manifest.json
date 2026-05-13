@@ -1,0 +1,1561 @@
+{
+  "archive_id": "dramaturgist-tuning",
+  "title": "Dramaturgist Tuning Prompt Response Markdown Archive",
+  "generated_at_utc": "2026-05-13T16:41:36Z",
+  "source_root": "/Users/4jp/Downloads/0d965e163f42d89ff6ca7c5e2a1f6a9e73dc28abb48ffcb76a68aa547265b4b4-2026-04-23-00-23-00-7cdc8c987a4042d3a7707208e1c131e1",
+  "source_shards": [
+    "conversations-019.json"
+  ],
+  "project_key": "g-p-69c6e425347c81918dfba984fb76206c",
+  "share_anchor_url": "https://chatgpt.com/share/6a04a67e-24c4-83ea-975f-433e6ee42f5a",
+  "conversation_count": 9,
+  "prompt_response_pair_count": 36,
+  "output_directory": "dramaturgist-tuning-markdown-archive",
+  "flat_hierarchy_pattern": "dramaturgist-tuning-NN--conversation-title--MMM-prompt-response.md",
+  "cleaning_rules": [
+    "visible user and assistant messages from current-node path only",
+    "system messages omitted",
+    "tool outputs omitted",
+    "hidden user context omitted",
+    "assistant thoughts, reasoning recaps, and tool-call scaffolding omitted",
+    "attachments preserved as metadata and linked to local export files when found",
+    "private citation glyphs normalized to readable bracket markers"
+  ],
+  "files": {
+    "readme": "dramaturgist-tuning-00--README.md",
+    "full_markdown_archive": "dramaturgist-tuning-00--full-prompt-response-archive.md",
+    "metadata_tsv": "dramaturgist-tuning-00--metadata.tsv",
+    "manifest_json": "dramaturgist-tuning-00--manifest.json"
+  },
+  "conversations": [
+    {
+      "conversation_index": 1,
+      "conversation_title": "Theatrical-Musical Composition System",
+      "conversation_id": "69c6e4d6-23b4-8328-a4dc-d555365791eb",
+      "source_shard": "conversations-019.json",
+      "created_utc": "2026-03-27T20:13:41.997401Z",
+      "updated_utc": "2026-03-27T22:08:52.246083Z",
+      "is_archived": false,
+      "memory_scope": "global_enabled",
+      "conversation_template_id": "g-p-69c6e425347c81918dfba984fb76206c",
+      "stats": {
+        "role_system": 10,
+        "content_type_text": 16,
+        "omitted_messages": 20,
+        "omitted_role_system": 10,
+        "role_user": 3,
+        "content_type_multimodal_text": 4,
+        "content_type_user_editable_context": 1,
+        "omitted_role_user": 1,
+        "role_assistant": 8,
+        "content_type_thoughts": 2,
+        "omitted_role_assistant": 4,
+        "content_type_reasoning_recap": 2,
+        "role_tool": 5,
+        "content_type_tether_browsing_display": 1,
+        "omitted_role_tool": 5
+      },
+      "pair_count": 2,
+      "pairs": [
+        {
+          "pair_id": "dt-01-001",
+          "global_pair_index": 1,
+          "conversation_index": 1,
+          "conversation_pair_index": 1,
+          "conversation_title": "Theatrical-Musical Composition System",
+          "conversation_id": "69c6e4d6-23b4-8328-a4dc-d555365791eb",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-01--theatrical-musical-composition-system--001-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T20:13:41.997401Z",
+          "conversation_updated_utc": "2026-03-27T22:08:52.246083Z",
+          "prompt_message_ids": [
+            "410a0d46-ec68-4b6d-8b75-04e9b08eb3b0"
+          ],
+          "response_message_ids": [
+            "f886c322-d5ea-4fc5-b526-69c19233dc36"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 60,
+          "response_char_count": 4742,
+          "attachment_count": 7,
+          "omitted_total": 5,
+          "content_sha256": "f843309bb4d4e803d1788915efe6df5ecd0a16f25086a933b7aed2e9102ff6ef",
+          "omitted_message_counts": {
+            "omitted_system": 5,
+            "omitted_total": 5
+          },
+          "duplicate_group": []
+        },
+        {
+          "pair_id": "dt-01-002",
+          "global_pair_index": 2,
+          "conversation_index": 1,
+          "conversation_pair_index": 2,
+          "conversation_title": "Theatrical-Musical Composition System",
+          "conversation_id": "69c6e4d6-23b4-8328-a4dc-d555365791eb",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-01--theatrical-musical-composition-system--002-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T20:13:41.997401Z",
+          "conversation_updated_utc": "2026-03-27T22:08:52.246083Z",
+          "prompt_message_ids": [
+            "6fb4a833-de36-49cf-8899-c628c5629e3f"
+          ],
+          "response_message_ids": [
+            "9143bc96-535b-4640-ae46-c0ecd17597dd"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 112,
+          "response_char_count": 13250,
+          "attachment_count": 0,
+          "omitted_total": 17,
+          "content_sha256": "09205f639be92dba4db59ff4f32733e26cfbb134c0dd5428fdeab398ea399185",
+          "omitted_message_counts": {
+            "omitted_system": 5,
+            "omitted_total": 17,
+            "omitted_user": 1,
+            "omitted_empty_assistant": 2,
+            "omitted_assistant": 4,
+            "omitted_tool": 5
+          },
+          "duplicate_group": []
+        }
+      ]
+    },
+    {
+      "conversation_index": 2,
+      "conversation_title": "Speech-based Performance System",
+      "conversation_id": "69c6e938-f0b8-832b-9f51-361505af6b25",
+      "source_shard": "conversations-019.json",
+      "created_utc": "2026-03-27T20:32:11.495136Z",
+      "updated_utc": "2026-03-27T22:07:25.373010Z",
+      "is_archived": false,
+      "memory_scope": "global_enabled",
+      "conversation_template_id": "g-p-69c6e425347c81918dfba984fb76206c",
+      "stats": {
+        "role_system": 5,
+        "content_type_text": 7,
+        "omitted_messages": 8,
+        "omitted_role_system": 5,
+        "role_user": 2,
+        "content_type_user_editable_context": 1,
+        "omitted_role_user": 1,
+        "content_type_multimodal_text": 1,
+        "role_assistant": 4,
+        "content_type_thoughts": 1,
+        "omitted_role_assistant": 2,
+        "content_type_reasoning_recap": 1
+      },
+      "pair_count": 1,
+      "pairs": [
+        {
+          "pair_id": "dt-02-001",
+          "global_pair_index": 3,
+          "conversation_index": 2,
+          "conversation_pair_index": 1,
+          "conversation_title": "Speech-based Performance System",
+          "conversation_id": "69c6e938-f0b8-832b-9f51-361505af6b25",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-02--speech-based-performance-system--001-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T20:32:11.495136Z",
+          "conversation_updated_utc": "2026-03-27T22:07:25.373010Z",
+          "prompt_message_ids": [
+            "20dad69e-306f-41b6-880a-c1f6893fc653"
+          ],
+          "response_message_ids": [
+            "cf02362d-56c5-41ad-92b2-250a6d021a9b"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 60,
+          "response_char_count": 7537,
+          "attachment_count": 7,
+          "omitted_total": 9,
+          "content_sha256": "ae13221793460ec07010690e47536205498e4802d67b2ffde626c6d3c9b88682",
+          "omitted_message_counts": {
+            "omitted_system": 5,
+            "omitted_total": 9,
+            "omitted_user": 1,
+            "omitted_empty_assistant": 1,
+            "omitted_assistant": 2
+          },
+          "duplicate_group": [
+            "dt-02-001",
+            "dt-03-001"
+          ]
+        }
+      ]
+    },
+    {
+      "conversation_index": 3,
+      "conversation_title": "Branch · Speech-based Performance System",
+      "conversation_id": "69c6ec6f-164c-8329-ac9c-6734aeda8e5b",
+      "source_shard": "conversations-019.json",
+      "created_utc": "2026-03-27T20:45:55.928824Z",
+      "updated_utc": "2026-03-27T21:48:16.155862Z",
+      "is_archived": false,
+      "memory_scope": "global_enabled",
+      "conversation_template_id": "g-p-69c6e425347c81918dfba984fb76206c",
+      "stats": {
+        "role_system": 14,
+        "content_type_text": 28,
+        "omitted_messages": 28,
+        "omitted_role_system": 14,
+        "role_user": 8,
+        "omitted_role_user": 2,
+        "content_type_multimodal_text": 1,
+        "role_assistant": 20,
+        "content_type_thoughts": 6,
+        "omitted_role_assistant": 12,
+        "content_type_reasoning_recap": 6,
+        "content_type_user_editable_context": 1
+      },
+      "pair_count": 6,
+      "pairs": [
+        {
+          "pair_id": "dt-03-001",
+          "global_pair_index": 4,
+          "conversation_index": 3,
+          "conversation_pair_index": 1,
+          "conversation_title": "Branch · Speech-based Performance System",
+          "conversation_id": "69c6ec6f-164c-8329-ac9c-6734aeda8e5b",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-03--branch-speech-based-performance-system--001-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T20:45:55.928824Z",
+          "conversation_updated_utc": "2026-03-27T21:48:16.155862Z",
+          "prompt_message_ids": [
+            "20dad69e-306f-41b6-880a-c1f6893fc653"
+          ],
+          "response_message_ids": [
+            "cf02362d-56c5-41ad-92b2-250a6d021a9b"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 60,
+          "response_char_count": 7537,
+          "attachment_count": 7,
+          "omitted_total": 5,
+          "content_sha256": "ae13221793460ec07010690e47536205498e4802d67b2ffde626c6d3c9b88682",
+          "omitted_message_counts": {
+            "omitted_system": 4,
+            "omitted_total": 5,
+            "omitted_user": 1
+          },
+          "duplicate_group": [
+            "dt-02-001",
+            "dt-03-001"
+          ]
+        },
+        {
+          "pair_id": "dt-03-002",
+          "global_pair_index": 5,
+          "conversation_index": 3,
+          "conversation_pair_index": 2,
+          "conversation_title": "Branch · Speech-based Performance System",
+          "conversation_id": "69c6ec6f-164c-8329-ac9c-6734aeda8e5b",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-03--branch-speech-based-performance-system--002-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T20:45:55.928824Z",
+          "conversation_updated_utc": "2026-03-27T21:48:16.155862Z",
+          "prompt_message_ids": [
+            "1ca0b795-0f3d-47ca-97ba-0da8640594cb"
+          ],
+          "response_message_ids": [
+            "f8635c4d-530e-499d-a320-7b812e8b700d"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 189,
+          "response_char_count": 7438,
+          "attachment_count": 0,
+          "omitted_total": 4,
+          "content_sha256": "a5cff217fa0d0f690a3aca5628088d0f3fea4d2d3f165e44d79ecf4dce176cf0",
+          "omitted_message_counts": {
+            "omitted_system": 1,
+            "omitted_total": 4,
+            "omitted_empty_assistant": 1,
+            "omitted_assistant": 2
+          },
+          "duplicate_group": []
+        },
+        {
+          "pair_id": "dt-03-003",
+          "global_pair_index": 6,
+          "conversation_index": 3,
+          "conversation_pair_index": 3,
+          "conversation_title": "Branch · Speech-based Performance System",
+          "conversation_id": "69c6ec6f-164c-8329-ac9c-6734aeda8e5b",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-03--branch-speech-based-performance-system--003-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T20:45:55.928824Z",
+          "conversation_updated_utc": "2026-03-27T21:48:16.155862Z",
+          "prompt_message_ids": [
+            "f2f48600-50d3-4a12-bdc5-b8e881e54b93"
+          ],
+          "response_message_ids": [
+            "0d562b01-8b09-4894-82ea-2ff76849ba46"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 80,
+          "response_char_count": 14976,
+          "attachment_count": 0,
+          "omitted_total": 6,
+          "content_sha256": "3d8defdb1a624bcd2ecfb26ce551bbeaf5cd7aaddf3b9ad459c9ca2ca5298dff",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 6,
+            "omitted_user": 1,
+            "omitted_empty_assistant": 1,
+            "omitted_assistant": 2
+          },
+          "duplicate_group": []
+        },
+        {
+          "pair_id": "dt-03-004",
+          "global_pair_index": 7,
+          "conversation_index": 3,
+          "conversation_pair_index": 4,
+          "conversation_title": "Branch · Speech-based Performance System",
+          "conversation_id": "69c6ec6f-164c-8329-ac9c-6734aeda8e5b",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-03--branch-speech-based-performance-system--004-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T20:45:55.928824Z",
+          "conversation_updated_utc": "2026-03-27T21:48:16.155862Z",
+          "prompt_message_ids": [
+            "bb6f3bbc-0574-4da4-9866-6f69014ccfb2"
+          ],
+          "response_message_ids": [
+            "7e3a2b61-d222-4869-b0d1-892297aa511e"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 103,
+          "response_char_count": 21564,
+          "attachment_count": 0,
+          "omitted_total": 4,
+          "content_sha256": "58751a5d6980f7add07ad1edcf7da14a43d74bbc3b12ee0977542ce1a763e6b5",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 4,
+            "omitted_assistant": 2
+          },
+          "duplicate_group": []
+        },
+        {
+          "pair_id": "dt-03-005",
+          "global_pair_index": 8,
+          "conversation_index": 3,
+          "conversation_pair_index": 5,
+          "conversation_title": "Branch · Speech-based Performance System",
+          "conversation_id": "69c6ec6f-164c-8329-ac9c-6734aeda8e5b",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-03--branch-speech-based-performance-system--005-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T20:45:55.928824Z",
+          "conversation_updated_utc": "2026-03-27T21:48:16.155862Z",
+          "prompt_message_ids": [
+            "34c63c16-c3b0-4af7-b04f-dd17e5dae796"
+          ],
+          "response_message_ids": [
+            "4efd139b-7a83-45a1-9cd3-337acaad9437"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 294,
+          "response_char_count": 36249,
+          "attachment_count": 0,
+          "omitted_total": 3,
+          "content_sha256": "05d7016d79f9c027ed22c1554295f8087a8b49c78c67cf3b72f0391b6dab8729",
+          "omitted_message_counts": {
+            "omitted_system": 1,
+            "omitted_total": 3,
+            "omitted_assistant": 2
+          },
+          "duplicate_group": []
+        },
+        {
+          "pair_id": "dt-03-006",
+          "global_pair_index": 9,
+          "conversation_index": 3,
+          "conversation_pair_index": 6,
+          "conversation_title": "Branch · Speech-based Performance System",
+          "conversation_id": "69c6ec6f-164c-8329-ac9c-6734aeda8e5b",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-03--branch-speech-based-performance-system--006-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T20:45:55.928824Z",
+          "conversation_updated_utc": "2026-03-27T21:48:16.155862Z",
+          "prompt_message_ids": [
+            "1aa85e2f-3048-4543-bf0f-3a0838464a11"
+          ],
+          "response_message_ids": [
+            "ec7109e3-53df-402b-b6b8-b6b1d7832335"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 178,
+          "response_char_count": 28386,
+          "attachment_count": 0,
+          "omitted_total": 8,
+          "content_sha256": "2adc66e05b8c4bf0380559e54b319fb748d3a4af6f6f82e3a7d6962f6c1725d4",
+          "omitted_message_counts": {
+            "omitted_system": 4,
+            "omitted_total": 8,
+            "omitted_assistant": 4
+          },
+          "duplicate_group": []
+        }
+      ]
+    },
+    {
+      "conversation_index": 4,
+      "conversation_title": "Gap Analysis and Merging",
+      "conversation_id": "69c700a2-2b2c-832f-bb09-8a6d069b352b",
+      "source_shard": "conversations-019.json",
+      "created_utc": "2026-03-27T22:12:08.563109Z",
+      "updated_utc": "2026-03-28T03:55:56.332085Z",
+      "is_archived": false,
+      "memory_scope": "global_enabled",
+      "conversation_template_id": "g-p-69c6e425347c81918dfba984fb76206c",
+      "stats": {
+        "role_system": 12,
+        "content_type_text": 32,
+        "omitted_messages": 77,
+        "omitted_role_system": 12,
+        "role_user": 5,
+        "content_type_user_editable_context": 1,
+        "omitted_role_user": 1,
+        "role_tool": 47,
+        "content_type_tether_browsing_display": 6,
+        "omitted_role_tool": 47,
+        "role_assistant": 27,
+        "content_type_multimodal_text": 34,
+        "content_type_thoughts": 8,
+        "omitted_role_assistant": 17,
+        "content_type_code": 5,
+        "content_type_reasoning_recap": 4,
+        "content_type_execution_output": 1
+      },
+      "pair_count": 4,
+      "pairs": [
+        {
+          "pair_id": "dt-04-001",
+          "global_pair_index": 10,
+          "conversation_index": 4,
+          "conversation_pair_index": 1,
+          "conversation_title": "Gap Analysis and Merging",
+          "conversation_id": "69c700a2-2b2c-832f-bb09-8a6d069b352b",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-04--gap-analysis-and-merging--001-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T22:12:08.563109Z",
+          "conversation_updated_utc": "2026-03-28T03:55:56.332085Z",
+          "prompt_message_ids": [
+            "16b51266-6d7d-45a1-a237-289f0c89b9c9"
+          ],
+          "response_message_ids": [
+            "129e6469-1103-447e-90db-5584d1600fcd",
+            "3d0ee246-09ef-424d-ba25-5321b5f39ccd",
+            "4008d56f-77b7-41b1-8cfb-819b6484597c"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 4861,
+          "response_char_count": 6665,
+          "attachment_count": 0,
+          "omitted_total": 4,
+          "content_sha256": "b597ccb48cf9e13b38b9a62513f1369e32371206f16b12887420f2ea55fe5e0f",
+          "omitted_message_counts": {
+            "omitted_system": 4,
+            "omitted_total": 4
+          },
+          "duplicate_group": []
+        },
+        {
+          "pair_id": "dt-04-002",
+          "global_pair_index": 11,
+          "conversation_index": 4,
+          "conversation_pair_index": 2,
+          "conversation_title": "Gap Analysis and Merging",
+          "conversation_id": "69c700a2-2b2c-832f-bb09-8a6d069b352b",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-04--gap-analysis-and-merging--002-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T22:12:08.563109Z",
+          "conversation_updated_utc": "2026-03-28T03:55:56.332085Z",
+          "prompt_message_ids": [
+            "f4436d1c-9cc8-4f09-a14e-19f4c9b7f29b"
+          ],
+          "response_message_ids": [
+            "8e81bb69-bf77-4318-9c5a-29cb5314c949",
+            "84c1c092-a584-4caf-a0ff-2ceb4215736c"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 124,
+          "response_char_count": 10749,
+          "attachment_count": 0,
+          "omitted_total": 25,
+          "content_sha256": "2e80d089d0a563227f02f5db63c59fbc032d0da661322bd558bc42ef42a22ff4",
+          "omitted_message_counts": {
+            "omitted_user": 1,
+            "omitted_total": 25,
+            "omitted_system": 1,
+            "omitted_tool": 17,
+            "omitted_empty_assistant": 1,
+            "omitted_assistant": 5
+          },
+          "duplicate_group": []
+        },
+        {
+          "pair_id": "dt-04-003",
+          "global_pair_index": 12,
+          "conversation_index": 4,
+          "conversation_pair_index": 3,
+          "conversation_title": "Gap Analysis and Merging",
+          "conversation_id": "69c700a2-2b2c-832f-bb09-8a6d069b352b",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-04--gap-analysis-and-merging--003-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T22:12:08.563109Z",
+          "conversation_updated_utc": "2026-03-28T03:55:56.332085Z",
+          "prompt_message_ids": [
+            "785c87e5-c3df-422e-a306-8d834c5d8a40"
+          ],
+          "response_message_ids": [
+            "205cb84d-eeb6-40a8-979e-91b7c606df78",
+            "6a181e32-a3fa-482b-99c3-a6e0122f1655"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 125,
+          "response_char_count": 14998,
+          "attachment_count": 0,
+          "omitted_total": 8,
+          "content_sha256": "616af60c6a7bfe884140b621d87d57c069066101e8a995bdfaef6231be32ca94",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 8,
+            "omitted_assistant": 4,
+            "omitted_tool": 2
+          },
+          "duplicate_group": []
+        },
+        {
+          "pair_id": "dt-04-004",
+          "global_pair_index": 13,
+          "conversation_index": 4,
+          "conversation_pair_index": 4,
+          "conversation_title": "Gap Analysis and Merging",
+          "conversation_id": "69c700a2-2b2c-832f-bb09-8a6d069b352b",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-04--gap-analysis-and-merging--004-prompt-response.md",
+          "conversation_created_utc": "2026-03-27T22:12:08.563109Z",
+          "conversation_updated_utc": "2026-03-28T03:55:56.332085Z",
+          "prompt_message_ids": [
+            "98622ffa-8358-4763-b079-17ea41b7d76c"
+          ],
+          "response_message_ids": [
+            "cc121f9c-03dc-41e4-9c1d-fe9579dc15aa",
+            "a872786d-d1aa-4b84-b050-a6b4984241dd"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 134,
+          "response_char_count": 863,
+          "attachment_count": 0,
+          "omitted_total": 41,
+          "content_sha256": "d57b0868a6a105e63b31050bf3efed99af3b99a5c9d627b1345b506889959432",
+          "omitted_message_counts": {
+            "omitted_system": 5,
+            "omitted_total": 41,
+            "omitted_tool": 28,
+            "omitted_assistant": 8
+          },
+          "duplicate_group": []
+        }
+      ]
+    },
+    {
+      "conversation_index": 5,
+      "conversation_title": "Tracker and Ableton Features",
+      "conversation_id": "69c75434-4510-832f-aa2d-381db758c106",
+      "source_shard": "conversations-019.json",
+      "created_utc": "2026-03-28T04:08:45.469842Z",
+      "updated_utc": "2026-03-28T11:13:54.872443Z",
+      "is_archived": false,
+      "memory_scope": "global_enabled",
+      "conversation_template_id": "g-p-69c6e425347c81918dfba984fb76206c",
+      "stats": {
+        "role_system": 7,
+        "content_type_text": 22,
+        "omitted_messages": 58,
+        "omitted_role_system": 7,
+        "role_user": 3,
+        "content_type_user_editable_context": 1,
+        "omitted_role_user": 1,
+        "role_tool": 38,
+        "content_type_tether_browsing_display": 2,
+        "omitted_role_tool": 38,
+        "content_type_multimodal_text": 28,
+        "role_assistant": 17,
+        "content_type_thoughts": 6,
+        "omitted_role_assistant": 12,
+        "content_type_code": 4,
+        "content_type_reasoning_recap": 2
+      },
+      "pair_count": 2,
+      "pairs": [
+        {
+          "pair_id": "dt-05-001",
+          "global_pair_index": 14,
+          "conversation_index": 5,
+          "conversation_pair_index": 1,
+          "conversation_title": "Tracker and Ableton Features",
+          "conversation_id": "69c75434-4510-832f-aa2d-381db758c106",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-05--tracker-and-ableton-features--001-prompt-response.md",
+          "conversation_created_utc": "2026-03-28T04:08:45.469842Z",
+          "conversation_updated_utc": "2026-03-28T11:13:54.872443Z",
+          "prompt_message_ids": [
+            "ec2783f4-5b34-4222-afa8-24fd13ebae46"
+          ],
+          "response_message_ids": [
+            "77a1c1e7-d66c-4be5-9276-3348aa65325a",
+            "d4274a9c-3477-4975-aaea-d99b4f1b517e"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 54,
+          "response_char_count": 10128,
+          "attachment_count": 0,
+          "omitted_total": 4,
+          "content_sha256": "5cc4a9ed3027dd0ad7cee838007f7bfde91846b01bb96d531fe6467863940145",
+          "omitted_message_counts": {
+            "omitted_system": 4,
+            "omitted_total": 4
+          },
+          "duplicate_group": []
+        },
+        {
+          "pair_id": "dt-05-002",
+          "global_pair_index": 15,
+          "conversation_index": 5,
+          "conversation_pair_index": 2,
+          "conversation_title": "Tracker and Ableton Features",
+          "conversation_id": "69c75434-4510-832f-aa2d-381db758c106",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-05--tracker-and-ableton-features--002-prompt-response.md",
+          "conversation_created_utc": "2026-03-28T04:08:45.469842Z",
+          "conversation_updated_utc": "2026-03-28T11:13:54.872443Z",
+          "prompt_message_ids": [
+            "2c103a4f-14d1-45a2-b43d-f1087713af87"
+          ],
+          "response_message_ids": [
+            "cb4de587-23c8-4088-8632-c31f63246afd",
+            "1d6be921-3595-4d97-a90f-94ade135603b"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 158,
+          "response_char_count": 14407,
+          "attachment_count": 0,
+          "omitted_total": 55,
+          "content_sha256": "37e1f67b81bd0ca1ddc31423253847cc99026a4461b95678ec3a9b82e80ae36c",
+          "omitted_message_counts": {
+            "omitted_user": 1,
+            "omitted_total": 55,
+            "omitted_system": 3,
+            "omitted_tool": 38,
+            "omitted_empty_assistant": 1,
+            "omitted_assistant": 12
+          },
+          "duplicate_group": []
+        }
+      ]
+    },
+    {
+      "conversation_index": 6,
+      "conversation_title": "Prototype and POC Steps",
+      "conversation_id": "69ca687a-0a20-8327-84aa-13ed8f02697f",
+      "source_shard": "conversations-019.json",
+      "created_utc": "2026-03-30T12:11:56.538255Z",
+      "updated_utc": "2026-03-30T22:15:59.661225Z",
+      "is_archived": false,
+      "memory_scope": "global_enabled",
+      "conversation_template_id": "g-p-69c6e425347c81918dfba984fb76206c",
+      "stats": {
+        "role_system": 9,
+        "content_type_text": 20,
+        "omitted_messages": 49,
+        "omitted_role_system": 9,
+        "role_user": 4,
+        "content_type_multimodal_text": 18,
+        "content_type_user_editable_context": 1,
+        "omitted_role_user": 1,
+        "role_tool": 25,
+        "content_type_tether_browsing_display": 3,
+        "omitted_role_tool": 25,
+        "role_assistant": 18,
+        "content_type_thoughts": 6,
+        "omitted_role_assistant": 14,
+        "content_type_code": 5,
+        "content_type_reasoning_recap": 3
+      },
+      "pair_count": 3,
+      "pairs": [
+        {
+          "pair_id": "dt-06-001",
+          "global_pair_index": 16,
+          "conversation_index": 6,
+          "conversation_pair_index": 1,
+          "conversation_title": "Prototype and POC Steps",
+          "conversation_id": "69ca687a-0a20-8327-84aa-13ed8f02697f",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-06--prototype-and-poc-steps--001-prompt-response.md",
+          "conversation_created_utc": "2026-03-30T12:11:56.538255Z",
+          "conversation_updated_utc": "2026-03-30T22:15:59.661225Z",
+          "prompt_message_ids": [
+            "646cfcb9-8a66-4728-936b-4e68578ca691"
+          ],
+          "response_message_ids": [
+            "40734158-b27c-465f-83f1-6d5d85bb29c2"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 66,
+          "response_char_count": 6279,
+          "attachment_count": 5,
+          "omitted_total": 4,
+          "content_sha256": "32469ea0cd78b6afc3f13aa4374a67e78789551e7bf917920990c8f3ef33d0ab",
+          "omitted_message_counts": {
+            "omitted_system": 4,
+            "omitted_total": 4
+          },
+          "duplicate_group": []
+        },
+        {
+          "pair_id": "dt-06-002",
+          "global_pair_index": 17,
+          "conversation_index": 6,
+          "conversation_pair_index": 2,
+          "conversation_title": "Prototype and POC Steps",
+          "conversation_id": "69ca687a-0a20-8327-84aa-13ed8f02697f",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-06--prototype-and-poc-steps--002-prompt-response.md",
+          "conversation_created_utc": "2026-03-30T12:11:56.538255Z",
+          "conversation_updated_utc": "2026-03-30T22:15:59.661225Z",
+          "prompt_message_ids": [
+            "f49e13ab-e7b4-4078-80b1-ec5d2b11bad0"
+          ],
+          "response_message_ids": [
+            "480cda0b-4334-4e38-9fbd-5633ee6d0b7f"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 138,
+          "response_char_count": 1399,
+          "attachment_count": 0,
+          "omitted_total": 30,
+          "content_sha256": "2473441e0fd52230898e068863b58a0d848b29bcb18183220571e8d5ed376407",
+          "omitted_message_counts": {
+            "omitted_user": 1,
+            "omitted_total": 30,
+            "omitted_system": 1,
+            "omitted_tool": 21,
+            "omitted_empty_assistant": 1,
+            "omitted_assistant": 6
+          },
+          "duplicate_group": []
+        },
+        {
+          "pair_id": "dt-06-003",
+          "global_pair_index": 18,
+          "conversation_index": 6,
+          "conversation_pair_index": 3,
+          "conversation_title": "Prototype and POC Steps",
+          "conversation_id": "69ca687a-0a20-8327-84aa-13ed8f02697f",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-06--prototype-and-poc-steps--003-prompt-response.md",
+          "conversation_created_utc": "2026-03-30T12:11:56.538255Z",
+          "conversation_updated_utc": "2026-03-30T22:15:59.661225Z",
+          "prompt_message_ids": [
+            "78028391-a7aa-41d6-80b5-93792f6cdf2b"
+          ],
+          "response_message_ids": [
+            "1a2aa9fd-6ba8-45cf-9ed0-1b2e09c156f9"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 80,
+          "response_char_count": 1360,
+          "attachment_count": 0,
+          "omitted_total": 16,
+          "content_sha256": "d7d3b0763855dc6e55e2fed7c62ff56148222a54f5b486ed54174fb8fa6b9426",
+          "omitted_message_counts": {
+            "omitted_system": 4,
+            "omitted_total": 16,
+            "omitted_assistant": 8,
+            "omitted_tool": 4
+          },
+          "duplicate_group": []
+        }
+      ]
+    },
+    {
+      "conversation_index": 7,
+      "conversation_title": "Prototype & Proof of Concept",
+      "conversation_id": "69caf63d-e7f0-8327-a7d7-f2b9b3b2e634",
+      "source_shard": "conversations-019.json",
+      "created_utc": "2026-03-30T22:16:48.860984Z",
+      "updated_utc": "2026-03-31T03:00:17.426126Z",
+      "is_archived": false,
+      "memory_scope": "global_enabled",
+      "conversation_template_id": "g-p-69c6e425347c81918dfba984fb76206c",
+      "stats": {
+        "role_system": 19,
+        "content_type_text": 53,
+        "omitted_messages": 91,
+        "omitted_role_system": 19,
+        "role_user": 9,
+        "content_type_multimodal_text": 18,
+        "content_type_user_editable_context": 1,
+        "omitted_role_user": 1,
+        "role_tool": 37,
+        "content_type_tether_browsing_display": 6,
+        "omitted_role_tool": 37,
+        "role_assistant": 47,
+        "content_type_thoughts": 16,
+        "omitted_role_assistant": 34,
+        "content_type_code": 10,
+        "content_type_reasoning_recap": 8
+      },
+      "pair_count": 8,
+      "pairs": [
+        {
+          "pair_id": "dt-07-001",
+          "global_pair_index": 19,
+          "conversation_index": 7,
+          "conversation_pair_index": 1,
+          "conversation_title": "Prototype & Proof of Concept",
+          "conversation_id": "69caf63d-e7f0-8327-a7d7-f2b9b3b2e634",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-07--prototype-and-proof-of-concept--001-prompt-response.md",
+          "conversation_created_utc": "2026-03-30T22:16:48.860984Z",
+          "conversation_updated_utc": "2026-03-31T03:00:17.426126Z",
+          "prompt_message_ids": [
+            "766a2869-31ba-4e23-afdb-2912f7d65e8b"
+          ],
+          "response_message_ids": [
+            "a61ee137-7e16-4c6d-8f63-2bf1089d888d"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 146,
+          "response_char_count": 6657,
+          "attachment_count": 5,
+          "omitted_total": 4,
+          "content_sha256": "7e3c8d322296470fd82f0f3fd4927946d81f350250c6c93dfb58f0b320fef3db",
+          "omitted_message_counts": {
+            "omitted_system": 4,
+            "omitted_total": 4
+          },
+          "duplicate_group": [
+            "dt-07-001",
+            "dt-08-001"
+          ]
+        },
+        {
+          "pair_id": "dt-07-002",
+          "global_pair_index": 20,
+          "conversation_index": 7,
+          "conversation_pair_index": 2,
+          "conversation_title": "Prototype & Proof of Concept",
+          "conversation_id": "69caf63d-e7f0-8327-a7d7-f2b9b3b2e634",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-07--prototype-and-proof-of-concept--002-prompt-response.md",
+          "conversation_created_utc": "2026-03-30T22:16:48.860984Z",
+          "conversation_updated_utc": "2026-03-31T03:00:17.426126Z",
+          "prompt_message_ids": [
+            "95c9650a-2bc8-4192-bd2d-0cd34c73f1ca"
+          ],
+          "response_message_ids": [
+            "4ff58680-4503-4d86-92e3-e3e36c1506d8"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 57,
+          "response_char_count": 5436,
+          "attachment_count": 0,
+          "omitted_total": 32,
+          "content_sha256": "201cba82a1855be4b609a0a6a6c152b434e4b6e5e4fb5843704e81aa47956c46",
+          "omitted_message_counts": {
+            "omitted_user": 1,
+            "omitted_total": 32,
+            "omitted_system": 1,
+            "omitted_tool": 23,
+            "omitted_empty_assistant": 1,
+            "omitted_assistant": 6
+          },
+          "duplicate_group": [
+            "dt-07-002",
+            "dt-08-002"
+          ]
+        },
+        {
+          "pair_id": "dt-07-003",
+          "global_pair_index": 21,
+          "conversation_index": 7,
+          "conversation_pair_index": 3,
+          "conversation_title": "Prototype & Proof of Concept",
+          "conversation_id": "69caf63d-e7f0-8327-a7d7-f2b9b3b2e634",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-07--prototype-and-proof-of-concept--003-prompt-response.md",
+          "conversation_created_utc": "2026-03-30T22:16:48.860984Z",
+          "conversation_updated_utc": "2026-03-31T03:00:17.426126Z",
+          "prompt_message_ids": [
+            "d6997e0d-f44c-4604-afe6-0cd2331f3f3e"
+          ],
+          "response_message_ids": [
+            "9d687a79-df8c-4140-92de-c0407fcb5b2e"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 163,
+          "response_char_count": 7537,
+          "attachment_count": 0,
+          "omitted_total": 8,
+          "content_sha256": "4e706b92101f7bb47ab675574329a74ccbac496755ff85b5578e136da38b605c",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 8,
+            "omitted_assistant": 4,
+            "omitted_tool": 2
+          },
+          "duplicate_group": [
+            "dt-07-003",
+            "dt-08-003"
+          ]
+        },
+        {
+          "pair_id": "dt-07-004",
+          "global_pair_index": 22,
+          "conversation_index": 7,
+          "conversation_pair_index": 4,
+          "conversation_title": "Prototype & Proof of Concept",
+          "conversation_id": "69caf63d-e7f0-8327-a7d7-f2b9b3b2e634",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-07--prototype-and-proof-of-concept--004-prompt-response.md",
+          "conversation_created_utc": "2026-03-30T22:16:48.860984Z",
+          "conversation_updated_utc": "2026-03-31T03:00:17.426126Z",
+          "prompt_message_ids": [
+            "b15365da-03db-4b14-b9a8-8ce59eb8366a"
+          ],
+          "response_message_ids": [
+            "dbeaf755-a258-4ae0-8b9a-7cbef1a3b448"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 30,
+          "response_char_count": 3689,
+          "attachment_count": 0,
+          "omitted_total": 8,
+          "content_sha256": "d079ec4c1cf9671cb674a1832fb8eb2e6247a1daa817fbd67114468cb420221c",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 8,
+            "omitted_assistant": 4,
+            "omitted_tool": 2
+          },
+          "duplicate_group": [
+            "dt-07-004",
+            "dt-08-004"
+          ]
+        },
+        {
+          "pair_id": "dt-07-005",
+          "global_pair_index": 23,
+          "conversation_index": 7,
+          "conversation_pair_index": 5,
+          "conversation_title": "Prototype & Proof of Concept",
+          "conversation_id": "69caf63d-e7f0-8327-a7d7-f2b9b3b2e634",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-07--prototype-and-proof-of-concept--005-prompt-response.md",
+          "conversation_created_utc": "2026-03-30T22:16:48.860984Z",
+          "conversation_updated_utc": "2026-03-31T03:00:17.426126Z",
+          "prompt_message_ids": [
+            "7f4e01cb-3559-47fb-b298-4b9a2271bfe1"
+          ],
+          "response_message_ids": [
+            "aafbcfec-6149-46b2-b104-951a72fc4830",
+            "54dd9095-f60a-4f0d-b43a-b2f516e17cc5",
+            "501fc6e9-f9b7-4126-989c-16db30421e82"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 85,
+          "response_char_count": 3621,
+          "attachment_count": 0,
+          "omitted_total": 4,
+          "content_sha256": "5340709842afc9796ac63abe393551fd76954d37dc487b95d24f73e180f4f1c9",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 4,
+            "omitted_assistant": 2
+          },
+          "duplicate_group": [
+            "dt-07-005",
+            "dt-08-005"
+          ]
+        },
+        {
+          "pair_id": "dt-07-006",
+          "global_pair_index": 24,
+          "conversation_index": 7,
+          "conversation_pair_index": 6,
+          "conversation_title": "Prototype & Proof of Concept",
+          "conversation_id": "69caf63d-e7f0-8327-a7d7-f2b9b3b2e634",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-07--prototype-and-proof-of-concept--006-prompt-response.md",
+          "conversation_created_utc": "2026-03-30T22:16:48.860984Z",
+          "conversation_updated_utc": "2026-03-31T03:00:17.426126Z",
+          "prompt_message_ids": [
+            "46b05f81-614a-4592-9ceb-7dce2a368a84"
+          ],
+          "response_message_ids": [
+            "40e2c0d7-a9d5-49b8-b4d5-5b16d1f4662f",
+            "f32ba670-bf5f-40f5-b549-2e9ac60ef8a5"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 66,
+          "response_char_count": 4150,
+          "attachment_count": 0,
+          "omitted_total": 12,
+          "content_sha256": "fce26566f3264daa444b9711d7a9cf7564c49adc80ccfafbbcfead9c79315b96",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 12,
+            "omitted_assistant": 6,
+            "omitted_tool": 4
+          },
+          "duplicate_group": [
+            "dt-07-006",
+            "dt-08-006"
+          ]
+        },
+        {
+          "pair_id": "dt-07-007",
+          "global_pair_index": 25,
+          "conversation_index": 7,
+          "conversation_pair_index": 7,
+          "conversation_title": "Prototype & Proof of Concept",
+          "conversation_id": "69caf63d-e7f0-8327-a7d7-f2b9b3b2e634",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-07--prototype-and-proof-of-concept--007-prompt-response.md",
+          "conversation_created_utc": "2026-03-30T22:16:48.860984Z",
+          "conversation_updated_utc": "2026-03-31T03:00:17.426126Z",
+          "prompt_message_ids": [
+            "63d2d986-4d1a-4956-8f3c-b995c1d15ce1"
+          ],
+          "response_message_ids": [
+            "924336a5-bfd2-48a1-ad57-db53ee546483"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 180,
+          "response_char_count": 9330,
+          "attachment_count": 0,
+          "omitted_total": 12,
+          "content_sha256": "3363ae012cb5b8f02a21a4dab50151c20e9f7048a5497218d0f4b6c5251c53d7",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 12,
+            "omitted_assistant": 6,
+            "omitted_tool": 4
+          },
+          "duplicate_group": [
+            "dt-07-007",
+            "dt-08-007"
+          ]
+        },
+        {
+          "pair_id": "dt-07-008",
+          "global_pair_index": 26,
+          "conversation_index": 7,
+          "conversation_pair_index": 8,
+          "conversation_title": "Prototype & Proof of Concept",
+          "conversation_id": "69caf63d-e7f0-8327-a7d7-f2b9b3b2e634",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-07--prototype-and-proof-of-concept--008-prompt-response.md",
+          "conversation_created_utc": "2026-03-30T22:16:48.860984Z",
+          "conversation_updated_utc": "2026-03-31T03:00:17.426126Z",
+          "prompt_message_ids": [
+            "48fee094-a2ad-49ec-a5f0-5c2e999f9c36"
+          ],
+          "response_message_ids": [
+            "a67f53b4-c223-4e73-8d5a-a5172bca2d0f",
+            "0e69cedb-ae4f-4c8b-9e70-d8731dc7ce39"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 101,
+          "response_char_count": 6193,
+          "attachment_count": 0,
+          "omitted_total": 12,
+          "content_sha256": "99a98a5af47611a51a88e9030d755f3e83258da24d5a5011276f2e808efe0205",
+          "omitted_message_counts": {
+            "omitted_system": 4,
+            "omitted_total": 12,
+            "omitted_assistant": 6,
+            "omitted_tool": 2
+          },
+          "duplicate_group": []
+        }
+      ]
+    },
+    {
+      "conversation_index": 8,
+      "conversation_title": "Branch · Prototype & Proof of Concept",
+      "conversation_id": "69cb38cf-de74-8327-8275-51d20948709e",
+      "source_shard": "conversations-019.json",
+      "created_utc": "2026-03-31T03:00:37.461552Z",
+      "updated_utc": "2026-03-31T03:11:49.354190Z",
+      "is_archived": false,
+      "memory_scope": "global_enabled",
+      "conversation_template_id": "g-p-69c6e425347c81918dfba984fb76206c",
+      "stats": {
+        "role_system": 22,
+        "content_type_text": 84,
+        "omitted_messages": 129,
+        "omitted_role_system": 22,
+        "role_user": 11,
+        "content_type_multimodal_text": 29,
+        "omitted_role_user": 2,
+        "role_tool": 69,
+        "omitted_role_tool": 69,
+        "role_assistant": 51,
+        "content_type_thoughts": 17,
+        "omitted_role_assistant": 36,
+        "content_type_code": 10,
+        "content_type_reasoning_recap": 9,
+        "content_type_user_editable_context": 1,
+        "content_type_tether_browsing_display": 3
+      },
+      "pair_count": 9,
+      "pairs": [
+        {
+          "pair_id": "dt-08-001",
+          "global_pair_index": 27,
+          "conversation_index": 8,
+          "conversation_pair_index": 1,
+          "conversation_title": "Branch · Prototype & Proof of Concept",
+          "conversation_id": "69cb38cf-de74-8327-8275-51d20948709e",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-08--branch-prototype-and-proof-of-concept--001-prompt-response.md",
+          "conversation_created_utc": "2026-03-31T03:00:37.461552Z",
+          "conversation_updated_utc": "2026-03-31T03:11:49.354190Z",
+          "prompt_message_ids": [
+            "766a2869-31ba-4e23-afdb-2912f7d65e8b"
+          ],
+          "response_message_ids": [
+            "a61ee137-7e16-4c6d-8f63-2bf1089d888d"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 146,
+          "response_char_count": 6657,
+          "attachment_count": 5,
+          "omitted_total": 4,
+          "content_sha256": "7e3c8d322296470fd82f0f3fd4927946d81f350250c6c93dfb58f0b320fef3db",
+          "omitted_message_counts": {
+            "omitted_system": 4,
+            "omitted_total": 4
+          },
+          "duplicate_group": [
+            "dt-07-001",
+            "dt-08-001"
+          ]
+        },
+        {
+          "pair_id": "dt-08-002",
+          "global_pair_index": 28,
+          "conversation_index": 8,
+          "conversation_pair_index": 2,
+          "conversation_title": "Branch · Prototype & Proof of Concept",
+          "conversation_id": "69cb38cf-de74-8327-8275-51d20948709e",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-08--branch-prototype-and-proof-of-concept--002-prompt-response.md",
+          "conversation_created_utc": "2026-03-31T03:00:37.461552Z",
+          "conversation_updated_utc": "2026-03-31T03:11:49.354190Z",
+          "prompt_message_ids": [
+            "95c9650a-2bc8-4192-bd2d-0cd34c73f1ca"
+          ],
+          "response_message_ids": [
+            "4ff58680-4503-4d86-92e3-e3e36c1506d8"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 57,
+          "response_char_count": 5436,
+          "attachment_count": 0,
+          "omitted_total": 32,
+          "content_sha256": "201cba82a1855be4b609a0a6a6c152b434e4b6e5e4fb5843704e81aa47956c46",
+          "omitted_message_counts": {
+            "omitted_user": 1,
+            "omitted_total": 32,
+            "omitted_system": 1,
+            "omitted_tool": 23,
+            "omitted_empty_assistant": 1,
+            "omitted_assistant": 6
+          },
+          "duplicate_group": [
+            "dt-07-002",
+            "dt-08-002"
+          ]
+        },
+        {
+          "pair_id": "dt-08-003",
+          "global_pair_index": 29,
+          "conversation_index": 8,
+          "conversation_pair_index": 3,
+          "conversation_title": "Branch · Prototype & Proof of Concept",
+          "conversation_id": "69cb38cf-de74-8327-8275-51d20948709e",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-08--branch-prototype-and-proof-of-concept--003-prompt-response.md",
+          "conversation_created_utc": "2026-03-31T03:00:37.461552Z",
+          "conversation_updated_utc": "2026-03-31T03:11:49.354190Z",
+          "prompt_message_ids": [
+            "d6997e0d-f44c-4604-afe6-0cd2331f3f3e"
+          ],
+          "response_message_ids": [
+            "9d687a79-df8c-4140-92de-c0407fcb5b2e"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 163,
+          "response_char_count": 7537,
+          "attachment_count": 0,
+          "omitted_total": 8,
+          "content_sha256": "4e706b92101f7bb47ab675574329a74ccbac496755ff85b5578e136da38b605c",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 8,
+            "omitted_assistant": 4,
+            "omitted_tool": 2
+          },
+          "duplicate_group": [
+            "dt-07-003",
+            "dt-08-003"
+          ]
+        },
+        {
+          "pair_id": "dt-08-004",
+          "global_pair_index": 30,
+          "conversation_index": 8,
+          "conversation_pair_index": 4,
+          "conversation_title": "Branch · Prototype & Proof of Concept",
+          "conversation_id": "69cb38cf-de74-8327-8275-51d20948709e",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-08--branch-prototype-and-proof-of-concept--004-prompt-response.md",
+          "conversation_created_utc": "2026-03-31T03:00:37.461552Z",
+          "conversation_updated_utc": "2026-03-31T03:11:49.354190Z",
+          "prompt_message_ids": [
+            "b15365da-03db-4b14-b9a8-8ce59eb8366a"
+          ],
+          "response_message_ids": [
+            "dbeaf755-a258-4ae0-8b9a-7cbef1a3b448"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 30,
+          "response_char_count": 3689,
+          "attachment_count": 0,
+          "omitted_total": 8,
+          "content_sha256": "d079ec4c1cf9671cb674a1832fb8eb2e6247a1daa817fbd67114468cb420221c",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 8,
+            "omitted_assistant": 4,
+            "omitted_tool": 2
+          },
+          "duplicate_group": [
+            "dt-07-004",
+            "dt-08-004"
+          ]
+        },
+        {
+          "pair_id": "dt-08-005",
+          "global_pair_index": 31,
+          "conversation_index": 8,
+          "conversation_pair_index": 5,
+          "conversation_title": "Branch · Prototype & Proof of Concept",
+          "conversation_id": "69cb38cf-de74-8327-8275-51d20948709e",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-08--branch-prototype-and-proof-of-concept--005-prompt-response.md",
+          "conversation_created_utc": "2026-03-31T03:00:37.461552Z",
+          "conversation_updated_utc": "2026-03-31T03:11:49.354190Z",
+          "prompt_message_ids": [
+            "7f4e01cb-3559-47fb-b298-4b9a2271bfe1"
+          ],
+          "response_message_ids": [
+            "aafbcfec-6149-46b2-b104-951a72fc4830",
+            "54dd9095-f60a-4f0d-b43a-b2f516e17cc5",
+            "501fc6e9-f9b7-4126-989c-16db30421e82"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 85,
+          "response_char_count": 3621,
+          "attachment_count": 0,
+          "omitted_total": 4,
+          "content_sha256": "5340709842afc9796ac63abe393551fd76954d37dc487b95d24f73e180f4f1c9",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 4,
+            "omitted_assistant": 2
+          },
+          "duplicate_group": [
+            "dt-07-005",
+            "dt-08-005"
+          ]
+        },
+        {
+          "pair_id": "dt-08-006",
+          "global_pair_index": 32,
+          "conversation_index": 8,
+          "conversation_pair_index": 6,
+          "conversation_title": "Branch · Prototype & Proof of Concept",
+          "conversation_id": "69cb38cf-de74-8327-8275-51d20948709e",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-08--branch-prototype-and-proof-of-concept--006-prompt-response.md",
+          "conversation_created_utc": "2026-03-31T03:00:37.461552Z",
+          "conversation_updated_utc": "2026-03-31T03:11:49.354190Z",
+          "prompt_message_ids": [
+            "46b05f81-614a-4592-9ceb-7dce2a368a84"
+          ],
+          "response_message_ids": [
+            "40e2c0d7-a9d5-49b8-b4d5-5b16d1f4662f",
+            "f32ba670-bf5f-40f5-b549-2e9ac60ef8a5"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 66,
+          "response_char_count": 4150,
+          "attachment_count": 0,
+          "omitted_total": 12,
+          "content_sha256": "fce26566f3264daa444b9711d7a9cf7564c49adc80ccfafbbcfead9c79315b96",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 12,
+            "omitted_assistant": 6,
+            "omitted_tool": 4
+          },
+          "duplicate_group": [
+            "dt-07-006",
+            "dt-08-006"
+          ]
+        },
+        {
+          "pair_id": "dt-08-007",
+          "global_pair_index": 33,
+          "conversation_index": 8,
+          "conversation_pair_index": 7,
+          "conversation_title": "Branch · Prototype & Proof of Concept",
+          "conversation_id": "69cb38cf-de74-8327-8275-51d20948709e",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-08--branch-prototype-and-proof-of-concept--007-prompt-response.md",
+          "conversation_created_utc": "2026-03-31T03:00:37.461552Z",
+          "conversation_updated_utc": "2026-03-31T03:11:49.354190Z",
+          "prompt_message_ids": [
+            "63d2d986-4d1a-4956-8f3c-b995c1d15ce1"
+          ],
+          "response_message_ids": [
+            "924336a5-bfd2-48a1-ad57-db53ee546483"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 180,
+          "response_char_count": 9330,
+          "attachment_count": 0,
+          "omitted_total": 12,
+          "content_sha256": "3363ae012cb5b8f02a21a4dab50151c20e9f7048a5497218d0f4b6c5251c53d7",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 12,
+            "omitted_assistant": 6,
+            "omitted_tool": 4
+          },
+          "duplicate_group": [
+            "dt-07-007",
+            "dt-08-007"
+          ]
+        },
+        {
+          "pair_id": "dt-08-008",
+          "global_pair_index": 34,
+          "conversation_index": 8,
+          "conversation_pair_index": 8,
+          "conversation_title": "Branch · Prototype & Proof of Concept",
+          "conversation_id": "69cb38cf-de74-8327-8275-51d20948709e",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-08--branch-prototype-and-proof-of-concept--008-prompt-response.md",
+          "conversation_created_utc": "2026-03-31T03:00:37.461552Z",
+          "conversation_updated_utc": "2026-03-31T03:11:49.354190Z",
+          "prompt_message_ids": [
+            "90988b45-2ab9-43e2-908b-4814504f7258"
+          ],
+          "response_message_ids": [
+            "0b9e19ab-ac10-46fd-8cdb-06864c36280d",
+            "0d43cd66-1de1-406c-bb09-b9a6d35732d8"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 135,
+          "response_char_count": 6059,
+          "attachment_count": 0,
+          "omitted_total": 4,
+          "content_sha256": "8d340eb6d926f846dfa786fe5a9c9b453cb2a46164cb7a6c4a3574d86ae4c425",
+          "omitted_message_counts": {
+            "omitted_system": 2,
+            "omitted_total": 4,
+            "omitted_assistant": 2
+          },
+          "duplicate_group": []
+        },
+        {
+          "pair_id": "dt-08-009",
+          "global_pair_index": 35,
+          "conversation_index": 8,
+          "conversation_pair_index": 9,
+          "conversation_title": "Branch · Prototype & Proof of Concept",
+          "conversation_id": "69cb38cf-de74-8327-8275-51d20948709e",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-08--branch-prototype-and-proof-of-concept--009-prompt-response.md",
+          "conversation_created_utc": "2026-03-31T03:00:37.461552Z",
+          "conversation_updated_utc": "2026-03-31T03:11:49.354190Z",
+          "prompt_message_ids": [
+            "4a2d0b64-926f-44de-8297-5fb3a01251ed"
+          ],
+          "response_message_ids": [
+            "95cef750-b590-4c3d-8dc6-d6183011d064"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 25,
+          "response_char_count": 16894,
+          "attachment_count": 0,
+          "omitted_total": 47,
+          "content_sha256": "85be884bda30030cf2367c6ddb15e3ec42cd4f320d866ec6dbe5552794ca7f7a",
+          "omitted_message_counts": {
+            "omitted_system": 5,
+            "omitted_total": 47,
+            "omitted_user": 1,
+            "omitted_tool": 34,
+            "omitted_empty_assistant": 1,
+            "omitted_assistant": 6
+          },
+          "duplicate_group": []
+        }
+      ]
+    },
+    {
+      "conversation_index": 9,
+      "conversation_title": "Discrepancy Engine Design",
+      "conversation_id": "69cb7d8b-a454-8331-8997-a52daa49b92e",
+      "source_shard": "conversations-019.json",
+      "created_utc": "2026-03-31T07:53:53.883461Z",
+      "updated_utc": "2026-03-31T07:55:25.689184Z",
+      "is_archived": false,
+      "memory_scope": "global_enabled",
+      "conversation_template_id": "g-p-69c6e425347c81918dfba984fb76206c",
+      "stats": {
+        "role_system": 5,
+        "content_type_text": 9,
+        "omitted_messages": 24,
+        "omitted_role_system": 5,
+        "role_user": 2,
+        "content_type_user_editable_context": 1,
+        "omitted_role_user": 1,
+        "role_tool": 16,
+        "content_type_tether_browsing_display": 1,
+        "omitted_role_tool": 16,
+        "content_type_multimodal_text": 14,
+        "role_assistant": 4,
+        "content_type_thoughts": 1,
+        "omitted_role_assistant": 2,
+        "content_type_reasoning_recap": 1
+      },
+      "pair_count": 1,
+      "pairs": [
+        {
+          "pair_id": "dt-09-001",
+          "global_pair_index": 36,
+          "conversation_index": 9,
+          "conversation_pair_index": 1,
+          "conversation_title": "Discrepancy Engine Design",
+          "conversation_id": "69cb7d8b-a454-8331-8997-a52daa49b92e",
+          "source_shard": "conversations-019.json",
+          "filename": "dramaturgist-tuning-09--discrepancy-engine-design--001-prompt-response.md",
+          "conversation_created_utc": "2026-03-31T07:53:53.883461Z",
+          "conversation_updated_utc": "2026-03-31T07:55:25.689184Z",
+          "prompt_message_ids": [
+            "d18f85c6-dc87-4529-9c7e-d7663ca98922"
+          ],
+          "response_message_ids": [
+            "ac42fd1b-f161-4ab9-967e-09bfcf025759"
+          ],
+          "assistant_models": [
+            "gpt-5-4-thinking"
+          ],
+          "prompt_char_count": 224,
+          "response_char_count": 7407,
+          "attachment_count": 0,
+          "omitted_total": 25,
+          "content_sha256": "09119a76cb77aa5455f266b59c0d2e5015a1e44080b5a7fde8ee7036e48092e0",
+          "omitted_message_counts": {
+            "omitted_system": 5,
+            "omitted_total": 25,
+            "omitted_user": 1,
+            "omitted_tool": 16,
+            "omitted_empty_assistant": 1,
+            "omitted_assistant": 2
+          },
+          "duplicate_group": []
+        }
+      ]
+    }
+  ]
+}
