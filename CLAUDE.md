@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `speech-score-engine` is a TypeScript pnpm-workspace monorepo implementing the system the design canvases call `$SPEECH_SCORE_ENGINE`: a dramaturgical-audio workbench for authoring, analyzing, rehearsing, rendering, and executing polyvocal speech works. As of 2026-05-13 it holds both **(a) the full provenance-preserved design corpus** recovered from a ChatGPT project (`dramaturgist-tuning`, project key `g-p-69c6e425347c81918dfba984fb76206c`), and **(b) the initial executable scaffold** generated from that corpus.
 
-The scaffold is structural, not feature-complete. The build runs (`pnpm install && pnpm db:up && pnpm db:migrate && pnpm dev`). The API has only `/health`. The worker boots BullMQ queues with no processors yet. The web app renders a static home page. The MVP feature surface (parsing, versioning, render pipeline, diagnostics, share links) is intentionally unimplemented — see `docs/product/repository-blueprint-handoff-package.md` §13 for the build order.
+The scaffold is structural, not feature-complete. The build runs (`pnpm install && pnpm db:up && pnpm db:migrate && pnpm dev`). The API has only `/health`. The worker boots BullMQ queues with no processors yet. The web app renders a static home page. **Wave 1 of blueprint §13 shipped 2026-05-13** (commit `6074094`): `packages/domain/` now defines TypeScript types + zod schemas for scenes, projects, users, parsing requests, and the four service interfaces (versioning, render dispatch, diagnostics, voice-provider adapter). Runtime logic — parser, repositories, API routes beyond `/health`, worker processors, render pipeline, diagnostics, share links — remains unbuilt. See `docs/product/repository-blueprint-handoff-package.md` §13 for the build order; see the "Current execution status" section below for what's shipped vs. pending.
 
 ## Layout
 
@@ -17,7 +17,7 @@ The scaffold is structural, not feature-complete. The build runs (`pnpm install 
 │   ├── api/                                    # Fastify (only /health endpoint so far); src/{server,modules,services,repositories,policies,contracts,bootstrap} anchored
 │   └── worker/                                 # BullMQ + ioredis (queues declared, no processors yet); src/{bootstrap,jobs,providers,pipelines,services,telemetry} anchored
 ├── packages/
-│   ├── domain/                                 # TS contracts + zod schemas + event constants (runtime-neutral)
+│   ├── domain/                                 # Runtime-neutral TS types + zod schemas + event constants. Submodules: scene/, project/, user/ (Wave 1 of §13 shipped); parsing/, contracts/ (4 service interfaces), events/; anchor-README only for diagnostics/, render/, share/, speaker/, version/.
 │   ├── database/                               # 6 SQL migrations + pg client + migrate + seed runner; src/{schema,queries,repositories,transactions} anchored
 │   ├── config/                                 # zod-validated env loader
 │   ├── client-sdk/                             # Fetch wrapper for API access (browser-or-Node)
@@ -39,12 +39,14 @@ The scaffold is structural, not feature-complete. The build runs (`pnpm install 
 ├── .github/workflows/ci.yml                    # install, typecheck, lint, build, migration-syntax check
 ├── dramaturgist-tuning-markdown-archive/       # The provenance-preserving canonical archive
 │   ├── codex-conversation-inventory.{md,tsv}   # Auxiliary Codex inventory (different schema from manifest)
+│   ├── objects-and-subjects-inventory.md       # 152KB ontological index derived from 36 raw transcripts; 526 $VARIABLE tokens + semantic entities (commit b18469c)
 │   ├── 00-{README.md,manifest.json,metadata.tsv,full-archive.md}   # Renamed 2026-05-13 from dramaturgist-tuning-00--*
 │   ├── dt-NN-MMM--{topic-slug}.md              # 36 per-pair files; renamed 2026-05-13 to be self-describing in Finder
 │   └── sources/                                # All 14 panel-sources from the ChatGPT project (SHA-1-tracked, byte-frozen)
 │       ├── SOURCES-INDEX.md                    # Recovery index
 │       ├── *.md                                # 12 canvas docs + 1 reconstructed lexicon
 │       └── *.html                              # 2 SingleFile HTML captures (61KB + 1MB fidelities)
+├── .serena/                                    # Serena MCP project config (project.yml + .gitignore); tracked but agent-tooling only
 ├── .claude/plans/YYYY-MM-DD-{slug}.md          # Per-session plan history (never overwrite)
 ├── CLAUDE.md                                   # This file
 └── README.md                                   # Bootstrap + service URLs
@@ -68,6 +70,7 @@ Three durable conventions live in `docs/conventions/`. Read them before adding o
 | `pnpm db:up` | `docker compose up -d` for Postgres + Redis + MinIO. |
 | `pnpm db:down` | Stop the local infra services. |
 | `pnpm db:migrate` | Apply unapplied SQL migrations from `packages/database/migrations/`. Idempotent; tracks state in a `schema_migration` table. |
+| `pnpm db:seed` | Run `packages/database/src/seed.ts` against the two SQL files in `packages/database/seeds/` (`sample_project.seed.sql`, `voice_profiles.seed.sql`). Idempotent — uses `ON CONFLICT DO NOTHING`. |
 | `pnpm dev` | Turbo runs `dev` across all apps in parallel. Web on `:3000`, API on `:4000`. |
 | `pnpm build` | Turbo-orchestrated build for all apps + packages. |
 | `pnpm typecheck` | `tsc --noEmit` across the graph. |
@@ -78,6 +81,21 @@ Three durable conventions live in `docs/conventions/`. Read them before adding o
 `docs/product/repository-blueprint-handoff-package.md` is the load-bearing implementation spec. The scaffold tracks it directly: top-level layout (§2), folder purposes (§3), SQL migrations (§7), TS service contracts (§9.3), env vars (§10), bootstrap (§11). When implementing a feature, read the matching blueprint section first; if you diverge, write an ADR in `docs/adr/`.
 
 The implementation order is **fixed** by blueprint §13: schema + contracts → scene CRUD + parsing → versioning transaction → render pipeline → diagnostics → share/compare. The system is **not** a TTS wrapper; dramatic language stays structured temporal data through the whole stack. See `docs/product/README.md` for the canvas read-order.
+
+## Current execution status (slice §13)
+
+Mirrors `.claude/plans/2026-05-13-closeout-v3.md` — authoritative source if these drift. The "scene CRUD + parser" vertical slice is decomposed into 6 waves in `.claude/plans/2026-05-13-scene-crud-and-parser-slice.md`:
+
+| Wave | Scope | Status | Commit |
+|---|---|---|---|
+| 1 — Domain contracts | `packages/domain/src/{scene,project,user,parsing,contracts,events}/*.ts` — types, zod schemas, HTTP request shapes, service interfaces | **Shipped** | `6074094` |
+| 2 — Repositories | `packages/database/src/repositories/*.ts` — pg queries against the 6 migrated tables | Pending | — |
+| 3 — Parser | `apps/api/src/modules/parsing/` — line-level parse of authored speech into `version_line` rows | Pending | — |
+| 4 — API routes | `apps/api/src/modules/scenes/` — scene CRUD + `/parse` endpoint | Pending | — |
+| 5 — Integration tests | `test/integration/` — vitest workspace, fixtures, parse/version round-trip | Pending | — |
+| 6 — ADR-0005 | `docs/adr/0005-*.md` — codify the slice's six design decisions | Pending | — |
+
+When picking up work, read the slice plan first, then the closeout-v3 status table, then proceed from the lowest pending wave.
 
 ## Load-bearing invariants
 
@@ -122,10 +140,15 @@ A reproducible content-extraction technique that bypasses Claude Code's JS-retur
 
 Every non-trivial task gets a dated plan file at `.claude/plans/YYYY-MM-DD-{descriptive-slug}.md`. **Never overwrite** — revisions get `-v2`, `-v3` suffixes. After writing a plan, commit it (Universal Rule #5: plans are artifacts).
 
-Read existing plans before acting on repo state — recent ones include:
+**Read `.claude/plans/2026-05-13-closeout-v3.md` first** for the current execution state — it carries the authoritative wave-status table and pointers to predecessors. The seven plans on disk, grouped by purpose:
 
-- `2026-05-13-dramaturgist-canvas-recovery-handoff.md` — the canvas recovery + initial commits.
-- `2026-05-13-scaffold-implementation.md` — the scaffold this CLAUDE.md describes; stack-decision rationale and execution order.
+| Purpose | Plan | Status |
+|---|---|---|
+| Canvas recovery handoff | `2026-05-13-dramaturgist-canvas-recovery-handoff.md` | Recovery phase complete |
+| Scaffold implementation | `2026-05-13-scaffold-implementation.md` | Executed (commit `f8305cb`) |
+| Blueprint materialization | `2026-05-13-materialize-blueprint-artifacts.md` | Executed (commit `e36a88f`) |
+| §13 vertical slice (6 waves) | `2026-05-13-scene-crud-and-parser-slice.md` | Wave 1 shipped; Waves 2–6 pending |
+| Session closeouts | `2026-05-13-closeout.md` → `-v2.md` → `-v3.md` | v3 is current; chain via `predecessor` frontmatter |
 
 ## What NOT to do here
 
