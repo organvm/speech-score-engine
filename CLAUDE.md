@@ -70,7 +70,7 @@ Three durable conventions live in `docs/conventions/`. Read them before adding o
 | `pnpm db:up` | `docker compose up -d` for Postgres + Redis + MinIO. |
 | `pnpm db:down` | Stop the local infra services. |
 | `pnpm db:migrate` | Apply unapplied SQL migrations from `packages/database/migrations/`. Idempotent; tracks state in a `schema_migration` table. |
-| `pnpm db:seed` | Run `packages/database/src/seed.ts` against the two SQL files in `packages/database/seeds/` (`sample_project.seed.sql`, `voice_profiles.seed.sql`). Idempotent — uses `ON CONFLICT DO NOTHING`. |
+| `pnpm db:seed` | Run `packages/database/src/seed.ts` against every `*.sql` file in `packages/database/seeds/` (lexical order). Idempotent — each seed uses `ON CONFLICT DO NOTHING`. |
 | `pnpm dev` | Turbo runs `dev` across all apps in parallel. Web on `:3000`, API on `:4000`. |
 | `pnpm build` | Turbo-orchestrated build for all apps + packages. |
 | `pnpm typecheck` | `tsc --noEmit` across the graph. |
