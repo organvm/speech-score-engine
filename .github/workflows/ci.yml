@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: sse
+          POSTGRES_PASSWORD: sse
+          POSTGRES_DB: speech_score_engine_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U sse -d speech_score_engine_ci"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    env:
+      NODE_ENV: test
+      WEB_PORT: 3000
+      API_PORT: 4000
+      DATABASE_URL: postgres://sse:sse@localhost:5432/speech_score_engine_ci
+      REDIS_URL: redis://localhost:6379
+      OBJECT_STORAGE_BUCKET: sse-ci
+      OBJECT_STORAGE_ENDPOINT: http://localhost:9000
+      OBJECT_STORAGE_ACCESS_KEY: ci
+      OBJECT_STORAGE_SECRET_KEY: ci-secret-not-real
+      AUTH_SESSION_SECRET: ci-session-secret-16+chars
+      VOICE_PROVIDER_ID: mock
+      VOICE_PROVIDER_API_KEY: ci-mock-key
+      APP_BASE_URL: http://localhost:3000
+      API_BASE_URL: http://localhost:4000
+      PUBLIC_SHARE_BASE_URL: http://localhost:3000/share
+      LOG_LEVEL: warn
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: install
+        run: pnpm install --frozen-lockfile
+
+      - name: lint
+        run: pnpm lint
+
+      - name: typecheck
+        run: pnpm typecheck
+
+      - name: build
+        run: pnpm build
+
+      - name: migration syntax check (apply against fresh postgres)
+        run: pnpm db:migrate

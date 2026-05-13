@@ -1,0 +1,27 @@
+{
+  "name": "speech-score-engine",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Speech-score engine — a dramaturgical-audio workbench for polyvocal text-as-executable-score.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "typecheck": "turbo run typecheck",
+    "db:migrate": "pnpm --filter @sse/database migrate",
+    "db:up": "docker compose -f infrastructure/docker/compose.yaml up -d",
+    "db:down": "docker compose -f infrastructure/docker/compose.yaml down"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  }
+}

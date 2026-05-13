@@ -4,27 +4,59 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-`speech-score-engine` is currently a **provenance-preserving design-corpus repo**, not yet an implementation. It holds the complete recovered content of a ChatGPT project named `dramaturgist-tuning` (project key `g-p-69c6e425347c81918dfba984fb76206c`) which designed a system the canvases call `$SPEECH_SCORE_ENGINE`: a dramaturgical-audio workbench for authoring, analyzing, rehearsing, rendering, and executing polyvocal speech works.
+`speech-score-engine` is a TypeScript pnpm-workspace monorepo implementing the system the design canvases call `$SPEECH_SCORE_ENGINE`: a dramaturgical-audio workbench for authoring, analyzing, rehearsing, rendering, and executing polyvocal speech works. As of 2026-05-13 it holds both **(a) the full provenance-preserved design corpus** recovered from a ChatGPT project (`dramaturgist-tuning`, project key `g-p-69c6e425347c81918dfba984fb76206c`), and **(b) the initial executable scaffold** generated from that corpus.
 
-The repo's eventual trajectory is to grow an implementation alongside the corpus — but as of `git init` (zero commits at time of writing), it is archive-only. There is no build, no test suite, no lint, no package manifest. Do not propose adding any until the implementation actually begins.
+The scaffold is structural, not feature-complete. The build runs (`pnpm install && pnpm db:up && pnpm db:migrate && pnpm dev`). The API has only `/health`. The worker boots BullMQ queues with no processors yet. The web app renders a static home page. The MVP feature surface (parsing, versioning, render pipeline, diagnostics, share links) is intentionally unimplemented — see `docs/product/repository-blueprint-handoff-package.md` §13 for the build order.
 
 ## Layout
 
 ```
 .
-├── dramaturgist-tuning-markdown-archive/      # The canonical archive (load-bearing)
-│   ├── dramaturgist-tuning-00--README.md          # Index + conversation table
-│   ├── dramaturgist-tuning-00--manifest.json      # Machine-readable manifest
-│   ├── dramaturgist-tuning-00--metadata.tsv       # Per-pair metadata + hashes
-│   ├── dramaturgist-tuning-00--full-prompt-response-archive.md   # All 36 pairs concatenated
+├── apps/
+│   ├── web/                                    # Next.js 15 app router
+│   ├── api/                                    # Fastify (only /health endpoint so far)
+│   └── worker/                                 # BullMQ + ioredis (queues declared, no processors yet)
+├── packages/
+│   ├── domain/                                 # TS contracts + zod schemas (runtime-neutral)
+│   ├── database/                               # 6 SQL migrations + pg client + migrate runner
+│   └── config/                                 # zod-validated env loader
+├── docs/
+│   ├── product/                                # Verbatim copies of the design canvases
+│   └── adr/                                    # Architecture decision records (0001 onward)
+├── infrastructure/
+│   └── docker/compose.yaml                     # Local Postgres 16 + Redis 7 + MinIO
+├── .github/workflows/ci.yml                    # install, typecheck, lint, build, migration-syntax check
+├── dramaturgist-tuning-markdown-archive/       # The provenance-preserving canonical archive
+│   ├── codex-conversation-inventory.{md,tsv}   # Auxiliary Codex inventory (different schema from manifest)
+│   ├── dramaturgist-tuning-00--{README,manifest.json,metadata.tsv,full-prompt-response-archive.md}
 │   ├── dramaturgist-tuning-NN--{title}--MMM-prompt-response.md   # 36 per-pair files
-│   └── sources/                                   # All 14 panel-sources from the ChatGPT project
-│       ├── SOURCES-INDEX.md                       # Recovery index, sizes, SHA-1s, ProjectSave IDs
-│       ├── *.md                                   # 12 canvas docs + 1 reconstructed lexicon
-│       └── *.html                                 # 1 SingleFile HTML capture
+│   └── sources/                                # All 14 panel-sources from the ChatGPT project
+│       ├── SOURCES-INDEX.md                    # Recovery index, sizes, SHA-1s, ProjectSave IDs
+│       ├── *.md                                # 12 canvas docs + 1 reconstructed lexicon
+│       └── *.html                              # 2 SingleFile HTML captures (61KB + 1MB fidelities)
 ├── .claude/plans/YYYY-MM-DD-{slug}.md          # Per-session plan history (never overwrite)
-└── {stray files at root}                       # Duplicates of in-archive files — disposition pending (see below)
+├── CLAUDE.md                                   # This file
+└── README.md                                   # Bootstrap + service URLs
 ```
+
+## Common commands
+
+| Command | What it does |
+|---|---|
+| `pnpm install` | Install workspace deps. |
+| `pnpm db:up` | `docker compose up -d` for Postgres + Redis + MinIO. |
+| `pnpm db:down` | Stop the local infra services. |
+| `pnpm db:migrate` | Apply unapplied SQL migrations from `packages/database/migrations/`. Idempotent; tracks state in a `schema_migration` table. |
+| `pnpm dev` | Turbo runs `dev` across all apps in parallel. Web on `:3000`, API on `:4000`. |
+| `pnpm build` | Turbo-orchestrated build for all apps + packages. |
+| `pnpm typecheck` | `tsc --noEmit` across the graph. |
+| `pnpm lint` / `pnpm format` | Biome check / Biome write. |
+
+## Architecture authority
+
+`docs/product/repository-blueprint-handoff-package.md` is the load-bearing implementation spec. The scaffold tracks it directly: top-level layout (§2), folder purposes (§3), SQL migrations (§7), TS service contracts (§9.3), env vars (§10), bootstrap (§11). When implementing a feature, read the matching blueprint section first; if you diverge, write an ADR in `docs/adr/`.
+
+The implementation order is **fixed** by blueprint §13: schema + contracts → scene CRUD + parsing → versioning transaction → render pipeline → diagnostics → share/compare. The system is **not** a TTS wrapper; dramatic language stays structured temporal data through the whole stack. See `docs/product/README.md` for the canvas read-order.
 
 ## Load-bearing invariants
 
@@ -69,13 +101,17 @@ A reproducible content-extraction technique that bypasses Claude Code's JS-retur
 
 Every non-trivial task gets a dated plan file at `.claude/plans/YYYY-MM-DD-{descriptive-slug}.md`. **Never overwrite** — revisions get `-v2`, `-v3` suffixes. After writing a plan, commit it (Universal Rule #5: plans are artifacts).
 
-The latest in-flight handoff is `.claude/plans/2026-05-13-dramaturgist-canvas-recovery-handoff.md`. Read it before acting on the repo state — it captures the exact post-recovery state, the open decisions, and the cold-start protocol for resuming the work.
+Read existing plans before acting on repo state — recent ones include:
+
+- `2026-05-13-dramaturgist-canvas-recovery-handoff.md` — the canvas recovery + initial commits.
+- `2026-05-13-scaffold-implementation.md` — the scaffold this CLAUDE.md describes; stack-decision rationale and execution order.
 
 ## What NOT to do here
 
-- **Do not commit unprompted.** The user has not yet requested the first commit. The repo is intentionally on `main` at zero commits awaiting the duplicate-resolution decision.
+- **Do not commit unprompted.** Commits go in only when explicitly requested. The repo is on `main` with the remote at `git@github.com:4444J99/speech-score-engine.git` (private).
+- **Do not reformat, normalize, or "clean up" any file under `dramaturgist-tuning-markdown-archive/`** without explicit instruction. Provenance is the load-bearing property; SHA-1s in `SOURCES-INDEX.md` are tracked against those file contents.
+- **Do not modify a `docs/product/*.md` canvas in isolation.** The canonical original lives at `dramaturgist-tuning-markdown-archive/sources/`; `docs/product/` is a copy. If a canvas needs editing, source-first and re-copy. Better: write an ADR in `docs/adr/` rather than rewrite the spec.
+- **Do not bypass the blueprint's build order (§13).** The schema and contracts come first, then scene CRUD + parsing, then versioning, then render pipeline. Building the worker pipeline before there's a `scene_version` to render against will create coupling that has to be unwound.
+- **Do not add stub functions / 501-handlers / TODO markers** for endpoints or features that don't have logic yet. The scaffold deliberately has fewer files than the blueprint anticipates; the right move when a feature is needed is to add the file at that point, not pre-create empty shells.
 - **Do not run `chezmoi apply` against this directory.** It is not a chezmoi-managed path.
-- **Do not add a `.gitignore` without checking** — the user's global gitignore already covers `.DS_Store`; verify what `git status -s` currently shows before adding repo-local ignore rules.
-- **Do not push the 1MB Tracker HTML** to a public remote without first inspecting for tracking pixels or third-party JS — it is a SingleFile capture of a Google search results page.
-- **Do not reformat, normalize, or "clean up" any file under `dramaturgist-tuning-markdown-archive/`** without explicit instruction. Provenance is the load-bearing property.
-- **Do not edit the deployed `~/.claude/CLAUDE.md`** — its source is in the chezmoi tree at `~/Workspace/4444J99/domus-semper-palingenesis`. (This applies globally, not just to this repo — but worth restating here.)
+- **Do not edit the deployed `~/.claude/CLAUDE.md`** — its source is in the chezmoi tree at `~/Workspace/4444J99/domus-semper-palingenesis`. (Restated from the global CLAUDE.md.)
