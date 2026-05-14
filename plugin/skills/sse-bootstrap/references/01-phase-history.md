@@ -1,7 +1,7 @@
 ---
 title: Phase-level history of the speech-score-engine bootstrap
-snapshot_commit: fb910cd
-generated_at: 2026-05-14T14:39:43Z
+snapshot_commit: d72f5ba
+generated_at: 2026-05-14T14:41:39Z
 source: human-curated narrative; git log --reverse + .claude/plans/ as anchors
 generated_by: hand-written; only frontmatter is touched by snapshot-state.sh
 ---

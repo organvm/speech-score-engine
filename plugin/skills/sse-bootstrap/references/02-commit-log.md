@@ -1,7 +1,7 @@
 ---
 title: Commit-by-commit history
-snapshot_commit: fb910cd
-generated_at: 2026-05-14T14:39:43Z
+snapshot_commit: d72f5ba
+generated_at: 2026-05-14T14:41:39Z
 source: "git log --reverse --pretty=format:'%h %ad %s' --date=short"
 generated_by: plugin/skills/sse-bootstrap/scripts/snapshot-state.sh
 ---
@@ -397,5 +397,33 @@ One entry per commit, in chronological order (`git log --reverse`). For grouped-
  .../derived/sse-ontology-era3.md                   | 228 +++++++++
  .../derived/sse-tokens.txt                         | 526 +++++++++++++++++++++
  8 files changed, 1636 insertions(+), 9 deletions(-)
+```
+
+## fb910cd — 2026-05-14 — plugin: scaffold sse-bootstrap-sop with SKILL.md, references, snapshot script
+
+- **Full SHA**: `fb910cd835a1ccd6e4529903bd3bfacd744805da`
+- **Files (stat)**:
+
+```
+ plugin/.claude-plugin/plugin.json                  |  20 ++
+ plugin/commands/replay.md                          |  27 ++
+ plugin/skills/sse-bootstrap/SKILL.md               | 268 ++++++++++++++
+ .../sse-bootstrap/references/01-phase-history.md   | 184 ++++++++++
+ .../sse-bootstrap/references/02-commit-log.md      | 384 +++++++++++++++++++++
+ .../skills/sse-bootstrap/references/03-plan-log.md | 176 ++++++++++
+ .../skills/sse-bootstrap/scripts/snapshot-state.sh | 227 ++++++++++++
+ 7 files changed, 1286 insertions(+)
+```
+
+## 8594dab — 2026-05-14 — plugin: repin sse-bootstrap-sop references to post-scaffold HEAD (fb910cd)
+
+- **Full SHA**: `8594dab20e124d6b68525dac8952e32839dd5b74`
+- **Files (stat)**:
+
+```
+ .../sse-bootstrap/references/01-phase-history.md    |  4 ++--
+ .../sse-bootstrap/references/02-commit-log.md       | 21 +++++++++++++++++++--
+ .../skills/sse-bootstrap/references/03-plan-log.md  |  4 ++--
+ 3 files changed, 23 insertions(+), 6 deletions(-)
 ```
 
