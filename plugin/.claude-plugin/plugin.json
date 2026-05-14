@@ -1,0 +1,20 @@
+{
+  "name": "sse-bootstrap-sop",
+  "version": "0.1.0",
+  "description": "Standard operating procedure for bootstrapping a TypeScript pnpm-workspace monorepo from a ChatGPT design corpus. Derived from the speech-score-engine repo's actual history (commits bba6f71..6adde86). Carries the historical record at three granularities (phase, commit, plan) plus a forward-reproducible procedure.",
+  "author": {
+    "name": "Anthony Padavano",
+    "email": "padavano.anthony@gmail.com"
+  },
+  "repository": "https://github.com/4444J99/speech-score-engine",
+  "license": "UNLICENSED",
+  "keywords": [
+    "bootstrap",
+    "typescript",
+    "monorepo",
+    "pnpm-workspace",
+    "chatgpt-canvas-recovery",
+    "blueprint-driven-scaffold",
+    "sop"
+  ]
+}
