@@ -46,6 +46,7 @@ The scaffold is structural, not feature-complete. The build runs (`pnpm install 
 │       ├── *.md                                # 12 canvas docs + 1 reconstructed lexicon
 │       └── *.html                              # 2 SingleFile HTML captures (61KB + 1MB fidelities)
 ├── .claude/plans/YYYY-MM-DD-{slug}.md          # Per-session plan history (never overwrite)
+├── .serena/                                    # Serena MCP project config (project.yml, project.local.yml); cache/ regenerable
 ├── CLAUDE.md                                   # This file
 └── README.md                                   # Bootstrap + service URLs
 ```
@@ -72,12 +73,22 @@ Three durable conventions live in `docs/conventions/`. Read them before adding o
 | `pnpm build` | Turbo-orchestrated build for all apps + packages. |
 | `pnpm typecheck` | `tsc --noEmit` across the graph. |
 | `pnpm lint` / `pnpm format` | Biome check / Biome write. |
+| `pnpm --filter <pkg> <script>` | Run a single workspace package's script. Used internally for `db:migrate` / `db:seed`. Example: `pnpm --filter @sse/database migrate`. |
+
+No test runner is wired up yet — no Vitest, Playwright, or other in `devDependencies`. The `test/{fixtures,integration,e2e}/` directories hold anchor READMEs only. Wave 2 of the §13 slice (scene CRUD + parser) introduces the runner; until then, "how do I run a test?" has no answer beyond `pnpm typecheck`.
 
 ## Architecture authority
 
 `docs/product/repository-blueprint-handoff-package.md` is the load-bearing implementation spec. The scaffold tracks it directly: top-level layout (§2), folder purposes (§3), SQL migrations (§7), TS service contracts (§9.3), env vars (§10), bootstrap (§11). When implementing a feature, read the matching blueprint section first; if you diverge, write an ADR in `docs/adr/`.
 
 The implementation order is **fixed** by blueprint §13: schema + contracts → scene CRUD + parsing → versioning transaction → render pipeline → diagnostics → share/compare. The system is **not** a TTS wrapper; dramatic language stays structured temporal data through the whole stack. See `docs/product/README.md` for the canvas read-order.
+
+### §13 slice progress (verified 2026-05-13)
+
+- **Wave 1 — domain contracts**: **DONE** (commits `6074094`, `47451d7`). `packages/domain/src/` exports `contracts/`, `diagnostics/`, `events/`, `parsing/`, `project/`, `render/`, `scene/`, `share/`, `speaker/`, `user/`, `version/` modules. Active plan-of-record: `.claude/plans/2026-05-13-scene-crud-and-parser-slice.md`.
+- **Waves 2-6** (scene CRUD + parser, versioning transaction, render pipeline + voice provider adapters, diagnostics generator, share links + version comparison): **OPEN**.
+
+Future agents implementing a wave should read the active plan-of-record first; do not re-derive contracts that already exist in `packages/domain/`.
 
 ## Load-bearing invariants
 
@@ -88,16 +99,23 @@ Future agents must treat the following as constraints, not suggestions:
 3. **ChatGPT-internal citation markers** in canvas content (e.g. `fileciteturn0file4`, `\nturn0file12turn0file13`) are valid provenance trails into the original chat-export. Preserve verbatim.
 4. **Canvases #4 (`speech-score-engine-system.md`) and #12 (`speech-performance-engine-concept.md`) are byte-identical** (both SHA-1 `96e52023ca5d`). This is intentional — they are distinct ProjectSave records under distinct panel titles. Do not dedupe; cross-reference in the index instead.
 5. **`preview.text` from the ChatGPT saves endpoint is full content**, not truncated. The API field name is misleading. Documented in `SOURCES-INDEX.md` and the recovery plan.
+6. **Migrations in `packages/database/migrations/` are immutable once applied** (ADR 0004). Never edit an applied `NNNN_*.sql` file — add a new one. `pnpm db:migrate` is idempotent and tracks state in a `schema_migration` table; mutating an applied file invalidates that state.
+7. **`packages/domain` is runtime-neutral.** No I/O, no DB calls, no Fastify or Next imports. Domain code must import-cleanly into a browser, Node, or worker context. Putting an HTTP client, a `pg` query, or a `fastify` handler inside `packages/domain/` breaks this boundary and the package's purpose.
 
-## Stray-file resolution (settled 2026-05-13)
+## Cross-cluster artifact drift
 
-The pre-git-init root-level strays were resolved in the commit immediately following the initial commit:
+This repo is one of three active workspaces in a cluster: `composition-1-2` (Broward College pedagogy), `_agent-ontology` (cross-tool agent-environment governance workbench), and this one. When AI-tool spillover or cross-tool search activity accumulates files at this repo's root, the cluster's canonical governance home is `/Users/4jp/Code/_agent-ontology`. Read `_agent-ontology/docs/PROTOCOL.md` (the 8-phase audit protocol) and `_agent-ontology/conventions/data-governance-sop.md` (the data-governance SOP) before classifying spillover here.
 
-- **Deleted as redundant**: `lexicon-and-style-guide.md` (1-byte newline diff vs `sources/lexicon-and-style-guide.md`) and `canvas-01--tracker-ableton-speech-workstation.md` (89-byte trailing-whitespace diff vs `sources/tracker-ableton-speech-workstation.md` from a failed earlier extraction).
-- **Promoted into `sources/`**: the 1MB Tracker HTML at root became `sources/Tracker vs Modern DAW - Google Search (3_28_2026 12-07-50 AM).singlefile-full.html` (SHA-1 `061589a08957`). The chat-export 61KB version is unchanged; both are now indexed in `SOURCES-INDEX.md` as one panel-source with two fidelities.
-- **Moved into the archive dir**: `dramaturgist-tuning-conversation-inventory.{md,tsv}` → `dramaturgist-tuning-markdown-archive/codex-conversation-inventory.{md,tsv}`. Different schema from the archive's `00--manifest.json` — kept for the share-anchor mapping and the per-conversation provenance set classification.
+**Historical resolution** (commits `7437f80`, `e36a88f`): the **pre-git-init** strays — `lexicon-and-style-guide.md` (newline-diff dup of `sources/`), `canvas-01--tracker-ableton-speech-workstation.md` (whitespace-diff dup), and the 1 MB Tracker HTML promoted to `sources/` as the full-fidelity sibling — were resolved.
 
-Repo root is now clean (no archive-adjacent strays).
+**2026-05-13/14 cluster recovery activity**: during a cross-tool search for potentially-deleted plans and transcripts, the user pulled 20 untracked files into this repo's root from various AI-tool persistence trees (`~/.local/share/{opencode,gemini}/`, `~/.codex/`, `~/Downloads/<chatgpt-export>/`, `~/.claude/`). The search concluded with **no actual losses** confirmed by the user. The plan-of-record for the recovery + reconciliation is `.claude/plans/2026-05-14-cluster-route-speech-score-strays-into-agent-ontology.md` (home-scope copy at `~/.claude/plans/drifting-sprouting-ripple.md`). SHA-256 sweep across `~/.local/share`, `~/.codex`, `~/.claude`, `~/.cache`, `/tmp` confirmed 18 of 20 strays are **unique to this repo's root** (created here by tool invocations, not migrated from a recoverable elsewhere). The 2 exceptions are `dramaturgist-tuning-conversation-inventory.{md,tsv}` — byte-identical to the archive copy AND to a 2026-04-23 ChatGPT user-data-export under `~/Downloads/0d965e16.../`.
+
+**Etiquette for future spillover**:
+
+1. **Classify by cluster destination first, not by `.gitignore` default.** Cross-tool audit material (Codex/Claude/Gemini/OpenCode session state, hook snapshots, atom-registry slices) belongs in `_agent-ontology/sessions/{YYYY-MM-DD}-{agent}/` (raw exports) or `_agent-ontology/archives/session-{agent}-{n}-{date}/` (IA-processed with manifest.yaml + per-artifact SHA-256). Speech-score-engine **domain** extractions (ontology mined from `dramaturgist-tuning-markdown-archive/sources/`) belong in `dramaturgist-tuning-markdown-archive/derived/`. Only `.gitignore` as a last resort.
+2. **Verify before deleting.** SOP §4.2 requires SHA-256 match against the archive counterpart. Empty files (0 bytes) are safe to delete; anything with content needs hash verification against at least one durable sibling.
+3. **Never rename without authorization** — per `_agent-ontology` SOP. Filename collisions across authors are first-class data, not bugs to deduplicate.
+4. **Tool spillover prevention**: when adding new tooling that writes to repo root, add the prefix to `.gitignore` BEFORE running it. The repo root is for human-authored artifacts and tracked build configuration.
 
 ## Reproducible operation: ChatGPT canvas recovery
 
@@ -122,10 +140,13 @@ A reproducible content-extraction technique that bypasses Claude Code's JS-retur
 
 Every non-trivial task gets a dated plan file at `.claude/plans/YYYY-MM-DD-{descriptive-slug}.md`. **Never overwrite** — revisions get `-v2`, `-v3` suffixes. After writing a plan, commit it (Universal Rule #5: plans are artifacts).
 
-Read existing plans before acting on repo state — recent ones include:
+Read existing plans before acting on repo state:
 
-- `2026-05-13-dramaturgist-canvas-recovery-handoff.md` — the canvas recovery + initial commits.
-- `2026-05-13-scaffold-implementation.md` — the scaffold this CLAUDE.md describes; stack-decision rationale and execution order.
+```
+ls .claude/plans/*.md 2>/dev/null | sort -r | head
+```
+
+The active plan-of-record for the §13 slice is `.claude/plans/2026-05-13-scene-crud-and-parser-slice.md`. The most recent session closeout supersedes earlier ones (versioned `closeout.md` → `closeout-v2.md` → `closeout-v3.md` → ...). Do not embed a filename list in this CLAUDE.md — plans decay too quickly for the index to stay accurate.
 
 ## What NOT to do here
 

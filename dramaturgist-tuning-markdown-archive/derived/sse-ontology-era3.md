@@ -1,0 +1,228 @@
+# Era 3: Prompt Freedom / Governance / Discrepancy (dt-07-008 → dt-09)
+
+## Components / Services / Modules
+- **Alias resolution** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Maps user-surface vocabulary (speaker/scene/line) to canonical internal terms before domain action selection; one-directional only.
+- **Analysis Engine** — *mentioned* — first in `dt-08-009--prompt-governance-charter.md` — Invoked by `$DIAGNOSTIC_REQUEST`; emits advisory structural findings, never authoritative truth.
+- **Audit record / audit module** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Per-prompt-operation record carrying prompt id, user, target class, canonical objects touched, contract id, event ids, test gate results, commit status, timestamps.
+- **`[coll]` / `[dict]` (Max objects)** — *mentioned* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Max objects for storing row score data.
+- **`[counter]` (Max object)** — *mentioned* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Max object tracking current row.
+- **Contract** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Typed declaration: request type, allowed/required fields, defaults, validation rules, failure codes, side effects, events emitted.
+- **Discrepancy engine / Reality Check Engine / Hypothesis Difference Engine** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — System that compares modeled claims against observed reality, classifies divergences, aggregates patterns; the headline construct of dt-09.
+- **Domain action** — *defined* — first in `dt-08-008--prompt-freedom-reduction.md` — Finite declared operation prompts terminate in; sits in `packages/domain/`.
+- **Domain event model / Event family** — *defined* — first in `dt-08-008--prompt-freedom-reduction.md` — Includes scene.parse.requested, version.created, render.requested/queued/processing/completed/failed, share.created, prompt.rejected.
+- **Live engine (Max/MSP role)** — *defined* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — Max-hosted live cueing/routing/triggering/rehearsal layer.
+- **Master timing clock** — *mentioned* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Single source-of-truth clock for the Max patch.
+- **`[matrixctrl]` (Max grid UI)** — *mentioned* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Candidate grid UI primitive for tracker display.
+- **`[metro]` (Max object)** — *mentioned* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Drives row advance in the Max tracker.
+- **Mixer / per-channel pan** — *mentioned* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Audio routing primitive in the Max patch.
+- **Object storage** — *mentioned* — first in `dt-08-001--prototype-and-poc-path.md` — Holds audio render artifacts; named via `$OBJECT_STORE_URI`.
+- **Polyvocal speech-composition engine (deeper layer)** — *alluded* — first in `dt-08-009--prompt-governance-charter.md` — The underlying engine beneath the dramaturgical-audio workbench surface.
+- **Prompt resolution flow** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Pipeline: input → intent resolution → alias-to-canonical mapping → contract selection → domain action selection → event emission → invariant checks → test gates → state commit → derived outputs.
+- **Pattern View (cluster-level)** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Discrepancy-engine surface where repeated checks accumulate into clusters (distinct from the tracker `$PATTERN_VIEW`).
+- **Queue-backed render worker / render pipeline** — *mentioned* — first in `dt-08-001--prototype-and-poc-path.md` — Async render worker; `$APP_WORKER` / `$RENDER_WORKER`.
+- **Relational core / relational storage** — *mentioned* — first in `dt-07-008--preconsidered-prompt-readiness.md` — Normalized DB layer holding mutable scene and immutable scene_version.
+- **Rehearsal kernel** — *mentioned* — first in `dt-07-008--preconsidered-prompt-readiness.md` — Canonical subsystem referenced in the prompt-governance ontology.
+- **`[route]` (Max object)** — *mentioned* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Routes events by voice-channel inside the Max patch.
+- **Score-player patch** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Single-purpose Max patch realizing the play as tracker triggers (the friend-demo artifact).
+- **Speech renderer per channel** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — One TTS/sample renderer per voice-channel in the Max patch.
+- **Timing engine (SuperCollider role)** — *defined* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — SuperCollider as deterministic row-precise scheduling/recurrence engine.
+- **Typed API boundary** — *mentioned* — first in `dt-08-001--prototype-and-poc-path.md` — The Fastify-style typed API surface envisioned for the prototype.
+- **Voice cache** — *defined* — first in `dt-08-004--voice-synthesis-injectability.md` — Local store of pre-rendered phrase audio referenced via `$VOICE_CACHE_DIR`.
+- **Voice render adapter** — *defined* — first in `dt-08-004--voice-synthesis-injectability.md` — Pluggable layer between `$PHRASE_EVENT` and audio output; selects sample/live/hybrid backend.
+- **`[transport]` (Max object)** — *mentioned* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Max's master transport primitive.
+
+## Concepts / Frameworks / Theories
+- **Acceptance test (POC success criterion)** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Proof works when a playwright/dramaturg creates, hears, inspects, revises, versions, and shares a scene without other human performers.
+- **Adoptable wedge** — *mentioned* — first in `dt-08-001--prototype-and-poc-path.md` — The commercially legible first product surface (listening-first revision environment).
+- **Behavioral loop (over spectacle)** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Repeatable scene→playback→revise→version→share loop as the proof point.
+- **Calibration instrument for reasoning** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Full-strength form of the discrepancy engine: general epistemic machine applied to hypotheses, predictions, intuitions.
+- **Canonical prompt target class** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Finite set of allowed prompt landing zones (`$SCENE_PARSE_REQUEST`, `$VERSION_CREATE_REQUEST`, etc.).
+- **Category-collapse (error class)** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Discrepancy-engine error type: predicted higher-order use collapses to commodity use.
+- **Checkable claim** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Unit of the discrepancy engine; replaces "fact" as the comparable atom.
+- **Claim types** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Taxonomy: factual, behavioral, predictive, interpretive, design, causal, strategic.
+- **Cluster Passage mode** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Second tracker mode: dialogue clusters begin to repeat and redistribute.
+- **Cluster unit / dialogue cluster** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Small grouping of utterance events triggered as a unit.
+- **Commercial wedge** — *mentioned* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — The browser-first adoptable surface differentiated from engine layers.
+- **Company voice library** — *defined* — first in `dt-08-006--theatre-company-voice-on-travel.md` — Centrally-recorded, consent-bounded archive of company performer voices.
+- **Composition-and-execution proof (vs. workbench proof)** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Demo class focused on the engine/score idea, not the listening-revision product.
+- **Compositional infrastructure (vs. script playback)** — *alluded* — first in `dt-08-001--prototype-and-poc-path.md` — Tracker-native cell commands are the line that separates the two.
+- **Content bank (three-level)** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Level 1 full-line events, level 2 phrase clusters, level 3 atomized fragments.
+- **Dispersal Passage mode** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Third tracker mode: text atomizes and disperses across channels/rows.
+- **Dispersion field (output form)** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Spray-of-data output replacing binary verdicts; plots expected vs observed across axes.
+- **Distributed repetition field** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Mid-piece zone where dialogue mutates from readable form into recurrent stacked positions.
+- **Dramaturgical habit** — *mentioned* — first in `dt-08-001--prototype-and-poc-path.md` — Practitioner workflow disrupted by batch-style playback latency.
+- **Dramaturgical-audio workbench** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — The commercial surface form of the system (versus polyvocal speech-composition engine underneath).
+- **Dual-aspect language** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Governing semantic law: language is simultaneously semantic content and timed performance.
+- **Error taxonomy** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Stable ontology of misses: exact_match, partial_match, directionally_correct, magnitude_error, timing_error, category_error, causal_error, overgeneralization, under-specification, ambiguity-leak, framing-bias, measurement-problem, reality-noise, unknown.
+- **Eventful state mutation** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Trusted state changes only through approved domain actions + explicit events + invariant checks + safe persistence.
+- **Hearing loop** — *mentioned* — first in `dt-07-008--preconsidered-prompt-readiness.md` — The end-to-end scene-listening loop covered by integration tests.
+- **Hybrid architecture (web + SuperCollider + Max + worker + bridge)** — *defined* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — Strongest shape: browser product front, SC timing core, Max live engine, async worker, OSC/WS bridge.
+- **Immutability boundary** — *defined* — first in `dt-08-008--prompt-freedom-reduction.md` — The mutable-scene vs immutable-scene_version split that prompts cannot cross silently.
+- **Injectable infrastructure (voice synthesis)** — *defined* — first in `dt-08-004--voice-synthesis-injectability.md` — Voice synthesis as pluggable layer reachable via env vars, not baked into score.
+- **Instant clone vs professional clone** — *defined* — first in `dt-08-005--voice-clone-audio-requirements.md` — Two voice-clone quality tiers with distinct minimum-audio requirements.
+- **Listening-first revision environment** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — The product framing for performative text revision; adoptable wedge form.
+- **Listening test** — *mentioned* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Verification step in the take-status workflow.
+- **Pattern aggregation layer** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Layer 3 of discrepancy output: what kinds of misses recur.
+- **Polyvocal speech (work)** — *alluded* — first in `dt-08-009--prompt-governance-charter.md` — Deeper-layer subject of the engine; underlies the workbench.
+- **Prepared-structure-selection (prompt posture)** — *defined* — first in `dt-07-008--preconsidered-prompt-readiness.md` — Prompt-as-selector-and-filler of prepared structures instead of inventor of structure.
+- **Prompt freedom (reduction)** — *defined* — first in `dt-08-008--prompt-freedom-reduction.md` — Operating rule: low prompt freedom, high system preparation; prompt is selector/instantiator.
+- **Prompt governance** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Normative architecture governing how prompts resolve into ontology/contracts/events/tests.
+- **Quality tier (travel vs house vs production)** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Voice library tiering for capture pipeline.
+- **Readable Passage mode** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — First tracker mode: conventional order playback as tracker.
+- **Render lifecycle correctness** — *defined* — first in `dt-07-008--preconsidered-prompt-readiness.md` — Trust zone enforced via tests over render request → completion path.
+- **Rejection-as-feature** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Prompts violating governance are rejected with structured reason + nearest-valid-operation suggestion.
+- **Score logic vs cloud dependency** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Demo discipline: prove the score, not the TTS provider chain.
+- **Spray map** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — User's preferred output form: dispersed pattern of divergences rather than binary right/wrong.
+- **Structural gap** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Difference-vector field measuring missed compositional affordances.
+- **Temporal kernel** — *defined* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — Deeper engine layer beneath the browser-first product, hosting timing substrate.
+- **Three-pane scene workspace** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Script editor (L), playback + synchronized focus (C), speakers/diagnostics/versions/share (R).
+- **Tracker brain vs live body vs shareable face** — *defined* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — Three-role division: SC tracker, Max live, browser commercial.
+- **Tracker precision + Ableton-style launch hybrid** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Underlying paradigm fusion for the prototype's three canonical views.
+- **Trust zones (parsing trust, version integrity, render lifecycle correctness)** — *defined* — first in `dt-08-008--prompt-freedom-reduction.md` — Tripartite framework for what the test matrix must guarantee.
+
+## Tools / Technologies / External Systems
+- **Ableton (Live)** — *mentioned* — first in `dt-08-001--prototype-and-poc-path.md` — Inspiration for session/arrangement view metaphors.
+- **Airtable** — *mentioned* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Possible target for CSV-paste of capture sheet.
+- **Apple speech / OS speech** — *mentioned* — first in `dt-08-004--voice-synthesis-injectability.md` — One example backend the injectable voice layer should support.
+- **Cartesia** — *mentioned* — first in `dt-08-005--voice-clone-audio-requirements.md` — TTS/cloning provider; 5-second high-similarity clone reference.
+- **ChatGPT** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Designated source of the modeled claim side of every reality check.
+- **CI path** — *mentioned* — first in `dt-08-008--prompt-freedom-reduction.md` — Continuous integration enforcing contract drift / parsing trust / version integrity.
+- **ElevenLabs** — *defined* — first in `dt-08-004--voice-synthesis-injectability.md` — Voice cloning provider; instant clone 1-2 min, professional 30-180 min, own-voice-only for pro.
+- **Google Sheets** — *mentioned* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Target for TSV-ready capture-sheet headers.
+- **HTTP (transport for voice adapter)** — *mentioned* — first in `dt-08-004--voice-synthesis-injectability.md` — One protocol candidate between Max and TTS service.
+- **`js` (Max object)** — *mentioned* — first in `dt-08-004--voice-synthesis-injectability.md` — Possible Max bridge into JS for the voice adapter.
+- **Jitter** — *mentioned* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Max graphics framework, candidate for custom tracker UI display.
+- **Local synthesis model** — *mentioned* — first in `dt-08-004--voice-synthesis-injectability.md` — One injectable backend class for the voice adapter.
+- **Max/MSP** — *defined* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — Recommended host for live performable prototypes; cue/routing/triggering layer.
+- **Music tracker (genre)** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Time-and-sequence model the user holds as essential; row-precise vertical sequencer.
+- **Node for Max** — *mentioned* — first in `dt-08-004--voice-synthesis-injectability.md` — Bridge for invoking JS-based voice adapters from Max.
+- **Notion** — *mentioned* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Possible target for the capture sheet (database schema convertible).
+- **OSC** — *defined* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — Bridge protocol between SC/Max/web layers.
+- **Pre-rendered speech samples / phrase banks** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Conservative demo backend: render once, trigger as samples.
+- **Renoise** — *mentioned* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Negative reference: do not build a dense Renoise clone first.
+- **Resemble (AI)** — *mentioned* — first in `dt-08-005--voice-clone-audio-requirements.md` — Voice cloning provider; rapid clone 10s-3min, pro clone 10-25min.
+- **SuperCollider** — *defined* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — Recommended host for deterministic timing/scheduling/recurrence engine.
+- **TSV** — *mentioned* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Target serialization for the capture sheet.
+- **WebSocket** — *mentioned* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — Alternate bridge protocol between layers.
+
+## People / Roles / Personas
+- **Actor / company performer** — *defined* — first in `dt-08-006--theatre-company-voice-on-travel.md` — Subject of voice capture; `$ACTOR_ID`-keyed entity in the capture sheet.
+- **Architecture (owner)** — *mentioned* — first in `dt-08-009--prompt-governance-charter.md` — Charter ownership role.
+- **BAKER** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Fourth voice-channel persona in the demo play (`$VOICE_CHANNEL_04`).
+- **Capture engineer** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Per-actor intake-sheet role.
+- **ChatGPT (as modeled-claim source)** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Treated as a personified output stream against which reality is checked.
+- **Client demo stakeholder** — *mentioned* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Named recipient of `client-demo-restricted` voice scope.
+- **Director / conductor** — *alluded* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — Implicit operator of "conductor transport" / "conductor logic" in Max prototype.
+- **Dramaturg** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Acceptance-test persona who must be able to run the loop without other performers.
+- **Engineering (owner)** — *mentioned* — first in `dt-08-009--prompt-governance-charter.md` — Charter ownership role.
+- **Engineering owner** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Capture-sheet control-vars field; per-session ownership.
+- **FIRST_WOMAN** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — First voice-channel persona (`$VOICE_CHANNEL_01`).
+- **Friend (audience-of-one)** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Demo recipient; sets the showable-instrument-problem framing.
+- **GLASS** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Third voice-channel persona (`$VOICE_CHANNEL_03`).
+- **Owner (of share artifact)** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Holder who shares the read-only review page externally; collaborators don't edit there.
+- **Playwright** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Acceptance-test persona alongside dramaturg.
+- **Product (owner)** — *mentioned* — first in `dt-08-009--prompt-governance-charter.md` — Charter ownership role.
+- **SECOND_WOMAN** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Second voice-channel persona (`$VOICE_CHANNEL_02`).
+- **Text owner** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Script-registry field naming ownership of script text.
+
+## Document Types / Artifacts
+- **`$ACTOR_INTAKE_SHEET` (per-actor)** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — One-per-performer enrollment sheet.
+- **API contract / typed request contract** — *mentioned* — first in `dt-08-009--prompt-governance-charter.md` — Located in `apps/api/src/contracts/`.
+- **Audio cache directory** — *defined* — first in `dt-08-004--voice-synthesis-injectability.md` — `$VOICE_CACHE_DIR` filesystem location.
+- **Canonical lexicon and naming charter** — *defined* — first in `dt-07-008--preconsidered-prompt-readiness.md` — Pre-prompt prerequisite document locking ontology.
+- **Check record** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Unit data row of the discrepancy engine.
+- **Clip filename / master clip filename** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Naming convention for raw and processed voice captures.
+- **Company voice pack / travel pack** — *defined* — first in `dt-08-006--theatre-company-voice-on-travel.md` — Approved voice-clone bundle for rehearsal/demo on the road.
+- **Consent policy** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Versioned governance artifact (`$CONSENT_POLICY_VERSION`).
+- **Cluster code** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Compact identifier inside a tracker cell.
+- **Difference record** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Persisted output of one check.
+- **Diagnostics summary (in share artifact)** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Compact section of the read-only review page.
+- **Domain event** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Named record emitted by every nontrivial prompt-originated operation.
+- **Master capture sheet** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Master operating table for the capture session.
+- **Master script registry** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Stable reusable pool of recording scripts.
+- **Per-cell command (tracker)** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Cell-level command tokens: pause, repeat, overlap, cue, density, transform.
+- **Prompt Governance Charter** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — The artifact produced; lives at `docs/architecture/prompt-governance-charter.md`.
+- **Read-only review page / share artifact** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Public-facing share surface containing player, text, speaker labels, diagnostics summary.
+- **Recording protocol** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Before-/during-/after-capture procedural rules.
+- **Row event JSON object** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — `{row, voice, text, mode, pause_after_ms, repeat, pan, rate}` payload format for Max tracker cells.
+- **Scene metadata** — *mentioned* — first in `dt-08-009--prompt-governance-charter.md` — Editable working-state field group.
+- **Share link** — *mentioned* — first in `dt-08-001--prototype-and-poc-path.md` — The public artifact emitted by the share flow.
+- **Spec (canonical lexicon, ontology, contracts, events)** — *mentioned* — first in `dt-07-008--preconsidered-prompt-readiness.md` — Body of pre-prompt artifacts.
+- **Speech event** — *defined* — first in `dt-08-004--voice-synthesis-injectability.md` — Normalized output of the tracker that the voice-render adapter consumes.
+- **Take log** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — In-session log of takes with TC, noise, delivery, selection columns.
+- **Tempo / locator markers** — *mentioned* — first in `dt-08-001--prototype-and-poc-path.md` — Tracker-view UI primitives.
+- **Theatre Company Voice Capture Sheet** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — The output document with control vars, vocabulary, naming rule, master sheet, intake sheet, take log, file standard, protocol, duration plan, CSV headers, short version.
+- **Voice profile** — *defined* — first in `dt-08-004--voice-synthesis-injectability.md` — Per-channel voice assignment with stable id (`$VOICE_PROFILE_ID`).
+
+## Methodologies / Processes / Workflows
+- **Alias-to-canonical mapping discipline** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — User aliases → canonical terms, never the reverse.
+- **Build order (three-pass prototype)** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Thin coded alpha → core authoring loop → tracker-native features.
+- **Build order (schema → CRUD → versioning → render → diagnostics → share)** — *mentioned* — first in `dt-07-008--preconsidered-prompt-readiness.md` — Engineering sequence inherited from prior docs.
+- **Capture target tiering (travel 1-3 min vs house 10-30+ min)** — *defined* — first in `dt-08-006--theatre-company-voice-on-travel.md` — Two-quality-tier capture plan.
+- **Charter authority order** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — 8-level precedence: governing sentence → terminology → ontology → contracts → events → tests → UI → prompt text.
+- **Compare-as-structured-fields** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Don't compare raw prose; normalize both sides into typed fields first.
+- **Difference-vector decomposition** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Direction, magnitude, domain, confidence gap, timing gap, structural gap, semantic gap, cause class.
+- **Eventful + validated state mutation** — *defined* — first in `dt-08-008--prompt-freedom-reduction.md` — Required policy for trusted state changes.
+- **File naming standard (voice capture)** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — `actor__script__take__date.wav` etc.
+- **Four output layers (discrepancy)** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Raw comparison → error typing → pattern aggregation → model correction.
+- **Hybrid voice provider mode** — *defined* — first in `dt-08-004--voice-synthesis-injectability.md` — Try cache first; if miss, synth + write-back; reuse next pass.
+- **Instances-not-systems prompt rule** — *defined* — first in `dt-07-008--preconsidered-prompt-readiness.md` — Prompts generate object instances inside a pre-built model; never invent the model.
+- **Listening loop** — *mentioned* — first in `dt-08-001--prototype-and-poc-path.md` — End-to-end scene-hearing user loop.
+- **Loop pipeline (claim → reality → record → aggregation → calibration)** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — The discrepancy-engine outer process.
+- **MVP discipline (defer-the-cathedral)** — *defined* — first in `dt-08-001--prototype-and-poc-path.md` — Skip overlap composition, visual score editing, live conductor tooling, deep collaboration, production infrastructure.
+- **Pre-prompt artifact set** — *defined* — first in `dt-07-008--preconsidered-prompt-readiness.md` — Lexicon, relational core, event model, service topology, test matrix locked before any serious prompting.
+- **Prompt rejection workflow** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Structured rejection with reason + nearest-valid-operation.
+- **Reality check protocol** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — User puts claim by ChatGPT, checks against real-life observation, stores divergence.
+- **Recording session lifecycle (record-twice/three, mouth-noise abort)** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Per-take procedural rules.
+- **Selection-and-instantiator prompt role** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — `$PROMPT_ROLE := selector-and-instantiator` as governing policy.
+- **Take selection workflow (select / hold / reject / retake)** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Disambiguated status assignment after every take.
+- **Testing matrix (parsing/version/render/hearing)** — *defined* — first in `dt-07-008--preconsidered-prompt-readiness.md` — Minimum test matrix gating the prompting phase.
+- **Three-section translation (A/B/C)** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Mapping play screenshots to recognizable / recurrent / distributed sections.
+- **Three-tier voice quality plan** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — travel-tier / house-tier / production-tier.
+- **TTS latency mitigation via cache** — *defined* — first in `dt-08-004--voice-synthesis-injectability.md` — Sample-cache mode to avoid network delay in live demos.
+- **Voice library workflow (record-once-travel-with-pack)** — *defined* — first in `dt-08-006--theatre-company-voice-on-travel.md` — Quiet controlled setting, archive, travel pack, no on-road recording.
+
+## Anything else (open category)
+- **`$ARCHIVE_DRIVE` / `$ARCHIVE_ROOT`** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Capture-session control variables locating the company voice library on disk.
+- **Audit rule** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Charter §15: every nontrivial prompt operation produces an audit record.
+- **Attribution invariant** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — No spoken unit may become unattributed in committed state.
+- **Boundary invariant** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — No prompt may smuggle unrelated production-management domains (costume, payroll, ticketing) into system scope.
+- **Cluster code** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Compact label form for tracker cell contents.
+- **Consent status** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — Capture-sheet column tracking performer permission state.
+- **Derived artifact invariant** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Renders, diagnostics, share links do not become domain truth just because a prompt made them.
+- **Deterministic render invariant** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Saved version + identical settings → substantially same playback timing.
+- **Dual-aspect invariant** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Prompts may not reduce language to meaning-only or timing-only.
+- **`EM` (tracker command)** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Emphasis / gain boost cell command.
+- **`$ERROR_CLASS`** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Discrepancy-engine field; enumerated taxonomy.
+- **Field-to-field comparison** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Structural method ensuring auditability.
+- **Framing-bias error** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Error class where user's own framing biases the system before the check.
+- **Governing sentence (charter §2)** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — "Prompts do not define the system. Prompts select and instantiate operations within the system."
+- **Hardcoded demo dataset** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Pre-baked tracker score for the friend-demo rather than parsed from screenshots.
+- **Magnetic policy (constrained-by-domain)** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — `$PROMPT_FREEDOM_POLICY := constrained-by-domain`.
+- **Mode selector (tracker)** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — UI control switching between readable/cluster/dispersal passages.
+- **Noise status** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — `clean / minor-noise / bad-noise`.
+- **`OV` (tracker command)** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Overlap-enable cell command.
+- **`PA` (tracker command)** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Pause-after-event cell command.
+- **`PN` (tracker command)** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Pan cell command.
+- **`$PROMPTS_SHALL_NOT_DEFINE_THE_SYSTEM`** — *defined* — first in `dt-08-008--prompt-freedom-reduction.md` — Codified slogan/policy directive.
+- **`$PROMPTS_SHALL_SELECT_WITHIN_THE_SYSTEM`** — *defined* — first in `dt-08-008--prompt-freedom-reduction.md` — Companion codified directive.
+- **`$PROMPT_FREEDOM_POLICY`** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Charter §6.3.
+- **`$PROMPT_READYNESS_CHECKLIST`** — *undefined* — first in `dt-07-008--preconsidered-prompt-readiness.md` — Flagged as next-step artifact but never specified.
+- **`$PROMPT_ROLE`** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Charter §6.1; selector-and-instantiator.
+- **`$PROTO_01` (Max)** — *defined* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — Named Max-first proof: four voice channels, tracker grid, phrase triggers, tempo map, repeat commands, conductor transport, TTS/prerecorded speech.
+- **`$PROTO_02` (SuperCollider)** — *defined* — first in `dt-08-002--max-msp-supercollider-feasibility.md` — Named SC-first proof: row-based phrase-event sequencer with deterministic timing, pattern repetition, phase displacement.
+- **`$PROTO_PLAY_01`** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — The named demo Max patch (four lanes, ~64-128 rows, three section states).
+- **`$REALITY_CHECK_ENGINE` canonical definition** — *defined* — first in `dt-09-001--discrepancy-engine-design.md` — Compares modeled claims vs reality, classifies divergences, aggregates patterns.
+- **`$REQUEST_TYPE` / `$ALLOWED_FIELDS` / `$REQUIRED_FIELDS` / `$DEFAULTS` / `$VALIDATION_RULES` / `$FAILURE_CODES` / `$SIDE_EFFECTS` / `$EVENTS_EMITTED`** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Charter §10 required contract fields.
+- **`RP` (tracker command)** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Repeat-count cell command.
+- **`CU` (tracker command)** — *defined* — first in `dt-08-003--dialogue-cluster-tracker-demo.md` — Cue-another-lane cell command.
+- **`$STATE_MUTATION_POLICY`** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Charter §6.4; eventful-and-validated.
+- **`$SYSTEM_PREPARATION_POLICY`** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Charter §6.2; ontology-first.
+- **`$STYLE_CLASS` controlled vocabulary** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — neutral-rehearsal, measured-stage, heightened-stage, narration-clean, tracker-shortform.
+- **`$TAKE_STATUS` controlled vocabulary** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — pending, recorded, selected, rejected, needs-retake, processed, trained, verified.
+- **`$TEST_GATE_POLICY`** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — Charter §6.5; mandatory-for-trusted-effects.
+- **`$TIER` controlled vocabulary** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — travel-tier, house-tier, production-tier.
+- **`$USAGE_SCOPE` controlled vocabulary** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — internal-training-only, internal-demo-only, internal-production-dev, client-demo-restricted, public-release-prohibited, public-release-approved, research-only.
+- **Version immutability invariant** — *defined* — first in `dt-08-009--prompt-governance-charter.md` — No prompt may mutate an existing immutable version.
+- **`$VOICE_PROVIDER_MODE`** — *defined* — first in `dt-08-004--voice-synthesis-injectability.md` — Switch among sample_cache / live_tts / hybrid backends.
+- **`$VOICE_PROFILE_ID` naming rule** — *defined* — first in `dt-08-007--theatre-voice-capture-sheet.md` — `actor__styleclass__tier__revision` shape.

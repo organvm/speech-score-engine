@@ -1,0 +1,330 @@
+# Era 1: Definition / Formalization (dt-01 → dt-04)
+
+## Components / Services / Modules
+
+- **Analysis Engine** — *defined* — first in `dt-01-002--formalize-system-concept.md` — dramaturgical diagnostic layer for pacing drag, low speaker differentiation, broken interruption logic, rhythm monotony; canonical replacement for "AI critique."
+- **Application API** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `apps/api/` Fastify-equivalent service owning auth, scene CRUD, parsing orchestration, version creation, diagnostics, share, render dispatch.
+- **Archive and Export Layer** — *defined* — first in `dt-01-002--formalize-system-concept.md` — stores work as human-legible document and machine-readable composition object; exports PDF, audio, JSON, captions.
+- **Artifact Storage Service** — *mentioned* — first in `dt-03-006--repository-blueprint-handoff.md` — `apps/worker/src/services/artifact-storage.service.ts`; render output persistence boundary.
+- **Audio Assembly Pipeline** — *mentioned* — first in `dt-03-006--repository-blueprint-handoff.md` — worker pipeline (`audio-assembly.ts`) combining rendered voice segments into the final composite asset.
+- **Audit Event Scaffolding** — *defined* — first in `dt-03-005--product-design-systems-package.md` — telemetry/event-store table `audit_event` capturing scene, parse, version, render, diagnostic, share actions.
+- **Browser Client** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `apps/web/`; owns workspace, dashboard, parse review, diagnostics panel, version history, comparison, share view.
+- **Cleanup Assets Job** — *mentioned* — first in `dt-03-006--repository-blueprint-handoff.md` — worker job (`cleanup-assets.job.ts`) for asset retention.
+- **Client SDK** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `packages/client-sdk/`; shared API client functions and request/response types preventing endpoint drift.
+- **Composition Layer** — *defined* — first in `dt-01-002--formalize-system-concept.md` — authoring environment where users write text, assign voices, fragment lines into phrase-events, declare recurrence rules.
+- **Conductor View** — *defined* — first in `dt-01-002--formalize-system-concept.md` — live control output for entries, pulse, holds, branch points.
+- **Config Package** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `packages/config/`; env parsing, typed configuration, runtime config logic.
+- **Database Package** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `packages/database/`; schema, migrations, ORM/query layer, repository abstractions, seeds, transaction helpers.
+- **Diagnostic Panel** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — UI surface exposing scene structure metrics and weak-point candidates.
+- **Diagnostics Service** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — TS service contract (`DiagnosticsService.generate`) producing `GenerateDiagnosticsResult` reports.
+- **Dialogue Listening Workbench** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — Product Layer One; accessible commercial entry point where a writer pastes a scene and immediately hears it back.
+- **Domain Package** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `packages/domain/`; core domain model, schemas, value objects, enums, parsers, event names.
+- **Generate Diagnostics Job** — *mentioned* — first in `dt-03-006--repository-blueprint-handoff.md` — worker job (`generate-diagnostics.job.ts`) for async report generation.
+- **Kinetic Text Render** — *defined* — first in `dt-01-002--formalize-system-concept.md` — projection or motion-based visual text output for installation/screen forms.
+- **Live Execution Layer** — *defined* — first in `dt-01-002--formalize-system-concept.md` — real-time performance coordination with conductor view, countdown, tempo map, monitor prompts.
+- **Live Prompt View** — *defined* — first in `dt-01-002--formalize-system-concept.md` — monitor-safe text display for performers during workshop or performance.
+- **Machine Score Object** — *defined* — first in `dt-01-002--formalize-system-concept.md` — JSON-like structured score output for software reuse, archival search, recomposition.
+- **Notation Renderer** — *defined* — first in `dt-01-002--formalize-system-concept.md` — produces readable script view, rhythmic score view, spatial matrix view, performer-specific part view.
+- **Observability Package** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `packages/observability/`; structured logging, audit emitters, telemetry wrappers, tracing.
+- **Phrase Event Model** — *defined* — first in `dt-01-002--formalize-system-concept.md` — canonical data structure storing utterances with text, voice, start/duration/repeat/overlap/emphasis/transform/spatial rules and semantic tags.
+- **Playback Transport** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `apps/web/src/components/playback-transport/`; first-class architectural unit for transport controls.
+- **Polyphonic Performance Engine** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — Product Layer Two; deeper compositional system for layered voices, staggered repetition, score-like works.
+- **Provider Adapters Layer** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — abstracts voice providers, blob storage, future waveform-generation services; prevents vendor coupling.
+- **Public Share Layer** — *defined* — first in `dt-03-005--product-design-systems-package.md` — read-only external artifact endpoint with playback, text, diagnostics.
+- **Readable Script** — *defined* — first in `dt-01-002--formalize-system-concept.md` — literary-readable output view for writers, readers, archives.
+- **Reason Tracker** — *alluded* — first in `dt-02-001--predict-system-from-photos.md` — implied by "sequencer" / "voices as tracks" framing of $VOCAL_SEQUENCER_FOR_THEATRE option.
+- **Rehearsal Kernel** — *defined* — first in `dt-01-002--formalize-system-concept.md` — translates score objects into cue sheets, click guides, count-ins, practice stems, loop studies, section isolations.
+- **Rehearsal Pack** — *defined* — first in `dt-01-002--formalize-system-concept.md` — export bundle containing performer parts, cue sheets, count maps, loop drills.
+- **Render Dispatch Service** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — TS contract (`RenderDispatchService.requestRender`) creating queued render jobs.
+- **Render Pipeline** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — worker pipeline (`render-pipeline.ts`) converting version snapshots into audio artifacts.
+- **Render Scene Job** — *mentioned* — first in `dt-03-006--repository-blueprint-handoff.md` — worker job (`render-scene.job.ts`) consuming render requests.
+- **Render Status Service** — *mentioned* — first in `dt-03-006--repository-blueprint-handoff.md` — worker service (`render-status.service.ts`) tracking render lifecycle.
+- **Render Worker** — *defined* — first in `dt-03-005--product-design-systems-package.md` — async queue-backed worker for render jobs; `apps/worker/` in repo blueprint.
+- **Rhythmic Score** — *defined* — first in `dt-01-002--formalize-system-concept.md` — measure-aligned or beat-aligned notation output for rehearsal and formal composition.
+- **Scene Editor Component** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `apps/web/src/components/scene-editor/`; first-class web architectural unit.
+- **Scene Parser Service** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — TS contract (`SceneParserService.parse`) producing `ParseSceneResult` from raw text.
+- **Share Link Service** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `apps/api/src/services/share-link.service.ts`; share-token generation and revocation.
+- **Spatial Text Score** — *defined* — first in `dt-01-002--formalize-system-concept.md` — visual-field output where typography and distribution carry instruction.
+- **Speaker Panel** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `apps/web/src/components/speaker-panel/`; first-class component for speaker management.
+- **Stemmed Audio Render** — *defined* — first in `dt-01-002--formalize-system-concept.md` — output of isolated voice channels, click track, composite mix.
+- **Table Read Audio** — *defined* — first in `dt-01-002--formalize-system-concept.md` — rapid auditory draft for dramaturgical listening; identified as clearest commercial entry point.
+- **Timeline Component** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `apps/web/src/components/timeline/`; speaker timeline visualization.
+- **Timing Substrate** — *defined* — first in `dt-01-002--formalize-system-concept.md` — temporal kernel supporting clock, beat, relative cue, and elastic time.
+- **UI Package** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `packages/ui/`; reusable UI components, transport controls, diagnostics cards, version history widgets.
+- **Version History Component** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `apps/web/src/components/version-history/`; revision-states UI.
+- **Versioning Service** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — TS contract (`VersioningService.createVersion` / `restoreVersion`) owning atomic version-snapshot transactions.
+- **Voice Engine** — *defined* — first in `dt-01-002--formalize-system-concept.md` — manages voice identity; distinguishes character identity from voice-channel identity.
+- **Voice Provider Adapter** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — TS contract (`VoiceProviderAdapter.render`) isolating vendor voice APIs.
+
+## Concepts / Frameworks / Theories
+
+- **Adaptation Layer** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — the unnamed conceptual layer the user recognizes in the *Philip Glass* piece's success.
+- **Alternation Density** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — diagnostic metric for speaker-turn frequency; used in flag examples (e.g. `0.41`).
+- **Analog-Digital Parity** — *defined* — first in `dt-01-002--formalize-system-concept.md` — invariant six: works must remain extractable for analog rehearsal/performance, not require the software.
+- **Analog-Digital Symmetry** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — dual-form system principle; analog rehearsal protocol + digital editor/sequencer.
+- **Attributability Invariant** — *defined* — first in `dt-01-002--formalize-system-concept.md` — every utterance must have a definite source channel (invariant two).
+- **Audio-First Theatre** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — works performable live AND renderable as sound-first artifacts.
+- **Audio-Form Problem** — *defined* — first in `dt-01-001--predict-system-from-photos.md` — the user's framing of the source material's central operative problem.
+- **Beat Time** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — one of four timing-substrate modes (alongside clock, relative cue, elastic).
+- **Canonical Project Definition** — *defined* — first in `dt-04-002--canonical-project-definition.md` — strict formal definition of $SPEECH_SCORE_ENGINE with scope, terminology, exclusions, naming.
+- **Choral Grouping** — *mentioned* — first in `dt-03-003--user-types-mvp-boundary.md` — Layer 4 feature; voice-collective composition technique.
+- **Choreography of Speech** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — advanced-user practice category.
+- **Click Track** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — referenced from WhatsApp exchange; one of the user's framing questions about source material.
+- **Clock Time** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — one of four timing-substrate modes.
+- **Compositional Timing** — *defined* — first in `dt-01-002--formalize-system-concept.md` — measure-count, subdivision, phase-offset triggering — opposed to literary timing.
+- **Controlled Emergence** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — rule-based, semi-independent channels producing patterned-emergence whole.
+- **Controlled Indeterminacy Invariant** — *defined* — first in `dt-01-002--formalize-system-concept.md` — variability must be declared as rule, range, or probability envelope (invariant eight).
+- **Coordinated Vocal Action** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — what the source-material text becomes when read as notation rather than script.
+- **Diagnostic Mode** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — listening mode for surfacing likely weaknesses in scene construction.
+- **Dramatic-Audio Dialectic** — *alluded* — first in `dt-03-002--dramaturgical-product-frame.md` — opposition between dramaturgical listening and generic TTS framing.
+- **Dramaturgical Composition System** — *defined* — first in `dt-01-001--predict-system-from-photos.md` — earliest formal name for the build target; sits at the intersection of theatre, music, sound poetry, notation, sequencing.
+- **Dramaturgical Data Structure** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — Moat Layer 1; structured temporal object composed of speaker identity, turn relation, pause logic, interruption potential, rhythmic profile.
+- **Dramaturgical Software** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — proposed commercial category the product can occupy.
+- **Dramaturgical-Audio Workbench** — *defined* — first in `dt-01-002--formalize-system-concept.md` — canonical product-surface descriptor; accessible commercial surface.
+- **Dual-Aspect Invariant** — *defined* — first in `dt-01-002--formalize-system-concept.md` — language must preserve both semantic meaning and temporal behavior (invariant one).
+- **Dual-Aspect Test** — *defined* — first in `dt-04-003--terminology-charter.md` — naming test: term must preserve both meaning and timed performance.
+- **Elastic Time** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — one of four timing-substrate modes; free elastic time.
+- **Execution Architecture** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — framing of attention as infrastructural rather than literary.
+- **Exposition Cluster Detection** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — diagnostic flag for exposition-heavy passages.
+- **Feature Ladder** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — progression Layer 1 (auditory utility) → Layer 5 (rehearsal/live execution).
+- **First Provisional Names (Option A/B/C)** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — three named candidate forms: $POLYPHONIC_PLAYWRITING_SYSTEM, $VOCAL_SEQUENCER_FOR_THEATRE, $THEATRICAL_MUSIC_OS.
+- **Foundational Data Model Decision** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — system must store scenes as structured temporal dialogue objects, not plain documents.
+- **Hearing for Realism / Theatricality / Pace / Musicality / Interruption / Repetition / Ensemble Texture** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — seven enumerated listening modes the product must support.
+- **Human Override Invariant** — *defined* — first in `dt-01-002--formalize-system-concept.md` — invariant seven: conductor/director/performers can override timing without state failure.
+- **Human Sequencing** — *defined* — first in `dt-01-001--predict-system-from-photos.md` — the regime adopted by the dramatic source-material when phrases split into atoms.
+- **Hybrid Dramaturgical Manifesto/Spec** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — one of three predicted next-concrete-artifact possibilities.
+- **Interruption Modeling** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — Layer 3 performance-modeling feature for interruption logic.
+- **Jobs-to-Be-Done** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — six jobs: Functional, Diagnostic, Revision, Interpretive, Collaborative, Compositional.
+- **Linguistic Choreography** — *defined* — first in `dt-01-001--predict-system-from-photos.md` — core operation: language reorganized through repetition into pattern/event.
+- **Listening-First Software** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — preferred positioning over "AI voices for playwrights."
+- **Listening-First Revision Environment** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — sharpest commercial-surface formulation; durable category.
+- **Literary Timing** — *defined* — first in `dt-01-002--formalize-system-concept.md` — cue-from-preceding-line triggering; opposed to compositional timing.
+- **Long Monologue Run** — *defined* — first in `dt-03-005--product-design-systems-package.md` — diagnostic flag type appearing in `flags[]` payloads.
+- **Loop Field** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — one of four passage behaviors (alongside dialogue, counterpoint, dispersive text matrix).
+- **MVP Boundary** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — drawn around the listening-and-revision proposition; excludes polyphonic overlap, live cueing, classroom admin, etc.
+- **Minimalist Speech-Performance Engine** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — compressed prediction; hybrid analog-digital system where spoken language behaves like composed music.
+- **Moat Thesis** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — domain-specific temporal model of dramatic language; five moat layers.
+- **Movement (compositional)** — *defined* — first in `dt-01-002--formalize-system-concept.md` — collection of passages; intermediate aggregation level above passage and below work.
+- **Non-Commodification Test** — *defined* — first in `dt-04-003--terminology-charter.md` — naming test: avoid collapsing product into commodity voice tooling.
+- **Notation Environment for Coordinated Vocal Action** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — what dramatic text becomes when read as voice-distribution matrix and iterative phrase field.
+- **Passage** — *defined* — first in `dt-01-002--formalize-system-concept.md` — collection of phrase-events; intermediate aggregation level.
+- **Phase Composition** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — minimalist-music framing of how text behaves in the source material.
+- **Phrase Event** — *defined* — first in `dt-01-002--formalize-system-concept.md` — primary compositional unit; bounded utterance with semantic, temporal, relational properties.
+- **Polyphonic Speech Design** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — Moat Layer 4 expansion from natural dialogue into formal composition.
+- **Polyphony Mode** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — listening mode for overlapping or layered structures.
+- **Polyvocal Speech-Composition Engine** — *defined* — first in `dt-04-002--canonical-project-definition.md` — canonical deep-system descriptor.
+- **Polyvocal Speech Works** — *defined* — first in `dt-01-002--formalize-system-concept.md` — works whose text, timing, recurrence, vocal distribution are interoperable across analog and digital forms.
+- **Post-Script Performance OS** — *mentioned* — first in `dt-02-001--predict-system-from-photos.md` — alternative ontological designation; one of seven naming candidates.
+- **Post-Script Theatrical Composition Environment** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — strongest prediction of build category; permitted secondary designation per charter.
+- **Product Staircase** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — strategy of leading with listening surface and revealing compositional depth from inside.
+- **Recurrence (as compositional operation)** — *defined* — first in `dt-01-002--formalize-system-concept.md` — first-class structural operation distinct from accidental duplication.
+- **Rehearsal Pack** — *defined* — first in `dt-01-002--formalize-system-concept.md` — see also Components section; conceptually defined here as export bundle.
+- **Relative Cue Time** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — one of four timing-substrate modes.
+- **Repeatable Form** — *defined* — first in `dt-01-001--predict-system-from-photos.md` — the user's mindset goal contrasted with consuming a one-off work.
+- **Repetition First-Class Invariant** — *defined* — first in `dt-01-002--formalize-system-concept.md` — invariant three: repetition has count, spacing, transformation, termination.
+- **Revision Intelligence** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — Moat Layer 2; heuristics/models tuned to performability.
+- **Rhythm Mode** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — listening mode for timing and pause analysis.
+- **Score-Native Theatre System** — *defined* — first in `dt-01-001--predict-system-from-photos.md` — one of three formulation candidates ("speech-music dramaturgy engine"; "compositional environment for micro-plays").
+- **Semantic Decay** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — transform-rule mode where repeated phrase decays semantically.
+- **Silence Invariant** — *defined* — first in `dt-01-002--formalize-system-concept.md` — invariant four: silence/pauses/holds are encoded objects, not absences.
+- **Speech-Music Dramaturgy Engine** — *defined* — first in `dt-01-001--predict-system-from-photos.md` — one of three early formulation candidates.
+- **Speech-Performance Operating Environment** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — composable speech-performance OE; "not just a play, not just music, not just software."
+- **Speech-Score Composition System** — *defined* — first in `dt-04-001--gap-analysis-and-merge.md` — canonical master name; merged synthesis of "aa" and "ab" takes.
+- **Subdivision (timing)** — *mentioned* — first in `dt-02-001--predict-system-from-photos.md` — one of the cue-logic/click-logic/algorithmic-alignment timing primitives.
+- **Subtextual Pressure** — *mentioned* — first in `dt-03-002--dramaturgical-product-frame.md` — diagnostic dimension distinguishing system from TTS.
+- **Synchronized Line Highlighting** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — text-audio synchronization UI requirement.
+- **Table Read Mode** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — listening mode for ordinary dramatic hearing.
+- **Temporal Drama Machine** — *mentioned* — first in `dt-02-001--predict-system-from-photos.md` — naming candidate (`$TEMPORAL_DRAMA_MACHINE`).
+- **Temporal Grid** — *mentioned* — first in `dt-02-001--predict-system-from-photos.md` — what dramatic text-block becomes under the user's reading regime.
+- **Temporal Performance Modeling** — *defined* — first in `dt-03-005--product-design-systems-package.md` — governing principle stated at the head of the system-design package.
+- **Temporal Relation** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — primary organizing principle (vs. plot); canonized in `dt-04-002`.
+- **Temporal Vocal Event** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — what dialogue actually is: not a visual object but an enacted-time event.
+- **Temporal Writing Intelligence** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — moat-positioning term; durable category for dramatic language.
+- **Terminology Charter** — *defined* — first in `dt-04-002--canonical-project-definition.md` — foreshadowed; instantiated in `dt-04-003`.
+- **Theatre as Rhythmic Machine** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — convergence layer 2: synchronization with musical rigor without becoming musical theatre.
+- **Theatrical-Musical Composition System** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — initial high-level naming of the build target.
+- **Theatrical Music OS** — *mentioned* — first in `dt-02-001--predict-system-from-photos.md` — Option C in three-candidate set; larger platform unifying writing, notation, cueing, rehearsal, audio, live, archive.
+- **Translation Test** — *defined* — first in `dt-04-003--terminology-charter.md` — naming test: term must remain valid across page, audio, rehearsal, live execution.
+- **Translatability Invariant** — *defined* — first in `dt-01-002--formalize-system-concept.md` — invariant five: a work must be renderable as readable score, audible mockup, and live-executable structure.
+- **Two-Layer Distinction (surface/depth)** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — Product Layer One sells, Product Layer Two becomes the moat.
+- **Typographic Dramaturgy** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — layout itself as instruction; layer 1 of the convergence.
+- **Visual Score** — *defined* — first in `dt-01-001--predict-system-from-photos.md` — what the dramatic page becomes when spatialized.
+- **Vocal Ritual Sequencer** — *mentioned* — first in `dt-02-001--predict-system-from-photos.md` — naming candidate (`$VOCAL_RITUAL_SEQUENCER`).
+- **Voice Channel** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — performer-not-only-as-character; canonized in `dt-04-002` as canonical performer carrier.
+- **Voice Distribution Matrix** — *mentioned* — first in `dt-02-001--predict-system-from-photos.md` — what the source-material's columns and repeated fragments become under the user's reading regime.
+
+## Tools / Technologies / External Systems
+
+- **Ableton** — *alluded* — first in `dt-02-001--predict-system-from-photos.md` — implied through "sequencer," "tracks," "clips" framing of $VOCAL_SEQUENCER_FOR_THEATRE.
+- **BullMQ** — *alluded* — first in `dt-03-005--product-design-systems-package.md` — implied by "queue-backed worker system" recommendation (made explicit later in scaffold).
+- **Biome** — *alluded* — first in `dt-03-006--repository-blueprint-handoff.md` — implied via "lint" CI step.
+- **Docker Compose** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `infrastructure/docker/` layer for Postgres, Redis, local object storage.
+- **FastAPI** — *mentioned* — first in `dt-03-005--product-design-systems-package.md` — listed as Python alternative for `$API_LAYER`.
+- **GitHub Actions** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `.github/workflows/ci.yml` CI pipeline.
+- **JSONB** — *defined* — first in `dt-03-005--product-design-systems-package.md` — Postgres JSON field used for `parsed_state`, `settings_snapshot`, `structural_tags`, `metrics`, `flags`.
+- **Kindle** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — source of photographs containing the spatialized dramatic-text pages.
+- **MinIO** — *mentioned* — first in `dt-03-006--repository-blueprint-handoff.md` — implied by `$OBJECT_STORAGE_ENDPOINT=http://localhost:9000` and `minio` credentials.
+- **Next.js** — *alluded* — first in `dt-03-006--repository-blueprint-handoff.md` — implied by `apps/web/src/app/` App Router-style directory structure.
+- **Node.js** — *mentioned* — first in `dt-03-005--product-design-systems-package.md` — listed as TS-stack option for the API layer.
+- **PostgreSQL** — *defined* — first in `dt-03-005--product-design-systems-package.md` — designated correct default DB; relational + JSONB + transactional version creation.
+- **React** — *defined* — first in `dt-03-005--product-design-systems-package.md` — recommended browser-first stateful component architecture.
+- **Redis** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — local infra (`$REDIS_URL=redis://localhost:6379`); job queue backing.
+- **REST API** — *defined* — first in `dt-03-005--product-design-systems-package.md` — chosen API style for MVP; async job semantics for renders.
+- **Terraform** — *mentioned* — first in `dt-03-006--repository-blueprint-handoff.md` — `infrastructure/terraform/` directory for production IaC anchor.
+- **Turbo / turbo.json** — *mentioned* — first in `dt-03-006--repository-blueprint-handoff.md` — workspace orchestrator at repo root.
+- **TypeScript** — *defined* — first in `dt-03-005--product-design-systems-package.md` — typed contracts for API layer; scoped naming convention (`$CONVENTION_03`).
+- **UUID** — *defined* — first in `dt-03-005--product-design-systems-package.md` — primary-key type across all tables.
+- **WebSocket** — *mentioned* — first in `dt-03-005--product-design-systems-package.md` — flagged as post-MVP option for real-time render progress.
+- **WhatsApp** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — source of exchange photos with Christopher; signals attention to timing/synchronization.
+- **pnpm workspace** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `pnpm-workspace.yaml` at root; modular monorepo strategy.
+
+## People / Roles / Personas
+
+- **Actor** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — User Type #4; uses product to test cueing, pacing, overlap risk, breath logic, emphasis.
+- **Adapter (writer)** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — buyer case: converts prose/essay/archive/theory into performable speech.
+- **Christopher** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — interlocutor in WhatsApp exchange about source material; reference person, not a project role.
+- **Composer** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — advanced-user category.
+- **Conductor** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — implied performance role from "how is this conducted?"
+- **David Ives** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — playwright of *Philip Glass Buys a Loaf of Bread*; named source-material author.
+- **Devising Ensemble** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — listed among immediate users.
+- **Director** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — User Type #3; uses product as pre-rehearsal interpretive environment.
+- **Dramaturg** — *defined* — first in `dt-01-002--formalize-system-concept.md` — primary high-value user; canonized as User Type #2 in `dt-03-003`.
+- **Experimental Performance Maker** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — User Type #6; uses deep engine for choral language, ritual text, distributed speech events.
+- **Installation Artist** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — advanced-user category.
+- **Narrator** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — speaker subtype for stage-direction voicing; "narrator-equivalent playback assignment."
+- **Philip Glass** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — composer named in source-material work title and `VOICE C = GLASS` example.
+- **Playwright** — *defined* — first in `dt-01-002--formalize-system-concept.md` — primary initial user; canonized as User Type #1 in `dt-03-003`.
+- **Screenwriter / Narrative Writer** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — User Type #7; later-expansion user concerned with dialogue clarity and pace.
+- **Sound Artist** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — advanced-user category.
+- **Speaker (system actor)** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$OBJECT_SPEAKER` entity representing speaking entity in the scene (character, narrator, chorus unit).
+- **Stage Manager** — *mentioned* — first in `dt-03-003--user-types-mvp-boundary.md` — Layer 5 feature mentions "stage-manager view."
+- **Teacher / Workshop Leader** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — User Type #5; institutional buyer in pedagogical settings.
+
+## Document Types / Artifacts
+
+- **ADR (Architecture Decision Record)** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `docs/adr/` directory with numbered records (`0001-monorepo-decision.md` etc.).
+- **Annotated Wireframe Description** — *defined* — first in `dt-03-005--product-design-systems-package.md` — screen-by-screen prose specs (sections `$SCREEN_01` … `$SCREEN_10`).
+- **API Contracts Doc** — *mentioned* — first in `dt-03-006--repository-blueprint-handoff.md` — `docs/architecture/005-api-contracts.md`.
+- **Architecture Doc Series** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — numbered `001-system-context.md` through `005-api-contracts.md`.
+- **Audit Event** — *defined* — first in `dt-03-005--product-design-systems-package.md` — domain-event record persisted in `audit_event` table; emitted per scene/parse/version/render/diagnostic/share action.
+- **Canvas (ChatGPT)** — *mentioned* — first in `dt-04-001--gap-analysis-and-merge.md` — referenced via project materials and filecite markers in merge response.
+- **Click Guide** — *defined* — first in `dt-01-002--formalize-system-concept.md` — practical rehearsal artifact output by `$REHEARSAL_KERNEL`.
+- **Compositional Manifesto** — *alluded* — first in `dt-01-001--predict-system-from-photos.md` — "hybrid dramaturgical manifesto/spec defining a new genre."
+- **Cue Sheet** — *defined* — first in `dt-01-002--formalize-system-concept.md` — rehearsal artifact output by `$REHEARSAL_KERNEL`.
+- **Diagnostic Report** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$OBJECT_DIAGNOSTIC_REPORT` capturing summary + `$FLAG_SET` for a scene version.
+- **Diff Highlighting (text)** — *defined* — first in `dt-03-005--product-design-systems-package.md` — feature on `$SCREEN_09_COMPARE_VERSIONS`.
+- **Doc Artifact ID** — *defined* — first in `dt-04-003--terminology-charter.md` — `<domain-subject>_<artifact-class>_<YYYYMMDD>` form; matches existing document style.
+- **Lexicon and Style Guide** — *defined* — first in `dt-04-003--terminology-charter.md` — repo-document promised at end of terminology charter; instantiated in `dt-04-004`.
+- **Migration Stub (SQL)** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — six numbered `.sql` files (`0001_init_users_projects_scenes.sql` … `0006_add_audit_events.sql`).
+- **MVP Spec** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — formal MVP specification document with `$PRODUCT_ID`, `$MVP_INTENT`, `$MVP_SCOPE`, etc.
+- **Performer Part View** — *defined* — first in `dt-01-002--formalize-system-concept.md` — one of four notation-renderer output views.
+- **Playback Render** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$OBJECT_PLAYBACK_RENDER` representing a generated audio rendering of the scene or segment.
+- **Product-Design and Systems Package** — *defined* — first in `dt-03-005--product-design-systems-package.md` — formal artifact extending MVP spec into normalized schema, wireframes, API, events, phased plan.
+- **ProjectSave** — *alluded* — first in `dt-04-001--gap-analysis-and-merge.md` — ChatGPT project records referenced through filecite turns; not literally named in Era 1 but conceptually adjacent.
+- **Render Profile** — *defined* — first in `dt-03-005--product-design-systems-package.md` — packages user-selectable playback behavior (neutral table read, heightened read, rhythm-forward).
+- **Repository Blueprint and Handoff Package** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — implementation-ready repo blueprint with service boundaries, migrations, contracts, and handoff paragraph.
+- **Scene Version (entity)** — *defined* — first in `dt-03-005--product-design-systems-package.md` — canonical immutable revision unit; `scene_version` table.
+- **Share Link** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$OBJECT_SHARE_LINK` shareable read-only review artifact.
+- **System Concept Doc** — *defined* — first in `dt-01-002--formalize-system-concept.md` — formal `$SPEECH_SCORE_ENGINE` concept with components, invariants, notation rules, candidate outputs.
+- **Tempo Map** — *defined* — first in `dt-01-002--formalize-system-concept.md` — live-execution-layer artifact for performance.
+- **Terminology Charter Doc** — *defined* — first in `dt-04-003--terminology-charter.md` — enforceable language policy with approved/forbidden terms, alias mappings, conventions, enforcement order.
+- **Timing Map** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — collaborative-job artifact for shared review.
+- **Version (entity)** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$OBJECT_VERSION` saved revision state with text snapshot, parsed snapshot, settings snapshot.
+- **Version Line** — *defined* — first in `dt-03-005--product-design-systems-package.md` — normalized `version_line` row holding speaker, line_index, text_content, pause, emphasis, duration, structural tags.
+- **Voice Profile** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$OBJECT_VOICE_PROFILE` with provider key, model key, label, timbre, gender presentation, speech rate, pitch offset, pause style.
+- **Waveform Asset** — *defined* — first in `dt-03-005--product-design-systems-package.md` — derived asset stored alongside audio; `waveform_uri` field on render rows.
+
+## Methodologies / Processes / Workflows
+
+- **Alpha → Beta Phased Implementation Plan** — *defined* — first in `dt-03-005--product-design-systems-package.md` — six phases: $PHASE_ALPHA_0_FOUNDATION → $PHASE_BETA_OPENING.
+- **Atomic Version Creation Transaction** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — atomic read → snapshot → normalize → estimate → emit event; lives at `packages/database/src/transactions/create-scene-version.transaction.ts`.
+- **CI/CD Blueprint** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — install / typecheck / lint / unit / integration / migration-validation pipeline.
+- **Compositional Job Workflow** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — JTBD #6: help me write language as score, not only as dialogue.
+- **Diagnostic Job Workflow** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — JTBD #2: help me identify what is failing once heard.
+- **Domain Event Naming Convention** — *defined* — first in `dt-03-005--product-design-systems-package.md` — `noun.action.state` pattern (e.g. `version.created`, `render.completed`).
+- **Event Model for Playback/Render/Version** — *defined* — first in `dt-03-005--product-design-systems-package.md` — behavioral skeleton; full event catalog with playback, render, version, parse, diagnostic, share families.
+- **Flow: Adjust Voices and Timing** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$FLOW_ADJUST_VOICES_AND_TIMING`; alter feel without rewriting scene.
+- **Flow: Compare Versions** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$FLOW_COMPARE_VERSIONS`; structural revision legibility.
+- **Flow: Create and Hear Scene** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$FLOW_CREATE_AND_HEAR_SCENE`; primary MVP flow.
+- **Flow: Inspect Scene Structure** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$FLOW_INSPECT_SCENE_STRUCTURE`; active dramaturgical inspection.
+- **Flow: Revise Text Against Audio** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$FLOW_REVISE_TEXT_AGAINST_AUDIO`; core value loop.
+- **Flow: Share for Review** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$FLOW_SHARE_FOR_REVIEW`; supports collaborator review without editing access.
+- **Functional Requirement Inventory** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — twelve `$FR_*` requirements: script input, parsing, speaker management, voice assignment, playback, timing, diagnostics, versioning, share, project org, persistence, performance.
+- **Gap-Analysis Merge Method** — *defined* — first in `dt-04-001--gap-analysis-and-merge.md` — isolate overlap, isolate delta, collapse into tighter unified statement; explicit method note in segment 1.
+- **Implementation Order (build sequence)** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — schema/contracts → web flows → version creation → render → diagnostics → share/compare.
+- **Listening-and-Revision Loop** — *defined* — first in `dt-03-005--product-design-systems-package.md` — implementation-principle sequencing law: prove this loop before expanding to sophisticated theatrical composition.
+- **Minimum Testing Matrix** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — parsing trust + version integrity + render lifecycle correctness; layout `test/integration/parsing/`, `versioning/`, `rendering/`, `e2e/scene-hearing-loop/`.
+- **Modular Monorepo Strategy** — *defined* — first in `dt-03-006--repository-blueprint-handoff.md` — `$REPOSITORY_STRATEGY`; chosen because layers evolve together early.
+- **Naming Tests (4-test gate)** — *defined* — first in `dt-04-003--terminology-charter.md` — Dual-aspect, Depth, Non-commodification, Translation tests for new terms.
+- **PR Review Checklist** — *alluded* — first in `dt-04-004--lexicon-and-style-guide.md` — promised as section in the Lexicon and Style Guide repo document.
+- **Phased Implementation Plan** — *defined* — first in `dt-03-005--product-design-systems-package.md` — see Alpha → Beta entry.
+- **Premortem (Risk Inventory)** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — $MVP_RISKS section: dressed-up TTS, render latency, parser brittleness, overclaim, premature avant-garde.
+- **Scene Parsing Workflow** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$FR_SCRIPT_PARSING`; heuristic, transparent, correctable.
+- **Strict-Terminology Enforcement Rule** — *defined* — first in `dt-04-003--terminology-charter.md` — priority order: $GOVERNING_SENTENCE → $CANONICAL_IDENTITY → $APPROVED_TERMS → $ALIAS_MAPPINGS → product-surface simplifications.
+- **Success-Metrics Framework** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — time-to-first-playback, replay frequency, revisions/session, diagnostic engagement, share-link creation, return usage.
+- **Voice Preview Workflow** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `$FR_VOICE_ASSIGNMENT`: preview individual voice before applying scene-wide.
+
+## Anything else (open category)
+
+- **Account Plan** — *defined* — first in `dt-03-005--product-design-systems-package.md` — `account_plan` column on `app_user`; supports pricing controls, render quotas, collaboration gating.
+- **Acceptance Threshold (per-phase)** — *defined* — first in `dt-03-005--product-design-systems-package.md` — each $PHASE_* defines a concrete acceptance condition.
+- **Accumulate (transform rule)** — *defined* — first in `dt-01-002--formalize-system-concept.md` — `ACCUMULATE(<new_material>)` repeat-rule mode.
+- **Alpha 0 Foundation** — *defined* — first in `dt-03-005--product-design-systems-package.md` — $PHASE_ALPHA_0_FOUNDATION; app shell, persistence, auth, scene model, parse pipeline.
+- **Alpha 1 First Hearing Loop** — *defined* — first in `dt-03-005--product-design-systems-package.md` — $PHASE_ALPHA_1_FIRST_HEARING_LOOP; voice assign, version, render, playback.
+- **Alpha 2 Revision Trust** — *defined* — first in `dt-03-005--product-design-systems-package.md` — $PHASE_ALPHA_2_REVISION_TRUST; version history, restore, compare.
+- **Alpha 3 Diagnostic Layer** — *defined* — first in `dt-03-005--product-design-systems-package.md` — $PHASE_ALPHA_3_DIAGNOSTIC_LAYER; lightweight dramaturgical inspection.
+- **Approved Pattern Families** — *defined* — first in `dt-04-002--canonical-project-definition.md` — speech-score, polyvocal, post-script, dramaturgical-audio, performance-writing, temporal writing intelligence.
+- **Branch (process)** — *mentioned* — first in `dt-03-001--predict-system-from-photos.md` — conversation title prefix "Branch · …"; ChatGPT branching mechanism.
+- **Canonical Expression Set** — *defined* — first in `dt-04-002--canonical-project-definition.md` — stable vocabulary core listing master name, identifier, descriptors, units.
+- **Canonical Identity Table** — *defined* — first in `dt-04-003--terminology-charter.md` — layered table mapping master system name, internal identifier, product-surface descriptor, etc.
+- **Canonical Pattern Families** — *defined* — first in `dt-04-002--canonical-project-definition.md` — see Approved Pattern Families.
+- **Convention #1–#8 (repo-wide)** — *defined* — first in `dt-04-003--terminology-charter.md` — eight naming conventions: system/ontology names, DB identifiers, TS types, file/dir, API paths, event names, env vars, doc artifact IDs.
+- **Counterpoint (compositional)** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — one of four passage behaviors.
+- **Density Field** — *mentioned* — first in `dt-02-001--predict-system-from-photos.md` — what text can become per the text-as-notation layer.
+- **Depth Test** — *defined* — first in `dt-04-003--terminology-charter.md` — naming test: term must scale to deeper system, not just MVP.
+- **Dispersive Text Matrix** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — one of four passage behaviors.
+- **Disprefered Pattern Families** — *defined* — first in `dt-04-002--canonical-project-definition.md` — AI voice, script reader, podcast engine, theatre chatbot, audio toy.
+- **Drift (ontological)** — *defined* — first in `dt-04-002--canonical-project-definition.md` — language drift to be prevented by canonical naming.
+- **Duration Rule Modes** — *defined* — first in `dt-01-002--formalize-system-concept.md` — `FREE_SPEECH`, `COUNTED(beats)`, `STRETCH(range)`, `RAPID_FIRE`, `SUSTAINED`, `CUT_SHORT_ON_NEXT_ENTRY`.
+- **Entry Rule Modes** — *defined* — first in `dt-01-002--formalize-system-concept.md` — `ON_CUE`, `AT_BEAT`, `AFTER`, `WITH`, `WHEN_COMPLETE`, `ON_CONDUCTOR_MARK`.
+- **Final Charter Statement** — *defined* — first in `dt-04-003--terminology-charter.md` — closing canonical statement of the charter.
+- **Flag Set** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — diagnostic-report field holding findings tied to line ranges.
+- **Forbidden Terms** — *defined* — first in `dt-04-003--terminology-charter.md` — table of rejected terms (TTS tool, voice generator, script reader, podcast engine, etc.) with replacements.
+- **Governing Sentence** — *defined* — first in `dt-04-003--terminology-charter.md` — "The system treats language as a dual-aspect object: semantic content and timed performance."
+- **Mythic Compression** — *mentioned* — first in `dt-04-001--gap-analysis-and-merge.md` — "text becomes music without ceasing to be language; theatre becomes programmable without ceasing to be live."
+- **N/A is a Vacuum** — *alluded* — first in `dt-04-001--gap-analysis-and-merge.md` — implicit in the gap-analysis impulse (every absence becomes a named item).
+- **Notation Rule Categories** — *defined* — first in `dt-01-002--formalize-system-concept.md` — `$UNIT_RULES`, `$VOICE_RULES`, `$ENTRY_RULES`, `$DURATION_RULES`, `$REPEAT_RULES`, `$OVERLAP_RULES`, `$TRANSFORM_RULES`, `$SPATIAL_RULES`.
+- **Object-Permanence Principle** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — non-functional requirement that scenes/versions/voices/diagnostics not feel ephemeral.
+- **One-Sentence Moat Thesis** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — "domain-specific temporal model of dramatic language that turns scripts into analyzable, revisable performance objects."
+- **Out-of-Scope (MVP)** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — explicit deferral list: overlap, score editing, conductor tooling, deep collab, classroom admin, emotion engine, marketplace.
+- **Overlap Rule Modes** — *defined* — first in `dt-01-002--formalize-system-concept.md` — `NO_OVERLAP`, `CAN_OVERLAP`, `MUST_OVERLAP_WITH(voice)`, `PHASE_SHIFT(offset)`, `INTERRUPT(phrase_id)`.
+- **Parse Trust** — *defined* — first in `dt-03-005--product-design-systems-package.md` — foundational, made visible through parse-events; if users repeatedly correct parser, operational fact becomes visible.
+- **Performance-Writing Software** — *defined* — first in `dt-03-002--dramaturgical-product-frame.md` — alternative commercial-category name (alongside "dramaturgical software").
+- **Phase Marker** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — one of the audio-form primitives (alongside click track, pulse, stems, voice-layer timing maps).
+- **Phase Shift** — *defined* — first in `dt-01-002--formalize-system-concept.md` — `PHASE_SHIFT(<offset>)` overlap-rule mode.
+- **Philip Glass Buys a Loaf of Bread** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — David Ives play; source material whose form exposes the "powerful seam."
+- **Phrase ID** — *defined* — first in `dt-01-002--formalize-system-concept.md` — `$PHRASE_ID` field on phrase-event model.
+- **Polyphonic Playwriting System** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — Option A in three-candidate set; smallest version.
+- **Private Beta 1 Workflow Integration** — *defined* — first in `dt-03-005--product-design-systems-package.md` — recruits small cohort of real users.
+- **Private Beta 2 Quality and Retainability** — *defined* — first in `dt-03-005--product-design-systems-package.md` — refines product from "interesting and usable" to "retainable and recommendable."
+- **Public Beta Opening** — *defined* — first in `dt-03-005--product-design-systems-package.md` — $PHASE_BETA_OPENING; broader availability with pricing.
+- **Pulse** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — one of the audio-form primitives.
+- **Recommended Initial Wedge** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — playwrights/dramaturgs developing new work needing instant readback + diagnostics.
+- **Repeat Rule Modes** — *defined* — first in `dt-01-002--formalize-system-concept.md` — `REPEAT(count)`, `LOOP_UNTIL(event)`, `OSTINATO(count, spacing)`, `ACCUMULATE`, `DIMINISH`.
+- **Score Object** — *mentioned* — first in `dt-01-002--formalize-system-concept.md` — generic compositional object the system stores/exports.
+- **Semantic Boundary Rules** — *defined* — first in `dt-04-003--terminology-charter.md` — system named from inside out; ontology vs. product wedge vs. infrastructure language layers.
+- **Spatial Rule Modes** — *defined* — first in `dt-01-002--formalize-system-concept.md` — `COLUMN(n)`, `X_POS`, `Y_FLOW`, `STACK_WITH`, `DISPERSE`, `CONVERGE`.
+- **Stage Direction** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — `is_stage_direction` flag on line; default-hidden from playback, optionally voiced via narrator.
+- **Stem (audio)** — *defined* — first in `dt-01-002--formalize-system-concept.md` — isolated voice channel as render output; listed in $STEMMED_AUDIO_RENDER.
+- **Strategic Positioning** — *defined* — first in `dt-03-003--user-types-mvp-boundary.md` — "listening-first software for dramatic writing"; "platform for modeling language as performance."
+- **Structural Intensification** — *defined* — first in `dt-02-001--predict-system-from-photos.md` — repetition reframed as structural intensification, not redundancy.
+- **Structural Tags** — *defined* — first in `dt-03-005--product-design-systems-package.md` — `structural_tags` JSONB column flagging refrain / monologue_run / exposition_candidate / interruptive_energy_high.
+- **Tempo** — *mentioned* — first in `dt-02-001--predict-system-from-photos.md` — primitive in the timing substrate.
+- **Three-Pane Workspace** — *defined* — first in `dt-03-005--product-design-systems-package.md` — `$SCREEN_05_SCENE_WORKSPACE` layout: script editor / playback+sync / contextual tools.
+- **Transform Rule Modes** — *defined* — first in `dt-01-002--formalize-system-concept.md` — `TEXT_CONST`, `DROP_WORD_EACH_REPEAT`, `ADD_WORD_EACH_REPEAT`, `CHANGE_STRESS`, `SPLIT_ACROSS_VOICES`, `SCATTER_BY_WORD`, `SEMANTIC_DECAY`.
+- **Two-Faces Synthesis** — *defined* — first in `dt-04-001--gap-analysis-and-merge.md` — artistic/ontological face + productive/practical face; merged-form claim.
+- **Voice-Layer Timing Map** — *mentioned* — first in `dt-01-001--predict-system-from-photos.md` — audio-form primitive.
+- **Voice Rules (declaration)** — *defined* — first in `dt-01-002--formalize-system-concept.md` — voices declared separately from character names; example `VOICE A = FIRST_WOMAN`.
+- **Voice Toy** — *alluded* — first in `dt-03-005--product-design-systems-package.md` — anti-pattern; product must not appear as "generic synthetic voice toy."
+- **Working Title** — *defined* — first in `dt-03-004--formal-mvp-spec.md` — "Audio-Dramaturgical Studio" given as `$PRODUCT_ID` working title.
+- **Workshop Mode** — *mentioned* — first in `dt-03-003--user-types-mvp-boundary.md` — Teacher persona uses product in workshop or classroom settings.

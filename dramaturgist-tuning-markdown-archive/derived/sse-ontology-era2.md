@@ -1,0 +1,253 @@
+# Era 2: Tracker / Audio / Voice Synthesis Feasibility (dt-05 → dt-07)
+
+## Components / Services / Modules
+- **Analysis Engine** — *alluded* — first in `dt-05-002--pattern-session-arrangement-screens.md` — cross-cutting diagnostics layer tied to actual compositional work across all three views (referenced as `$ANALYSIS_ENGINE`)
+- **Async render worker** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — non-blocking job processor for audio rendering, so render jobs do not block the request cycle
+- **Bottom console** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — shell region for render jobs, diagnostics, event log, warnings, and version notes
+- **Bottom detail editor** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Arrangement-view region for selected region/anchor/envelope or timing edit
+- **Bottom phrase editor** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Pattern-view region for expanded text editing of selected event without leaving timing context
+- **Bridge protocol** — *mentioned* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — OSC or WebSocket bridge between layers (referenced as `$BRIDGE_PROTOCOL`)
+- **Center workspace** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — shell region holding the active view canvas
+- **Command lanes** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Pattern-view per-row command cells adjacent to phrase-event cells
+- **Compositional infrastructure** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — what the system becomes once per-cell speech commands are first-class
+- **Diagnostic report** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — minimum POC object capturing analysis output
+- **Diagnostics summary** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — compact analytical readout included on the read-only share page
+- **Envelope lanes** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Arrangement-view lanes for density, emphasis, spatialization, pace drift
+- **Launch cells** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Session-view playable passage references (user-surface object)
+- **Left structure rail** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — shell region holding work tree: project → work → movement → passage
+- **Live engine** — *defined* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — Max/MSP layer for cueing, routing, triggering, rehearsal, and performance control (`$LIVE_ENGINE`)
+- **Live execution layer** — *mentioned* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — deferred deeper-engine layer for live performance (`$LIVE_EXECUTION_LAYER`)
+- **Locator strip** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Arrangement-view named anchors for rehearsal and export
+- **Master launch controls** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Session-view region for quantization, trigger mode, stop-all, return-to-anchor
+- **Mini overview rail** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Pattern-view compressed density map of the passage for fast navigation
+- **Mixer** — *mentioned* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — Max patch component handling per-channel routing and pan
+- **Monitoring strip** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Session-view region showing currently active passages, elapsed time, queued launches
+- **Movement lanes** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Arrangement-view high-level structural blocks defining major formal zones
+- **Object storage** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — storage layer for generated audio in the recommended POC stack
+- **Parse Review screen** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — POC Screen 2 showing raw text vs parsed speakers/line groupings with rename/merge controls; designated a "trust screen"
+- **Pattern editor** — *mentioned* — first in `dt-05-001--tracker-ableton-features.md` — Renoise's UI built around entering events top-to-bottom and sequencing patterns
+- **Pattern header** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Pattern-view region with passage name, row resolution, loop length, swing/subdivision controls
+- **Pattern View** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — micro-compositional core tracker layer; `$PATTERN_VIEW` (rows=time, columns=voice-channels, cells=phrase-events+commands)
+- **Phrase-event grid** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Pattern-view row-addressed event matrix; central authoring surface
+- **PostgreSQL** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — relational store recommended for the POC stack
+- **Render worker** — *mentioned* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — `$RENDER_WORKER` async pipeline for table-read exports
+- **REST API** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — simple back-end API layer for the POC
+- **Right inspector** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — shell region for context-sensitive properties of selected object
+- **Scene Workspace screen** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — POC Screen 3 with script editor (left), playback (center), diagnostics/speaker controls (right) plus pace and replay-region controls
+- **Selection inspector** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Pattern-view right-side editor for phrase text, entry rule, duration rule, repeat rule, overlap rule, emphasis, spatial rule
+- **Session scene strip** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Session-view vertical stack of launchable rows
+- **Session View** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — launch grid for phrases/passages/scenes (`$SESSION_VIEW`)
+- **Share View screen** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — POC Screen 4 read-only artifact with scene title, audio player, text, speaker labels, optional diagnostics summary
+- **Speech renderer** — *mentioned* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — per-channel TTS/audio output component in the Max patch architecture
+- **Timeline ruler** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Arrangement-view ruler with clock time, beat time, locator markers; switchable display modes
+- **Timing engine** — *defined* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — `$TIMING_ENGINE` SuperCollider layer for row-precise scheduling and recurrence
+- **Top command bar** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — shell region with project title, save state, render state, transport, tempo, meter, current version
+- **Variant panel** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Session-view region for alternate render behaviors per launch state (neutral, heightened, rhythm-forward, diagnostic)
+- **Voice-channel column strip** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Pattern-view reorderable, color-coded one-column-per-voice strip
+- **Voice-channel lanes** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Session-view horizontal lanes holding launchable passage states
+- **Voice-channel tracks** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Arrangement-view stacked horizontal timeline tracks holding scheduled passage/phrase-event material
+- **Voice render adapter** — *defined* — first in `dt-07-004--voice-synthesis-injectability.md` — injectable layer between phrase-event and audio output (`$VOICE_RENDER_ADAPTER`)
+
+## Concepts / Frameworks / Theories
+- **Ableton-bodied** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — half of the product framing: Ableton governs macro-form and performance navigation
+- **Audio-dramaturgical studio** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — the clearer product surface layer (vs. "full theatrical operating system")
+- **Authoring-analysis-rendering environment** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — what the system actually is, beyond mere editor
+- **Behavioral thesis** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — the listening-and-revision loop as the documented core behavior the product must prove
+- **Browser-first product surface** — *defined* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — the adoptable wedge layer of the system; what Max/SuperCollider should NOT be
+- **Cluster families** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — three-level decomposition (full-line, phrase clusters, atomized fragments) for tracker content
+- **Commercial promise** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — "hear, inspect, and revise dialogue as performed time before rehearsal"
+- **Composition-and-execution proof** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — what the Max demo proves, distinct from the listening-first workbench
+- **Compositional precision** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — score-editor side of the dual product requirement
+- **Cross-view workflow** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — workflow stages spanning Pattern→Session→Arrangement views as one intelligible motion
+- **DAW analogy** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — descriptive (not ontological) framing used for explanation; must not displace canonical ontology
+- **Diagnostics placement** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — design rule: diagnostics must be cross-cutting across all three views, not one screen
+- **Dramatic-audio dialectic** — *alluded* — first in `dt-05-001--tracker-ableton-features.md` — implicit dual structure of speech as both semantic content and timed performance
+- **Dramaturgical-audio workbench** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — the product surface descriptor (vs. internal "polyvocal speech-composition engine")
+- **Dual-aspect object** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — governing rule: language carries both semantic content and timed performance
+- **Event grammar** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — what Pattern View governs (per final design rule §10)
+- **Exploratory relation** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — what Session View governs (per final design rule §10)
+- **First-class score operations** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — speech commands as score primitives, not loose annotations
+- **Formal order** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — what Arrangement View governs (per final design rule §10)
+- **Formal timing engine** — *defined* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — deterministic scheduling, recurrence, phase offsets, generative transformation (SuperCollider's strong domain)
+- **Hybrid of tracker precision and Ableton-style launch/arrangement control** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — the architectural fusion thesis
+- **Injectable infrastructure** — *defined* — first in `dt-07-004--voice-synthesis-injectability.md` — voice synthesis treated as pluggable backend, not baked into score model
+- **Internal contract** — *defined* — first in `dt-07-004--voice-synthesis-injectability.md` — the JSON shape each tracker cell resolves to (phrase_id, voice_channel, text, voice_profile_id, etc.)
+- **Listening-and-revision loop** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — core behavioral thesis: hear dialogue quickly, inspect, revise, save, share
+- **Listening-first revision environment for performative text** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — the adoptable-wedge framing of the product
+- **Live plasticity** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — rehearsal/performance side of dual product requirement
+- **Minimum object set** — *mentioned* — first in `dt-06-002--poc-build-spec-four-screens.md` — formal subset of data objects required for POC
+- **Polyvocal speech-composition engine** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — internal system identity (vs. product-surface descriptor "dramaturgical-audio workbench")
+- **Product surface vs. deeper engine** — *defined* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — architectural split between browser-first shareable face and SuperCollider/Max engine layers
+- **Row-precise event grid** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — tracker paradigm contributed to the product
+- **Score-encoding of speech** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — translation of literary line into `$PHRASE_EVENT` with temporal-relation context
+- **Score-player patch** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — Max-patch type for the demo: single-purpose tracker surface, not "the app"
+- **Score-like distribution** — *alluded* — first in `dt-06-001--prototype-and-poc-path.md` — what the bakery scene exemplifies (transition from ordinary dialogue to patterned distribution)
+- **Scene-versus-version split** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — mutable `scene` vs. immutable `scene_version` as load-bearing architecture
+- **Seed demonstration work** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — single canonical demo scene that proves the product (the Philip Glass bakery material)
+- **Showable instrument problem** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — class of problem (vs. product-surface problem) suited to Max-first demonstration
+- **Speech-score composition system** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — full system name; the umbrella ontology under which the three views operate
+- **Speech-score grid** — *mentioned* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — visible grid of voices and trigger matrix
+- **Speech-score ontology** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — the canonical naming/typing system: phrase-events, voice-channels, temporal-relation, timing-substrate
+- **Speech-score workstation** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — product framing (vs. generic "DAW for theatre")
+- **Structural promise** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — "compose speech as score across writing, notation, rehearsal, rendering, and execution"
+- **Structured temporal dialogue objects** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — scene storage rule (not plain documents)
+- **Tracker-brained and Ableton-bodied** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — slogan for the hybrid product paradigm
+- **Tracker-compatible temporal data model** — *defined* — first in `dt-06-003--tracker-time-sequences-essential.md` — required architecture: ordered timed events from day one (not "script text plus playback")
+- **Tracker-score dataset** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — hardcoded data structure containing the play as tracker events for the Max demo
+- **Tracker time** — *defined* — first in `dt-06-003--tracker-time-sequences-essential.md` — essential timing model: bounded events, deterministic order, phrase-loop replay
+- **Trust screen** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — Parse Review screen role: building user confidence in speaker parsing
+- **Two-layer distinction** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — commercial promise vs. structural promise; must remain explicit in the spec
+- **Vertical sequencer** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — clean, slow, legible grid: voice-channels across top, rows down left, tempo/controls at bottom
+
+## Tools / Technologies / External Systems
+- **Ableton (Ableton Live)** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — DAW providing Session View / Arrangement View / Warp / Racks / Macros paradigms inherited by the system
+- **Ableton Arrangement View** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — linear timeline with locators, automation lanes, section launching
+- **Ableton Clip/Warp model** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — Live's clip warping that keeps audio aligned to tempo via markers
+- **Ableton Racks / Macros** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — Live's grouped-parameter encapsulation system
+- **Ableton Session View** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — Live's random-access clip-launch grid
+- **Airtable** — *mentioned* — first in `dt-07-007--theatre-voice-capture-sheet.md` — destination for CSV import of voice-capture sheets
+- **Apple Speech (OS speech)** — *mentioned* — first in `dt-07-004--voice-synthesis-injectability.md` — example backend the voice adapter should be pluggable against
+- **Cartesia** — *defined* — first in `dt-07-005--voice-clone-audio-requirements.md` — voice-cloning provider; 5-second high-similarity, 30+ minute pro
+- **Cloud speech** — *mentioned* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — real-time remote synthesis (recommended against for first demo)
+- **`coll`** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — Max object for storing score rows
+- **`counter`** — *mentioned* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — Max object tracking current row
+- **`dict`** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — Max object alternative to `coll` for storing score data
+- **ElevenLabs** — *defined* — first in `dt-07-004--voice-synthesis-injectability.md` — voice-cloning provider; instant requires consent; pro limited to verified own voice
+- **Figma** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — static mockup tool explicitly rejected as the prototype form
+- **Google Sheets** — *mentioned* — first in `dt-07-007--theatre-voice-capture-sheet.md` — destination for TSV import of voice-capture sheets
+- **HTTP** — *mentioned* — first in `dt-07-004--voice-synthesis-injectability.md` — transport for synthesis adapter calls from Max
+- **`js` (Max object)** — *mentioned* — first in `dt-07-004--voice-synthesis-injectability.md` — Max scripting object usable as a synthesis-adapter bridge
+- **Jitter display** — *mentioned* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — custom grid UI option in Max
+- **Local synthesis** — *mentioned* — first in `dt-07-004--voice-synthesis-injectability.md` — on-device speech generation as an injectable backend
+- **`matrixctrl`** — *mentioned* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — Max object option for grid UI
+- **Max/MSP** — *defined* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — visual patching environment; "live-performance body" of the architecture
+- **`metro`** — *mentioned* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — Max object driving row advance
+- **Node for Max** — *mentioned* — first in `dt-07-004--voice-synthesis-injectability.md` — Node.js runtime inside Max usable as synthesis bridge
+- **Notion** — *mentioned* — first in `dt-07-007--theatre-voice-capture-sheet.md` — destination for database import of voice-capture sheets
+- **OSC** — *mentioned* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — Open Sound Control as bridge between Max/SuperCollider/Web layers
+- **Prerecorded WAVs** — *mentioned* — first in `dt-07-004--voice-synthesis-injectability.md` — sampled audio as an injectable backend mode
+- **React** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — example stateful-front-end choice for the POC workspace
+- **Renoise** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — concrete tracker reference; pattern editor and phrase-trigger logic cited
+- **Renoise phrase** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — Renoise feature: notes trigger reusable embedded structures
+- **Resemble** — *defined* — first in `dt-07-005--voice-clone-audio-requirements.md` — voice-cloning provider; 10-second rapid clone; 10-25+ minute professional
+- **`route`** — *mentioned* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — Max object routing by voice-channel
+- **SuperCollider** — *defined* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — audio language; "tracker-brain" of the architecture
+- **Tracker (the genre)** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — interaction-model class providing event-grid paradigm; contributes pattern editor and per-step effect commands
+- **`transport` (Max master clock)** — *mentioned* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — Max master timing clock object
+- **TTS (text-to-speech)** — *mentioned* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — generic class of synthesis providers behind `$TTS_PROVIDER_URI`
+- **WebSocket** — *mentioned* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — alternative bridge protocol between Max/SuperCollider/web
+- **`$APP_API`** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — typed API service in the minimum infrastructure
+- **`$APP_DB`** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — relational storage component
+- **`$APP_WEB`** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — browser editor / versions / diagnostics / share-links surface
+- **`$APP_WORKER`** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — queue-backed render worker
+
+## People / Roles / Personas
+- **Actor** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — performer named in `$ACTOR_ID`, `$ACTOR_NAME`, subject of consent and capture flow
+- **BAKER** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — named voice-channel for the bakery demo scene
+- **Capture engineer** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — role recording the actor; tracked via `$CAPTURE_ENGINEER`, `$ENGINEERING_OWNER`
+- **Collaborator** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — non-editing recipient of a read-only share artifact
+- **Conductor** — *alluded* — first in `dt-05-001--tracker-ableton-features.md` — "live conductor view" deferred to later phases; conductor logic central to live performance
+- **Director** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — listed audience of the convincing shareable POC
+- **Dramaturg** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — listed audience for the convincing shareable POC
+- **FIRST_WOMAN** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — named voice-channel for the bakery demo scene
+- **GLASS** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — named voice-channel (Philip Glass) for the bakery demo
+- **Narrator (neutral)** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — optional voice for stage directions
+- **Performer (the speaker)** — *defined* — first in `dt-07-006--theatre-company-voice-on-travel.md` — company member whose voice is captured for cloning
+- **Philip Glass** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — referenced composer whose bakery material seeds the demo
+- **Playwright** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — listed audience of the POC and acceptance-test subject
+- **SECOND_WOMAN** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — named voice-channel for the bakery demo scene
+- **Speaker (UI-surface alias)** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — usability-facing alias for `$VOICE_CHANNEL`
+- **Stakeholder** — *mentioned* — first in `dt-06-002--poc-build-spec-four-screens.md` — recipient role for the POC walkthrough sequence; "named project stakeholders" in client-demo scope
+- **Teacher** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — listed audience for the convincing shareable POC
+- **Text owner** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — entity holding rights to script content (tracked in `$TEXT_OWNER`)
+- **Theatre company** — *defined* — first in `dt-07-006--theatre-company-voice-on-travel.md` — organizational unit owning the voice library; identified via `$COMPANY_ID`
+
+## Document Types / Artifacts
+- **Bakery sample (demo content)** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — pre-modeled canonical demo scene used to seed the POC
+- **Build handoff** — *defined* — first in `dt-06-002--poc-build-spec-four-screens.md` — POC build spec functioning as an executable handoff rather than concept note
+- **Canvas (ChatGPT artifact)** — *mentioned* — first in `dt-06-002--poc-build-spec-four-screens.md` — drafting surface inside ChatGPT ("I drafted it in canvas")
+- **Clickable wireframe package** — *mentioned* — first in `dt-06-002--poc-build-spec-four-screens.md` — possible next deliverable
+- **Clip filename** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — `$ACTOR_ID__$SCRIPT_ID__$TAKE_ID__$CAPTURE_DATE.$AUDIO_FORMAT` (`$CLIP_FILENAME`)
+- **Company voice library** — *defined* — first in `dt-07-006--theatre-company-voice-on-travel.md` — internal archive of approved performer clones with consent metadata
+- **Consent policy** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — versioned policy under `$CONSENT_POLICY_VERSION`
+- **CSV headers (master capture sheet)** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — explicit CSV schema for import into Sheets/Airtable/Notion
+- **Demo states** — *defined* — first in `dt-06-002--poc-build-spec-four-screens.md` — versioned ones pre-modeled into POC demo content
+- **Diagnostics summary (share artifact)** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — compact readout included on the read-only share view
+- **Google Sheets-ready TSV** — *mentioned* — first in `dt-07-007--theatre-voice-capture-sheet.md` — output format option for the capture sheet
+- **House dataset** — *defined* — first in `dt-07-006--theatre-company-voice-on-travel.md` — 10-30+ minute per-actor durable archive
+- **Master clip filename** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — `$VOICE_PROFILE_ID__master.$AUDIO_FORMAT` (`$MASTER_CLIP_FILENAME`)
+- **Notion database schema** — *mentioned* — first in `dt-07-007--theatre-voice-capture-sheet.md` — alternate output format option for the capture sheet
+- **Playback render** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — minimum POC object: audio rendered from a scene_version
+- **Read-only review page** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — public-facing share artifact: playback, text, speaker labels, diagnostics
+- **Read-only share link** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — single private URL produced from a scene version
+- **Rehearsal pack** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — performer-facing exported output (`$REHEARSAL_PACK`)
+- **Renderable output** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — Arrangement-view export from stable work
+- **Row event (Max JSON schema)** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — JSON shape per tracker row: row, voice, text, mode, pause_after_ms, repeat, pan, rate
+- **Scene (mutable)** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — minimum POC object: working draft state
+- **Scene_version (immutable)** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — minimum POC object: frozen renderable shareable analyzable artifact
+- **Script registry** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — stable reusable pool of script-IDs with class/duration/text-owner metadata
+- **Share link** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — minimum POC object: stable revocable URL
+- **Speaker (POC object)** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — minimum POC object distinct from `$VOICE_CHANNEL` at user surface
+- **Stakeholder walkthrough sequence** — *defined* — first in `dt-06-002--poc-build-spec-four-screens.md` — guided demo flow included in POC build spec
+- **Table-read audio** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — rapid auditory draft (`$TABLE_READ_AUDIO`)
+- **Theatre-company voice capture sheet** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — full operating sheet with 12 sections including control vars, master capture, take log, script registry
+- **Travel pack (voice clones)** — *defined* — first in `dt-07-006--theatre-company-voice-on-travel.md` — approved-cloned voice bundle for rehearsal/travel use
+- **Versioned demo states** — *defined* — first in `dt-06-002--poc-build-spec-four-screens.md` — frozen demo content tied to immutable scene_version objects
+- **Voice cache directory** — *defined* — first in `dt-07-004--voice-synthesis-injectability.md` — `$VOICE_CACHE_DIR` filesystem path holding pre-rendered phrase files
+- **Voice pack** — *defined* — first in `dt-07-006--theatre-company-voice-on-travel.md` — exported bundle of approved voice clones for use with the tracker patch
+
+## Methodologies / Processes / Workflows
+- **Acceptance criteria** — *mentioned* — first in `dt-06-002--poc-build-spec-four-screens.md` — formal check-list included in the POC build spec
+- **Acceptance test** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — playwright/dramaturg can create-hear-revise-save-share without other performers
+- **Adoption wedge** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — narrow commercially-legible product layer to enter market with
+- **Authoring loop** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — second-pass build: paste, parse, assign, play, revise, version, compare, share
+- **Build order (3-pass)** — *defined* — first in `dt-07-001--prototype-and-poc-path.md` — thin coded alpha → core authoring loop → tracker-native features
+- **Cached renderer mode** — *defined* — first in `dt-07-004--voice-synthesis-injectability.md` — voice-adapter strategy resolving cells to pre-rendered files
+- **Capture protocol** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — `$RECORDING_PROTOCOL`: before-capture, during-capture, after-capture rules
+- **Capture target (two-tier)** — *defined* — first in `dt-07-006--theatre-company-voice-on-travel.md` — travel-tier (1-3 min per performer) and house-tier (10-30 min)
+- **Demonstration thesis** — *alluded* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — the formal idea you communicate to the friend via three-mode demo
+- **File naming standard** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — strict filename format tying clip to actor/script/take/date
+- **Hybrid voice-provider mode** — *defined* — first in `dt-07-004--voice-synthesis-injectability.md` — fall back to live TTS when phrase not cached, then cache the result
+- **Listening-revision workflow** — *defined* — first in `dt-07-002--max-msp-supercollider-feasibility.md` — browser-first workflow: paste/assign/hear/revise/save/share
+- **Live-TTS voice-provider mode** — *defined* — first in `dt-07-004--voice-synthesis-injectability.md` — patch sends text to synthesis adapter and receives audio back
+- **Master capture sheet** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — main operating spreadsheet of captures with consent/usage/profile metadata
+- **Milestone sequence (A-D)** — *defined* — first in `dt-06-001--prototype-and-poc-path.md` — Milestone A (hard-coded sample playback) → B (parse/speakers/pace) → C (versions/diagnostic/timeline) → D (read-only share)
+- **MVP boundary** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — explicit scope-cut per view: what is in vs. deferred
+- **MVP statement (revised)** — *defined* — first in `dt-05-002--pattern-session-arrangement-screens.md` — formal restatement of MVP after view-spec revision
+- **Per-actor intake sheet** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — one form per performer with consent, voice-profile-id, role, accent, vocal limitations
+- **Recording spec** — *defined* — first in `dt-07-006--theatre-company-voice-on-travel.md` — cleanliness/consistency rules: one speaker, quiet room, no reverb, no long silences
+- **Sample-cache voice-provider mode** — *defined* — first in `dt-07-004--voice-synthesis-injectability.md` — pre-rendered phrase files triggered like samples (safest for demos)
+- **Section block (A/B/C demo mapping)** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — three-phase translation of script: recognizable → cluster buildup → distributed dispersal
+- **Take log** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — recording-session table with status, filename, timecode, selection
+- **Three-mode demo (READABLE/CLUSTER/DISPERSAL)** — *defined* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — `$READABLE_PASSAGE`, `$CLUSTER_PASSAGE`, `$DISPERSAL_PASSAGE` for the Max demo
+- **Travel-training tier** — *defined* — first in `dt-07-006--theatre-company-voice-on-travel.md` — quality tier for short captures used in transit / rehearsal
+- **Usage-scope controlled vocabulary** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — enum of allowed `$USAGE_SCOPE` values (internal-training-only, client-demo-restricted, etc.)
+- **Voice profile ID naming rule** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — `$ACTOR_ID__$STYLE_CLASS__$TIER__$REVISION` format
+
+## Anything else (open category)
+- **Bit depth** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — `$BIT_DEPTH` capture metadata (e.g., 24)
+- **`bad-noise` / `clean` / `minor-noise`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — controlled `$NOISE_STATUS` values
+- **`client-demo-restricted`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — usage-scope value
+- **Cluster code** — *mentioned* — first in `dt-07-003--dialogue-cluster-tracker-demo.md` — short compact identifier displayed in a tracker cell
+- **`flat` / `usable` / `strong` / `too-acted` / `inconsistent`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — controlled `$DELIVERY_STATUS` values
+- **`heightened-stage`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — style-class value (stronger dramatic coloration)
+- **House-tier** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — quality tier label (fuller company library)
+- **Humanization range** — *mentioned* — first in `dt-05-001--tracker-ableton-features.md` — `HU` command parameter
+- **`internal-demo-only` / `internal-production-dev` / `internal-training-only`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — usage-scope values
+- **`measured-stage`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — style-class value (controlled theatrical energy)
+- **Mic ID** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — `$MIC_ID` metadata field (e.g., `mkh416`)
+- **`narration-clean`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — style-class value
+- **`neutral-rehearsal`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — style-class value (flat, clean, low-expression capture)
+- **`production-tier`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — quality tier label
+- **`public-release-approved` / `public-release-prohibited`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — usage-scope values
+- **`pending` / `recorded` / `selected` / `rejected` / `needs-retake` / `processed` / `trained` / `verified`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — controlled `$TAKE_STATUS` values
+- **`research-only`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — usage-scope value
+- **Room ID** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — `$ROOM_ID` capture metadata
+- **Sample rate** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — `$SAMPLE_RATE` capture metadata (e.g., 48000)
+- **`select` / `hold` / `reject` / `retake`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — controlled `$SELECTION_STATUS` values
+- **Speech commands (PA/PR/RP/RT/OV/CU/EM/DN/PN/BR/ST/GL/MX/LK/HU/MT/TR)** — *defined* — first in `dt-05-001--tracker-ableton-features.md` — full table of tracker-derived command tokens with functions
+- **Stage directions** — *mentioned* — first in `dt-06-001--prototype-and-poc-path.md` — script content optionally voiced by neutral narrator or hidden
+- **Style class** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — `$STYLE_CLASS` controlled vocabulary attached to voice profiles
+- **Tier** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — `$TIER` capture quality dimension (travel/house/production)
+- **`tracker-shortform`** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — style-class value (short clusters/fragments for sequencer triggering)
+- **Travel-tier** — *defined* — first in `dt-07-007--theatre-voice-capture-sheet.md` — quality tier label
