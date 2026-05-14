@@ -2,7 +2,6 @@
 name: sse-bootstrap
 description: This skill should be used when the user asks to bootstrap a TypeScript monorepo from a ChatGPT design corpus, replay the speech-score-engine setup procedure, recover canvas content from a ChatGPT project's saves endpoint, or scaffold a pnpm-workspace + Turbo + biome project from a blueprint canvas. The skill orchestrates a six-phase procedure (canvas recovery → archive inventory → blueprint identification → monorepo scaffold → first vertical slice → cluster-spillover etiquette). The historical record at three granularities lives in references/.
 version: 0.1.0
-snapshot_commit: PENDING
 ---
 
 # Speech-score-engine bootstrap SOP
