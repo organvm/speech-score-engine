@@ -1,7 +1,7 @@
 ---
 title: Commit-by-commit history
-snapshot_commit: 6adde86
-generated_at: 2026-05-14T14:38:35Z
+snapshot_commit: fb910cd
+generated_at: 2026-05-14T14:39:43Z
 source: "git log --reverse --pretty=format:'%h %ad %s' --date=short"
 generated_by: plugin/skills/sse-bootstrap/scripts/snapshot-state.sh
 ---
@@ -380,5 +380,22 @@ One entry per commit, in chronological order (`git log --reverse`). For grouped-
 ```
  .claude/plans/2026-05-13-closeout-v3.md | 121 ++++++++++++++++++++++++++++++++
  1 file changed, 121 insertions(+)
+```
+
+## 6adde86 — 2026-05-14 — Reframe CLAUDE.md as cluster-aware; archive SSE-ontology derivations
+
+- **Full SHA**: `6adde8696c21f0f474094cade69c0c59ca64606d`
+- **Files (stat)**:
+
+```
+ ...6-05-13-claudemd-reconcile-and-strays-triage.md |  99 ++++
+ ...oute-speech-score-strays-into-agent-ontology.md | 125 +++++
+ CLAUDE.md                                          |  39 +-
+ .../derived/README.md                              |  45 ++
+ .../derived/sse-ontology-era1.md                   | 330 +++++++++++++
+ .../derived/sse-ontology-era2.md                   | 253 ++++++++++
+ .../derived/sse-ontology-era3.md                   | 228 +++++++++
+ .../derived/sse-tokens.txt                         | 526 +++++++++++++++++++++
+ 8 files changed, 1636 insertions(+), 9 deletions(-)
 ```
 
