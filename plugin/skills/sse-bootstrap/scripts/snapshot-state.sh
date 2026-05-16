@@ -32,14 +32,19 @@ REF_01="${REF_DIR}/01-phase-history.md"
 REF_02="${REF_DIR}/02-commit-log.md"
 REF_03="${REF_DIR}/03-plan-log.md"
 
-# Sanity: must be inside a git working tree.
-if ! git -C "${REPO_ROOT}" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  echo "error: ${REPO_ROOT} is not a git working tree" >&2
-  exit 2
-fi
-
-HEAD_SHA="$(git -C "${REPO_ROOT}" rev-parse --short HEAD)"
+# Detect mode of execution: source repo vs. cached install.
+# - Source repo: REPO_ROOT is the speech-score-engine git working tree. All ops work.
+# - Cached install: REPO_ROOT is ~/.claude/plugins/cache/.../sse-bootstrap-sop. No git
+#   repo, no archive to verify against. --check, --rewrite, --verify-archive degrade
+#   to informational (exit 0) since the cache references are static at install time.
 GENERATED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+if git -C "${REPO_ROOT}" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  IS_SOURCE_REPO=1
+  HEAD_SHA="$(git -C "${REPO_ROOT}" rev-parse --short HEAD)"
+else
+  IS_SOURCE_REPO=0
+  HEAD_SHA=""
+fi
 
 mode="${1:---check}"
 
@@ -191,6 +196,15 @@ verify_archive() {
 
 case "${mode}" in
   --check)
+    if [[ "${IS_SOURCE_REPO}" -eq 0 ]]; then
+      printf 'cached-install: no host git repo at %s — drift check N/A\n' "${REPO_ROOT}"
+      for ref in "${REF_01}" "${REF_02}" "${REF_03}"; do
+        [[ -f "${ref}" ]] || { printf 'missing: %s\n' "${ref}"; continue; }
+        pinned="$(read_snapshot_commit "${ref}")"
+        printf 'pinned: %s @ %s (static at install time)\n' "$(basename "${ref}")" "${pinned:-<none>}"
+      done
+      exit 0
+    fi
     drift=0
     for ref in "${REF_01}" "${REF_02}" "${REF_03}"; do
       [[ -f "${ref}" ]] || { printf 'missing: %s\n' "${ref}"; drift=1; continue; }
@@ -205,6 +219,11 @@ case "${mode}" in
     exit "${drift}"
     ;;
   --rewrite)
+    if [[ "${IS_SOURCE_REPO}" -eq 0 ]]; then
+      printf 'error: --rewrite requires the source git repo at %s\n' "${REPO_ROOT}" >&2
+      printf 'this is a cached install; references are static. Run --rewrite from the plugin source.\n' >&2
+      exit 2
+    fi
     regenerate_commit_log "${REF_02}" "${HEAD_SHA}"
     regenerate_plan_log   "${REF_03}" "${HEAD_SHA}"
     write_frontmatter_snapshot "${REF_01}" "${HEAD_SHA}"
@@ -214,6 +233,10 @@ case "${mode}" in
     printf 'snapshot_commit: %s\n' "${HEAD_SHA}"
     ;;
   --verify-archive)
+    if [[ "${IS_SOURCE_REPO}" -eq 0 ]]; then
+      printf 'error: --verify-archive requires the source repo (the archive lives there)\n' >&2
+      exit 2
+    fi
     verify_archive
     ;;
   -h|--help)
