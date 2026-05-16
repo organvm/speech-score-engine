@@ -1,7 +1,7 @@
 ---
 title: Plan-by-plan log
-snapshot_commit: d72f5ba
-generated_at: 2026-05-14T14:41:39Z
+snapshot_commit: ffe25a8
+generated_at: 2026-05-16T17:50:29Z
 source: ".claude/plans/*.md (frontmatter + first body lines)"
 generated_by: plugin/skills/sse-bootstrap/scripts/snapshot-state.sh
 ---

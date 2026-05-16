@@ -1,7 +1,7 @@
 ---
 title: Commit-by-commit history
-snapshot_commit: d72f5ba
-generated_at: 2026-05-14T14:41:39Z
+snapshot_commit: ffe25a8
+generated_at: 2026-05-16T17:50:29Z
 source: "git log --reverse --pretty=format:'%h %ad %s' --date=short"
 generated_by: plugin/skills/sse-bootstrap/scripts/snapshot-state.sh
 ---
@@ -425,5 +425,37 @@ One entry per commit, in chronological order (`git log --reverse`). For grouped-
  .../sse-bootstrap/references/02-commit-log.md       | 21 +++++++++++++++++++--
  .../skills/sse-bootstrap/references/03-plan-log.md  |  4 ++--
  3 files changed, 23 insertions(+), 6 deletions(-)
+```
+
+## d72f5ba — 2026-05-14 — plugin: drop snapshot_commit from SKILL.md frontmatter
+
+- **Full SHA**: `d72f5ba75837fe49013ff0b6ae28682221afa369`
+- **Files (stat)**:
+
+```
+ plugin/skills/sse-bootstrap/SKILL.md | 1 -
+ 1 file changed, 1 deletion(-)
+```
+
+## 5662022 — 2026-05-14 — plugin: repin references after SKILL.md cleanup
+
+- **Full SHA**: `5662022b95d2a5ecd2c603341f15634623d02a4f`
+- **Files (stat)**:
+
+```
+ .../sse-bootstrap/references/01-phase-history.md   |  4 +--
+ .../sse-bootstrap/references/02-commit-log.md      | 32 ++++++++++++++++++++--
+ .../skills/sse-bootstrap/references/03-plan-log.md |  4 +--
+ 3 files changed, 34 insertions(+), 6 deletions(-)
+```
+
+## 7fc4209 — 2026-05-16 — plugin: add local marketplace.json for sse-bootstrap-sop
+
+- **Full SHA**: `7fc4209fffe7cddad3d32ed9aca1d80a2dd79c8b`
+- **Files (stat)**:
+
+```
+ .claude-plugin/marketplace.json | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 ```
 
