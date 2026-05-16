@@ -1,0 +1,26 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "speech-score-engine-local",
+  "description": "Local marketplace for plugins authored inside the speech-score-engine repository. Currently exposes the sse-bootstrap-sop plugin (the SOP for bootstrapping a TypeScript monorepo from a ChatGPT design corpus).",
+  "owner": {
+    "name": "Anthony Padavano",
+    "email": "padavano.anthony@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "sse-bootstrap-sop",
+      "description": "Standard operating procedure for bootstrapping a TypeScript pnpm-workspace monorepo from a ChatGPT design corpus. Carries the historical record at three granularities (phase, commit, plan) plus a forward-reproducible procedure.",
+      "source": "./plugin",
+      "version": "0.1.0",
+      "category": "development",
+      "tags": [
+        "bootstrap",
+        "typescript",
+        "monorepo",
+        "pnpm-workspace",
+        "chatgpt-canvas-recovery",
+        "sop"
+      ]
+    }
+  ]
+}
