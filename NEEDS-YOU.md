@@ -17,6 +17,11 @@ We tend to all of these together at the end.
   inlined). Send Chris that one file; he double-clicks it, offline, no folder, no install. The
   live-cue human+AI duet works from it. *(The bare `philip-glass-tracker.html` alone is NOT enough —
   it loads 8 sibling files by relative path; use the bundle.)*
-- **Shareable URL (your decision, if/when you want one):** host the Next app (Vercel/Firebase) for a
-  public link. Needs a hosting choice + deploy. Flag it and I'll set it up. Until then the single
-  file covers sharing.
+- **Shareable URL (your decision, if/when you want one):** everything is derived and staged —
+  `apps/web` is a Next.js **static export** (`output: 'export'`), so it's host-agnostic and needs no
+  server. Host = **Cloudflare Pages** (derived, not defaulted: static export means no host keeps an
+  SSR edge, so the tiebreaker is our existing Cloudflare substrate — the Worker + already-authed
+  `wrangler`). The build is green (7/7 static pages) and `out/` is complete. The **only** remaining
+  atom is your go — this publishes the scores to a public URL. On your word it's one command:
+  `cd apps/web && wrangler pages deploy out --project-name speech-score-engine`. Until then the
+  single `dist/speech-score.html` file covers sharing.
