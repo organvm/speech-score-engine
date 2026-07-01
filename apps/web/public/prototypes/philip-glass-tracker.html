@@ -25,6 +25,8 @@
         --ink-spoken: rgba(233, 230, 220, 0.52);
         --rule: rgba(233, 230, 220, 0.10);
         --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
+        --accent: #cdbf9a;         /* warm gold — live/human lane */
+        --lanes: repeat(4, minmax(0, 1fr)); /* set by the engine from the score's lane count */
       }
       * { box-sizing: border-box; margin: 0; padding: 0; }
       html, body { height: 100%; background: var(--stage); }
@@ -70,7 +72,7 @@
       /* ---- column headers ---- */
       .heads {
         display: grid;
-        grid-template-columns: clamp(1.4rem, 3vw, 3rem) repeat(4, minmax(0, 1fr));
+        grid-template-columns: clamp(1.4rem, 3vw, 3rem) var(--lanes);
         padding: 6px clamp(10px, 1.4vw, 22px) 8px;
         border-bottom: 1px solid var(--rule);
         margin: 4px clamp(8px, 1vw, 18px) 0;
@@ -85,6 +87,8 @@
         min-width: 0;
       }
       .heads .h.gut { text-align: center; }
+      .heads .h.live { color: var(--accent); }
+      .heads .h.live::after { content: " ●"; font-size: 0.7em; vertical-align: middle; }
 
       /* ---- score viewport ---- */
       .viewport { position: relative; flex: 1; overflow: hidden; margin: 0 clamp(8px, 1vw, 18px); }
@@ -101,7 +105,7 @@
       .track { position: absolute; inset: 0 0 auto 0; transition: transform 0.12s linear; will-change: transform; }
       .row {
         display: grid;
-        grid-template-columns: clamp(1.4rem, 3vw, 3rem) repeat(4, minmax(0, 1fr));
+        grid-template-columns: clamp(1.4rem, 3vw, 3rem) var(--lanes);
         min-height: clamp(24px, 3.4vh, 46px);
         align-items: center;
       }
@@ -142,6 +146,9 @@
         animation: bloom 0.5s ease-out;
       }
       .word.stage { font-style: italic; font-size: clamp(11px, 1.3vw, 19px); opacity: 0.3; }
+      /* a live (human-performed) line: the engine leaves it silent; the actor speaks it */
+      .word.live { color: var(--accent); text-decoration: underline dotted rgba(205, 191, 154, 0.4); }
+      .word.live.now { text-shadow: 0 0 16px rgba(205, 191, 154, 0.6), 0 0 3px rgba(205, 191, 154, 0.7); }
       @keyframes bloom {
         0% { transform: translateY(0.5px); text-shadow: 0 0 26px rgba(233,230,220,0.9); }
         100% { transform: translateY(0); }
@@ -200,8 +207,8 @@
     <div class="frame">
       <div class="title">
         <div class="mark">Speech-Score Engine</div>
-        <h1>Philip Glass Buys a Loaf of Bread</h1>
-        <div class="by">a speech-score, after David Ives</div>
+        <h1 id="title">Philip Glass Buys a Loaf of Bread</h1>
+        <div class="by" id="byline">a speech-score, after David Ives</div>
       </div>
 
       <div class="heads" id="heads"></div>
@@ -210,9 +217,12 @@
         <div class="track" id="track"></div>
       </div>
 
-      <div class="caption">Dialogue as temporal score — text, recurrence, overlap, vocal distribution.</div>
+      <div class="caption" id="caption">Dialogue as temporal score — text, recurrence, overlap, vocal distribution.</div>
 
       <div class="transport">
+        <div class="trow">
+          <div class="seg" id="scores"></div>
+        </div>
         <div class="tempo">
           <label>Tempo</label>
           <input id="tempo" type="range" min="1" max="9" step="0.5" value="3" />
@@ -227,90 +237,62 @@
           </div>
         </div>
         <div class="trow">
-          <div class="seg" id="sections">
-            <button data-s="readable">Readable</button>
-            <button data-s="phase">Phase</button>
-            <button data-s="fragment">Fragment</button>
-            <button data-s="unison">Unison</button>
-            <button data-s="full" class="on">Whole</button>
-          </div>
+          <div class="seg" id="sections"></div>
         </div>
       </div>
     </div>
 
     <!-- Neural voice clips (generated): window.SSE_VOICES. Loads over file:// via a script tag
-         (fetch is blocked for local files). Absent -> the player falls back to Web Speech. -->
-    <script src="philip-glass-voices.js"></script>
+         (fetch is blocked for local files). Score data + voice packs register onto window; add a
+         play = add a scores/<id>.js + voices/<id>.js file and two <script> tags below. -->
+    <script src="scores/philip-glass.js"></script>
+    <script src="scores/richard-and-anne.js"></script>
+    <script src="scores/earnest-duet.js"></script>
+    <script src="voices/philip-glass.js"></script>
+    <script src="voices/richard-and-anne.js"></script>
+    <script src="voices/earnest-duet.js"></script>
     <script>
-      const CH = ['FIRST_WOMAN', 'SECOND_WOMAN', 'GLASS', 'BAKER'];
-      const HEAD = { FIRST_WOMAN: 'First Woman', SECOND_WOMAN: 'Second Woman', GLASS: 'Glass', BAKER: 'Baker' };
-      // per-voice pitch, high -> low, for a Glass-minimalist stack
-      const TONES = {
-        FIRST_WOMAN: { f: 587.33, t: 'triangle' },
-        SECOND_WOMAN: { f: 493.88, t: 'triangle' },
-        GLASS: { f: 392.0, t: 'sine' },
-        BAKER: { f: 261.63, t: 'sine' },
-      };
+      // ---- pick the score (data-driven: this engine renders any registered SCORE) ----
+      const SCORES = window.SSE_SCORES || {};
+      const params = new URLSearchParams(location.search);
+      const wanted = params.get('score');
+      const ID =
+        (wanted && SCORES[wanted] && wanted) ||
+        (SCORES['philip-glass'] ? 'philip-glass' : Object.keys(SCORES)[0]);
+      const SC = SCORES[ID];
+      const CLIPS = ((window.SSE_VOICES || {})[ID] || {}).clips || null;
 
-      // ---- build the score (the arc of the play) ----
-      const EV = [];
-      const put = (row, ch, text, section, stage) => EV.push({ row, channel: ch, text, section, stage: !!stage });
+      const LANES = SC.lanes;
+      const CH = LANES.map((l) => l.id);
+      const HEAD = {};
+      const laneById = new Map(LANES.map((l) => [l.id, l]));
+      const isHuman = (lane) => (laneById.get(lane) || {}).performer === 'human';
 
-      // I. READABLE — the recognizable exchange (short fragments, turn-taking)
-      put(2, 'FIRST_WOMAN', 'Isn’t that Philip Glass?', 'readable');
-      put(6, 'SECOND_WOMAN', 'I think it is.', 'readable');
-      put(10, 'BAKER', 'Can I help you, sir?', 'readable');
-      put(14, 'GLASS', 'a loaf of bread', 'readable');
-      put(18, 'BAKER', 'Just a moment.', 'readable');
-      put(22, 'FIRST_WOMAN', 'It’s time now.', 'readable');
-
-      // II. PHASE — staggered ostinati enter one voice at a time, then lock
-      for (let r = 26; r <= 44; r += 2) put(r, 'FIRST_WOMAN', 'isn’t that', 'phase');
-      for (let r = 32; r <= 50; r += 2) put(r, 'SECOND_WOMAN', 'think it is', 'phase');
-      for (let r = 38; r <= 56; r += 2) put(r, 'BAKER', 'help you sir', 'phase');
-      for (let r = 44; r <= 62; r += 2) put(r, 'GLASS', 'yes I need', 'phase');
-      for (let r = 58; r <= 63; r += 1) {
-        put(r, 'FIRST_WOMAN', 'isn’t that', 'phase');
-        put(r, 'SECOND_WOMAN', 'think it is', 'phase');
-        put(r, 'GLASS', 'yes I need', 'phase');
-        put(r, 'BAKER', 'help you sir', 'phase');
+      // Derive every audio map from the lane casting — one source of truth per lane.
+      const TONES = {};
+      const CHVOX = {};
+      const VOX = {};
+      for (const l of LANES) {
+        HEAD[l.id] = l.name || l.id;
+        TONES[l.id] = { f: (l.tone && l.tone.f) || 440, t: (l.tone && l.tone.type) || 'sine' };
+        CHVOX[l.id] = {
+          pan: typeof l.pan === 'number' ? l.pan : 0,
+          rate: 1.0,
+          gain: typeof l.gain === 'number' ? l.gain : 1.0,
+        };
+        VOX[l.id] = l.speech || { pitch: 1.0, rate: 1.0, prefer: [] };
       }
+      const EV = SC.events;
+      const SECTIONS = SC.sections || {};
+      const TOTAL = SC.total;
+      const rand = (a, b) => a + Math.random() * (b - a);
 
-      // III. FRAGMENT — phrases atomize into single words, scattered / phasing
-      const FRAG = {
-        FIRST_WOMAN: ['Philip', 'a'],
-        SECOND_WOMAN: ['think', 'is'],
-        GLASS: ['loaf', 'bread', 'yes'],
-        BAKER: ['help', 'can', 'bread'],
-      };
-      const idx = { FIRST_WOMAN: 0, SECOND_WOMAN: 0, GLASS: 0, BAKER: 0 };
-      const nextFrag = (ch) => FRAG[ch][idx[ch]++ % FRAG[ch].length];
-      for (let r = 66; r <= 99; r += 1) {
-        if (r % 2 === 0) put(r, 'FIRST_WOMAN', nextFrag('FIRST_WOMAN'), 'fragment');
-        if (r % 2 === 1) put(r, 'SECOND_WOMAN', nextFrag('SECOND_WOMAN'), 'fragment');
-        if (r % 3 === 0) put(r, 'GLASS', nextFrag('GLASS'), 'fragment');
-        if (r % 3 === 2) put(r, 'BAKER', nextFrag('BAKER'), 'fragment');
-      }
-
-      // IV. UNISON — the four voices converge on the same word, same instant
-      const UNI = ['Philip', 'can', 'think', 'bread', 'Bread', 'help', 'Philip', 'think', 'Philip', 'need', 'bread', 'loaf'];
-      let ur = 103;
-      for (const w of UNI) {
-        for (const ch of CH) put(ur, ch, w, 'unison');
-        ur += 2;
-      }
-      ur += 1;
-      for (const ch of CH) put(ur, ch, 'loaf of bread', 'unison');
-      ur += 3;
-      for (const ch of CH) put(ur, ch, 'loaf of bread.', 'unison');
-      const TOTAL = ur + 3;
-
-      const SECTIONS = {
-        readable: [0, 24],
-        phase: [25, 64],
-        fragment: [65, 101],
-        unison: [102, TOTAL - 1],
-      };
+      // Paint the shell from the score.
+      document.documentElement.style.setProperty('--lanes', 'repeat(' + CH.length + ', minmax(0, 1fr))');
+      document.getElementById('title').textContent = SC.title;
+      document.getElementById('byline').textContent = SC.byline || '';
+      document.getElementById('caption').textContent = SC.caption || '';
+      document.title = SC.title + ' — Speech-Score';
 
       const eventsByRow = new Map();
       const cellRef = new Map();
@@ -320,36 +302,15 @@
       }
 
       // ---- audio ----
-      // Sound sources, best-first:
-      //   'voice' — pre-rendered NEURAL clips (window.SSE_VOICES, Resemble AI Chatterbox) played
-      //             as Web Audio buffers: polyphonic (many at once) + zero-latency. One clip per
-      //             unique line; per-channel pan/register + per-trigger humanization (detune,
-      //             timing jitter, gain, LFO vibrato) make it four voices, human, never identical.
-      //             If no neural clips are present, falls back to the Web Speech API.
-      //   'tone'  — the Web Audio pitch stack (percussive reading).
+      // 'voice' — pre-rendered NEURAL clips (window.SSE_VOICES[ID]) played as Web Audio buffers:
+      //           polyphonic (many at once) + zero-latency. Per-lane pan/register + per-trigger
+      //           humanization (detune, timing jitter, gain, LFO vibrato). Human lanes are left
+      //           SILENT — a live actor speaks them. Falls back to Web Speech, then to tones.
       let silent = false;
       let soundMode = 'voice';
 
-      // Each channel is a tracker lane placed across the stereo field. The clips are already four
-      // distinct neural actors, so no pitch-register trick is needed — just position + humanization.
-      const CHVOX = {
-        FIRST_WOMAN: { pan: -0.5, rate: 1.0, gain: 0.98 },
-        SECOND_WOMAN: { pan: -0.17, rate: 1.0, gain: 0.98 },
-        GLASS: { pan: 0.17, rate: 1.0, gain: 1.0 },
-        BAKER: { pan: 0.5, rate: 1.0, gain: 0.95 },
-      };
-      const rand = (a, b) => a + Math.random() * (b - a);
-
-      // -- source A: real voices (Web Speech API) --
+      // -- source A: real voices (Web Speech API) — fallback when no neural clips are present --
       const synth = window.speechSynthesis || null;
-      // Per-$VOICE_CHANNEL character. `prefer` biases voice picking; pitch/rate keep the four
-      // distinct even when the OS only exposes one or two real voices.
-      const VOX = {
-        FIRST_WOMAN: { pitch: 1.5, rate: 1.0, prefer: ['samantha', 'victoria', 'karen', 'moira', 'tessa', 'fiona', 'zira', 'female'] },
-        SECOND_WOMAN: { pitch: 1.2, rate: 1.06, prefer: ['victoria', 'allison', 'ava', 'karen', 'moira', 'female'] },
-        GLASS: { pitch: 0.7, rate: 0.9, prefer: ['daniel', 'alex', 'oliver', 'rishi', 'aaron', 'male'] },
-        BAKER: { pitch: 0.88, rate: 1.0, prefer: ['fred', 'tom', 'reed', 'alex', 'daniel', 'male'] },
-      };
       const VOICE_ASSIGN = {};
       function loadVoices() {
         if (!synth) return;
@@ -359,8 +320,9 @@
         const pool = en.length ? en : all;
         const used = new Set();
         for (const ch of CH) {
+          if (isHuman(ch)) continue;
           let pick = null;
-          for (const h of VOX[ch].prefer) {
+          for (const h of VOX[ch].prefer || []) {
             pick = pool.find((v) => !used.has(v.name) && v.name.toLowerCase().includes(h));
             if (pick) break;
           }
@@ -377,10 +339,8 @@
       }
       function speak(events) {
         if (!synth) return false;
-        // Same word struck by several channels on one row (unison) -> one clear utterance.
         const seen = new Map();
-        for (const ev of events) if (!seen.has(ev.text)) seen.set(ev.text, ev.channel);
-        // Track the playhead: never let a backlog build (Chrome also pauses if left idle).
+        for (const ev of events) if (!seen.has(ev.text)) seen.set(ev.text, ev.lane);
         synth.resume();
         if (synth.pending) synth.cancel();
         for (const [text, ch] of seen) {
@@ -389,7 +349,6 @@
           if (v) u.voice = v;
           const spec = VOX[ch];
           u.pitch = spec.pitch;
-          // Speak faster as tempo rises so words land on the beat.
           u.rate = Math.min(2.2, spec.rate * Math.max(1, rps / 3));
           u.volume = 1;
           synth.speak(u);
@@ -397,7 +356,7 @@
         return true;
       }
 
-      // -- source B: Web Audio tone stack (fallback) --
+      // -- source B: Web Audio tone stack (final fallback) --
       let ctx = null;
       let master = null;
       function ensureCtx() {
@@ -435,7 +394,7 @@
         };
       }
 
-      // -- source 0: pre-rendered neural clips (window.SSE_VOICES) as Web Audio buffers --
+      // -- source 0: pre-rendered neural clips (window.SSE_VOICES[ID]) as Web Audio buffers --
       const SAMP = { buf: new Map(), ready: false, loading: false };
       function b64ToBuf(b64) {
         const bin = atob(b64);
@@ -449,16 +408,15 @@
         const thresh = 0.012;
         let i = 0;
         for (; i < d.length; i += 1) if (Math.abs(d[i]) > thresh) break;
-        const off = i / buffer.sampleRate - 0.02; // back off 20ms so the onset isn't clipped
+        const off = i / buffer.sampleRate - 0.02;
         return off > 0 ? off : 0;
       }
       async function loadSamples() {
         if (SAMP.ready || SAMP.loading) return SAMP.ready;
-        if (!window.SSE_VOICES || !ensureCtx() || !ctx) return false;
+        if (!CLIPS || !ensureCtx() || !ctx) return false;
         SAMP.loading = true;
-        const clips = window.SSE_VOICES.clips || {};
         await Promise.all(
-          Object.entries(clips).map(async ([key, b64]) => {
+          Object.entries(CLIPS).map(async ([key, b64]) => {
             try {
               const buffer = await ctx.decodeAudioData(b64ToBuf(b64));
               SAMP.buf.set(key, { buffer, offset: leadOffset(buffer) });
@@ -471,17 +429,17 @@
         SAMP.loading = false;
         return SAMP.ready;
       }
-      // Play one line on one channel: the character's own neural clip, humanized + panned.
+      // Play one line on one lane: that character's own neural clip, humanized + panned.
       function playSample(channel, text, when) {
-        const clip = SAMP.buf.get(`${channel}|${text}`) || SAMP.buf.get(text);
+        const clip = SAMP.buf.get(channel + '|' + text) || SAMP.buf.get(text);
         if (!clip || !ctx || !master) return false;
         const spec = CHVOX[channel] || { pan: 0, rate: 1, gain: 1 };
         const src = ctx.createBufferSource();
         src.buffer = clip.buffer;
-        src.playbackRate.value = spec.rate * rand(0.997, 1.003); // micro tempo/pitch drift
-        if (src.detune) src.detune.value = rand(-8, 8); // cents of humanized detune
+        src.playbackRate.value = spec.rate * rand(0.997, 1.003);
+        if (src.detune) src.detune.value = rand(-8, 8);
         const g = ctx.createGain();
-        g.gain.value = spec.gain * rand(0.88, 1.0); // velocity variation
+        g.gain.value = spec.gain * rand(0.88, 1.0);
         // subtle pitch LFO — the "low-frequency oscillation"; kept small so speech stays natural
         let lfo = null;
         let lfoGain = null;
@@ -490,7 +448,7 @@
           lfo.type = 'sine';
           lfo.frequency.value = rand(4.5, 6.5);
           lfoGain = ctx.createGain();
-          lfoGain.gain.value = rand(1.5, 4); // cents — barely-there life, not a warble
+          lfoGain.gain.value = rand(1.5, 4);
           lfo.connect(lfoGain).connect(src.detune);
         }
         const cleanup = (nodes) => () => {
@@ -518,25 +476,27 @@
 
       function voice(events) {
         if (silent || !events || !events.length) return;
+        // Human lanes are performed live — never voiced by the engine.
+        const audible = events.filter((ev) => !isHuman(ev.lane));
+        if (!audible.length) return;
         if (soundMode === 'voice') {
-          if (window.SSE_VOICES) {
+          if (CLIPS) {
             if (SAMP.ready) {
               const base = ctx.currentTime + 0.015;
               let any = false;
-              // per-event timing jitter so voices don't lock to a machine grid
-              for (const ev of events) if (playSample(ev.channel, ev.text, base + rand(0, 0.028))) any = true;
+              for (const ev of audible) if (playSample(ev.lane, ev.text, base + rand(0, 0.028))) any = true;
               if (any) return;
             } else {
-              loadSamples(); // still decoding — skip this row rather than beep robotically
+              loadSamples();
               return;
             }
-          } else if (synth && speak(events)) {
-            return; // no neural clips available -> Web Speech
+          } else if (synth && speak(audible)) {
+            return;
           }
         }
-        if (!ensureCtx() || !ctx) return; // 'tone' mode, or final fallback
+        if (!ensureCtx() || !ctx) return;
         const now = ctx.currentTime;
-        for (const ev of events) tone(ev.channel, now);
+        for (const ev of audible) tone(ev.lane, now);
       }
 
       // ---- build view ----
@@ -549,7 +509,7 @@
       heads.appendChild(gh);
       for (const c of CH) {
         const el = document.createElement('div');
-        el.className = 'h';
+        el.className = 'h' + (isHuman(c) ? ' live' : '');
         el.textContent = HEAD[c];
         heads.appendChild(el);
       }
@@ -573,19 +533,49 @@
         rowEls.push(row);
       }
       for (const ev of EV) {
-        const cell = cellRef.get(ev.row + ':' + ev.channel);
+        const cell = cellRef.get(ev.row + ':' + ev.lane);
         if (!cell) continue;
         const span = document.createElement('span');
-        span.className = 'word' + (ev.stage ? ' stage' : '');
+        span.className = 'word' + (ev.stage ? ' stage' : '') + (isHuman(ev.lane) ? ' live' : '');
         span.textContent = ev.text;
         cell.appendChild(span);
         ev.el = span;
       }
 
+      // ---- score picker + section chips (built from the registry / the score) ----
+      const scoresSeg = document.getElementById('scores');
+      for (const s of Object.values(SCORES)) {
+        const b = document.createElement('button');
+        b.dataset.score = s.id;
+        b.textContent = s.short || s.title;
+        if (s.id === ID) b.classList.add('on');
+        scoresSeg.appendChild(b);
+      }
+      scoresSeg.addEventListener('click', (e) => {
+        const b = e.target.closest('button');
+        if (!b || b.dataset.score === ID) return;
+        const p = new URLSearchParams(location.search);
+        p.set('score', b.dataset.score);
+        location.search = p.toString();
+      });
+
+      const sections = document.getElementById('sections');
+      for (const key of Object.keys(SECTIONS)) {
+        const b = document.createElement('button');
+        b.dataset.s = key;
+        b.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+        sections.appendChild(b);
+      }
+      const wholeBtn = document.createElement('button');
+      wholeBtn.dataset.s = 'full';
+      wholeBtn.textContent = 'Whole';
+      wholeBtn.classList.add('on');
+      sections.appendChild(wholeBtn);
+
       // ---- state + transport ----
       let playing = false;
       let currentRow = 0;
-      let rps = 3;
+      let rps = SC.tempo || 3;
       let sel = 'full';
       let rafId = null;
       let lastTs = 0;
@@ -664,7 +654,7 @@
           ensureCtx();
           if (ctx && ctx.state === 'suspended') ctx.resume();
           if (soundMode === 'voice') {
-            if (window.SSE_VOICES) loadSamples();
+            if (CLIPS) loadSamples();
             else if (synth) {
               loadVoices();
               synth.resume();
@@ -698,8 +688,8 @@
       const restartBtn = document.getElementById('restart');
       const soundSeg = document.getElementById('sound');
       const tempo = document.getElementById('tempo');
-      const sections = document.getElementById('sections');
 
+      tempo.value = String(rps);
       playBtn.addEventListener('click', () => (playing ? pause() : play()));
       restartBtn.addEventListener('click', () => {
         const [s] = range();
@@ -723,7 +713,7 @@
         ensureCtx();
         if (ctx && ctx.state === 'suspended') ctx.resume();
         if (m === 'voice') {
-          if (window.SSE_VOICES) loadSamples();
+          if (CLIPS) loadSamples();
           else if (synth) {
             loadVoices();
             synth.resume();

@@ -33,12 +33,26 @@ four-column score that phases and converges to unison. The prototype performs th
 - Generator committed at `tools/render-philip-glass-voices.mjs` (bootstraps its own venv); the 570 KB
   data blob + `tools/` are biome-ignored. Gate: `biome check .` (1.9.4) passes.
 
+## Shipped pass 3 — data-driven engine (L1 of ROADMAP.md)
+- The score is now **data, not code**: `apps/web/public/prototypes/scores/<id>.js` register
+  `window.SSE_SCORES[id]` = `{ lanes[], events[], sections, tempo, total, ... }`. Lanes carry their
+  own casting (neural `voice`, `pan`, `gain`, `tone`, `speech`) and a `performer` (`ai` | `human`).
+- The engine (`philip-glass-tracker.html`) derives everything — lane count/grid, headers, tone/pan
+  maps, section chips, tempo, title — from the selected score. `?score=<id>` + an in-app picker.
+  Philip Glass is preserved byte-identical (still 183 events / 4 lanes).
+- Proven multi-play: **richard-and-anne** (2-lane Shakespeare stichomythia) and **earnest-duet**
+  (Wilde) ship on the same engine. earnest-duet is the first taste of L5: JACK is `performer:'human'`
+  (engine leaves it silent + marks it gold) while ALGERNON is the AI actor.
+- Generator generalized: `tools/render-voices.mjs` reads every score and renders each AI lane's lines
+  in its assigned neural voice → `voices/<id>.js` (human lanes skipped). Voice blobs biome-ignored.
+- Gates green: `biome check .` (67 files, clean); engine compiles; all scores/voices coherent.
+
+## Roadmap
+The full plan (L0–L6, "Ableton for voice", live human+AI performance) now lives in `ROADMAP.md`.
+
 ## Not yet (follow-ups)
-- **Distinct cast from real reference reads** (user's recorded-human vision): swap the source to a
-  zero-shot cloning model (e.g. Chatterbox) driven by 4 reference clips he provides/records, so the
-  four voices are specific real people. Pipeline + player already support it — only the render source
-  changes. (Chatterbox via HF ZeroGPU was rate-limited when attempted anonymously.)
-- Port the same logic into the Next App Router route `apps/web/src/app/prototypes/philip-glass-tracker/`
-  (shared `core/`), run the full gate matrix (`tsc --noEmit`, `next build`), open PR → merge.
-- Phoneme-recomposition tier (granular reassembly of recorded consonants/vowels).
-- Do NOT add: version history, diagnostics, share links, screenshot parsing, auth, DB.
+- **L2** — port the engine into the Next App Router route (shared `core/`), gate matrix, PR → merge.
+- **L3** — the arrangement editor (drag/retime/recast clips; persist the SCORE JSON).
+- **L4** — casting UI + zero-shot cloning from real reference reads (specific real people).
+- **L5** — live human+AI performance (cue-follow, count-in, loop-a-passage, mute/solo per lane).
+- Do NOT add yet: auth, DB, accounts, collaboration, cloud storage (see ROADMAP non-goals).

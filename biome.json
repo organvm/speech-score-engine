@@ -13,7 +13,7 @@
       ".turbo",
       "dramaturgist-tuning-markdown-archive",
       "infrastructure/docker/data",
-      "apps/web/public/prototypes/philip-glass-voices.js",
+      "apps/web/public/prototypes/voices",
       "tools"
     ]
   },
