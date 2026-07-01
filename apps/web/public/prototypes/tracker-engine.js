@@ -535,20 +535,28 @@
       currentRow = s;
       renderRow(s);
     };
+    // Rows that actually hold a line, within the selected passage, in order.
+    const cueRows = () => {
+      const [s, e] = range();
+      return [...eventsByRow.keys()].filter((r) => r >= s && r <= e).sort((a, b) => a - b);
+    };
+    // Each cue strikes the NEXT LINE (not the next empty grid-beat) — the human drives line by line.
     const cueAdvance = () => {
       primeAudio();
-      const [s, e] = range();
+      const rows = cueRows();
+      if (!rows.length) return;
       if (!cued) {
         cued = true;
         clearPerformed();
-        advance(s);
+        advance(rows[0]);
         return;
       }
-      if (currentRow >= e) {
+      const next = rows.find((r) => r > currentRow);
+      if (next === undefined) {
         clearPerformed();
-        advance(s);
+        advance(rows[0]); // wrap — loop the passage for drilling
       } else {
-        advance(currentRow + 1);
+        advance(next);
       }
     };
 
