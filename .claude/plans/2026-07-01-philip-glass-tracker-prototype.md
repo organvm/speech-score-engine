@@ -47,12 +47,24 @@ four-column score that phases and converges to unison. The prototype performs th
   in its assigned neural voice → `voices/<id>.js` (human lanes skipped). Voice blobs biome-ignored.
 - Gates green: `biome check .` (67 files, clean); engine compiles; all scores/voices coherent.
 
-## Roadmap
-The full plan (L0–L6, "Ableton for voice", live human+AI performance) now lives in `ROADMAP.md`.
+## Shipped pass 4 — L2→L5 (the full march)
+- **L2** — shared engine core (`tracker-engine.js` + `tracker.css`); standalone HTML is now a thin
+  shell over it; Next `/tracker` route injects the same file. `src/types/sse.d.ts`, `TrackerClient`.
+- **L3** — the arrangement editor at `/editor`: horizontal timeline, drag clips in time / across
+  lanes, add/dup/delete clips + lanes, per-lane AI↔human toggle, Import/Export SCORE JSON, ▶ Perform
+  through the shared engine.
+- **L4 (partial)** — per-lane neural voice casting (`src/lib/voiceCatalog.ts`); generator renders
+  editor-exported `scores/*.json` too (editor→neural loop). Cloning from real reads is **hung** →
+  `NEEDS-YOU.md`.
+- **L5** — live human+AI performance in the shared engine: **Live cue** (Space advances), count-in,
+  loop-a-passage (sections), mute a voice (click header). Chris's two-hander idea, made real.
+- Gates green each layer: `biome check .` · `tsc --noEmit` · `next build` · http smoke tests.
+
+## Roadmap / hung items
+Full plan (L0–L6) in `ROADMAP.md`; anything needing Anthony collected in `NEEDS-YOU.md`.
 
 ## Not yet (follow-ups)
-- **L2** — port the engine into the Next App Router route (shared `core/`), gate matrix, PR → merge.
-- **L3** — the arrangement editor (drag/retime/recast clips; persist the SCORE JSON).
-- **L4** — casting UI + zero-shot cloning from real reference reads (specific real people).
-- **L5** — live human+AI performance (cue-follow, count-in, loop-a-passage, mute/solo per lane).
+- **L4 cloning** — zero-shot clone specific real voices from ~10s reference reads (needs recordings).
+- **L6** — waveform/clip audio editing + phoneme recomposition.
+- Small: per-lane solo; MIDI/pedal mapping; one-click in-app render; hosting for a shareable URL.
 - Do NOT add yet: auth, DB, accounts, collaboration, cloud storage (see ROADMAP non-goals).
