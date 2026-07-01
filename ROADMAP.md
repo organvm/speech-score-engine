@@ -41,7 +41,10 @@ model that can't hold it — data model first, then surface, then persistence, t
   delete clips, add / rename / reorder lanes, edit tempo and the arc. Persist to the portable
   `SCORE` JSON (export / import). Perform from the edited arrangement.
 
-- **L4 — Casting & real actors.** Per-lane voice assignment UI. **Zero-shot voice cloning:** record
+- **L4 — Casting & real actors.** ◐ *casting UI shipped; cloning hung on your reference reads
+  (see NEEDS-YOU.md).* Per-lane voice assignment UI (cast any lane from the neural catalog) + the
+  editor→neural loop (export a score, render it with `tools/render-voices.mjs`). **Zero-shot voice
+  cloning:** record
   or upload a ~10s reference per lane and that lane becomes a *specific real person* (Chatterbox /
   ElevenLabs-grade). On-demand render pipeline (server function) replaces pre-baked blobs.
 

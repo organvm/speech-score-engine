@@ -43,7 +43,17 @@ for (const file of fs.readdirSync(SCORES_DIR).filter((f) => f.endsWith('.js')).s
   const src = fs.readFileSync(path.join(SCORES_DIR, file), 'utf8');
   new vm.Script(src, { filename: file }).runInContext(sandbox);
 }
-const scores = sandbox.SSE_SCORES || {};
+const scores = { ...(sandbox.SSE_SCORES || {}) };
+// Also render plain SCORE JSON dropped here (e.g. exported from the /editor). This closes the
+// editor -> neural loop: export a score, drop the .json in scores/, run this to voice it.
+for (const file of fs.readdirSync(SCORES_DIR).filter((f) => f.endsWith('.json')).sort()) {
+  try {
+    const sc = JSON.parse(fs.readFileSync(path.join(SCORES_DIR, file), 'utf8'));
+    if (sc && sc.id && Array.isArray(sc.lanes) && Array.isArray(sc.events)) scores[sc.id] = sc;
+  } catch (e) {
+    console.log(`SKIP ${file}: ${String(e.message).slice(0, 80)}`);
+  }
+}
 console.log(`scores: ${Object.keys(scores).join(', ')}`);
 
 const render = (voice, rate, text) => {

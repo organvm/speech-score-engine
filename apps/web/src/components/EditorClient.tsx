@@ -1,6 +1,7 @@
 'use client';
 
 import { loadScript } from '@/lib/loadScript';
+import { VOICE_CATALOG } from '@/lib/voiceCatalog';
 import type { Lane, Score } from '@/types/sse';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -11,8 +12,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 // engine (edited lines preview via Web Speech; L4 will render them as neural voices).
 
 const PX_PER_ROW = 15;
-const LANE_H = 60;
-const GUTTER = 150;
+const LANE_H = 92;
+const GUTTER = 168;
 
 const C = {
   stage: '#101012',
@@ -60,6 +61,7 @@ function blankLanes(): Lane[] {
       id: 'A',
       name: 'Voice A',
       performer: 'ai',
+      voice: 'en-US-AriaNeural',
       pan: -0.3,
       gain: 1,
       tone: { f: 440, type: 'sine' },
@@ -68,6 +70,7 @@ function blankLanes(): Lane[] {
       id: 'B',
       name: 'Voice B',
       performer: 'ai',
+      voice: 'en-GB-RyanNeural',
       pan: 0.3,
       gain: 1,
       tone: { f: 330, type: 'sine' },
@@ -200,6 +203,7 @@ export function EditorClient() {
         id: `L${seq.current++}`,
         name: `Voice ${n}`,
         performer: 'ai',
+        voice: 'en-US-GuyNeural',
         pan: 0,
         gain: 1,
         tone: { f: 440, type: 'sine' },
@@ -209,6 +213,9 @@ export function EditorClient() {
   };
   const renameLane = (id: string, name: string) => {
     setLanes((prev) => prev.map((l) => (l.id === id ? { ...l, name } : l)));
+  };
+  const setLaneVoice = (id: string, voice: string) => {
+    setLanes((prev) => prev.map((l) => (l.id === id ? { ...l, voice } : l)));
   };
   const toggleLanePerformer = (id: string) => {
     setLanes((prev) =>
@@ -453,6 +460,24 @@ export function EditorClient() {
                   ✕
                 </button>
               </div>
+              {l.performer !== 'human' && (
+                <select
+                  aria-label={`Voice for ${l.name ?? l.id}`}
+                  style={{ ...field, fontSize: 10, padding: '2px 4px' }}
+                  value={l.voice ?? ''}
+                  onChange={(e) => setLaneVoice(l.id, e.target.value)}
+                >
+                  {!l.voice && <option value="">voice…</option>}
+                  {l.voice && !VOICE_CATALOG.some((v) => v.id === l.voice) && (
+                    <option value={l.voice}>{l.voice}</option>
+                  )}
+                  {VOICE_CATALOG.map((v) => (
+                    <option key={v.id} value={v.id}>
+                      {v.label}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
           ))}
         </div>
