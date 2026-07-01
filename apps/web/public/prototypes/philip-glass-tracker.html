@@ -9,6 +9,9 @@
       Renders David Ives' "Philip Glass Buys a Loaf of Bread" as a living speech-score:
       the page becomes a four-voice tracker that phases, fragments, and converges to unison.
       Aesthetic mirrors the Kindle source pages (warm serif on dark slate).
+      Layout is fully fluid — fills the viewport, reflows on resize; columns stay in their lanes.
+      Audio: real voices via the Web Speech API (browser-native neural TTS), with a Web Audio
+      tone layer as fallback. Per-$VOICE_CHANNEL voice + pitch so the four are distinguishable.
       Provenance: dramaturgist-tuning-markdown-archive/source-attachments/ (the 7 genesis screenshots).
       Speech-score instrument — unit = $PHRASE_EVENT, ordered by $TEMPORAL_RELATION.
     -->
@@ -36,55 +39,55 @@
       }
       .frame {
         position: relative;
+        width: 100vw;
         height: 100dvh;
-        aspect-ratio: 9 / 16;
-        max-width: 100vw;
         background: var(--page);
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        box-shadow: 0 0 140px rgba(0, 0, 0, 0.85), inset 0 0 90px rgba(0, 0, 0, 0.18);
+        box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.22);
       }
 
       /* ---- title ---- */
-      .title { padding: 20px 24px 12px; text-align: center; }
+      .title { padding: clamp(14px, 2.2vh, 30px) 24px clamp(8px, 1.2vh, 16px); text-align: center; }
       .title .mark {
         font-family: var(--serif);
-        font-size: 9px;
+        font-size: clamp(8px, 0.9vw, 12px);
         letter-spacing: 0.42em;
         text-transform: uppercase;
         color: rgba(233, 230, 220, 0.4);
       }
       .title h1 {
         font-weight: 500;
-        font-size: 17px;
+        font-size: clamp(16px, 2.4vw, 32px);
         letter-spacing: 0.02em;
-        margin-top: 9px;
+        margin-top: clamp(6px, 0.9vh, 12px);
         font-variant: small-caps;
         color: var(--ink);
       }
-      .title .by { font-size: 11px; font-style: italic; color: rgba(233, 230, 220, 0.45); margin-top: 4px; }
+      .title .by { font-size: clamp(10px, 1.2vw, 16px); font-style: italic; color: rgba(233, 230, 220, 0.45); margin-top: 4px; }
 
       /* ---- column headers ---- */
       .heads {
         display: grid;
-        grid-template-columns: 1.6rem repeat(4, 1fr);
-        padding: 6px 14px 8px;
+        grid-template-columns: clamp(1.4rem, 3vw, 3rem) repeat(4, minmax(0, 1fr));
+        padding: 6px clamp(10px, 1.4vw, 22px) 8px;
         border-bottom: 1px solid var(--rule);
-        margin: 4px 10px 0;
+        margin: 4px clamp(8px, 1vw, 18px) 0;
       }
       .heads .h {
-        font-size: 8.5px;
+        font-size: clamp(8.5px, 1vw, 13px);
         letter-spacing: 0.14em;
         text-transform: uppercase;
         text-align: left;
         color: rgba(233, 230, 220, 0.62);
         padding-left: 4px;
+        min-width: 0;
       }
       .heads .h.gut { text-align: center; }
 
       /* ---- score viewport ---- */
-      .viewport { position: relative; flex: 1; overflow: hidden; margin: 0 10px; }
+      .viewport { position: relative; flex: 1; overflow: hidden; margin: 0 clamp(8px, 1vw, 18px); }
       .viewport::before, .viewport::after {
         content: "";
         position: absolute;
@@ -98,38 +101,38 @@
       .track { position: absolute; inset: 0 0 auto 0; transition: transform 0.12s linear; will-change: transform; }
       .row {
         display: grid;
-        grid-template-columns: 1.6rem repeat(4, 1fr);
-        min-height: 26px;
+        grid-template-columns: clamp(1.4rem, 3vw, 3rem) repeat(4, minmax(0, 1fr));
+        min-height: clamp(24px, 3.4vh, 46px);
         align-items: center;
       }
       .rownum {
-        font-size: 8px;
+        font-size: clamp(7px, 0.8vw, 11px);
         color: rgba(233, 230, 220, 0.14);
         text-align: center;
         font-family: var(--serif);
         user-select: none;
       }
       .row.here .rownum { color: rgba(233, 230, 220, 0.5); }
-      /* the playhead: a soft luminous band on the active row */
+      /* the playhead: a soft luminous band on the active row (spans the full row height) */
       .row.here::before {
         content: "";
         position: absolute;
-        left: 0; right: 0;
-        height: 26px;
-        margin-left: -10px;
-        width: calc(100% + 20px);
+        top: 0; bottom: 0;
+        left: calc(-1 * clamp(8px, 1vw, 18px)); right: calc(-1 * clamp(8px, 1vw, 18px));
         background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.07), rgba(255,255,255,0.02));
         box-shadow: 0 0 26px rgba(200, 220, 255, 0.06);
         pointer-events: none;
       }
-      .cell { position: relative; padding-left: 4px; }
+      .cell { position: relative; padding-left: 4px; min-width: 0; }
       .word {
         display: inline-block;
-        font-size: 14px;
+        max-width: 100%;
+        font-size: clamp(13px, 1.5vw, 23px);
         line-height: 1.2;
         letter-spacing: 0.01em;
         color: var(--ink);
-        opacity: 0.16;               /* future: faint on the page */
+        opacity: 0.16;               /* faint on the page until struck */
+        overflow-wrap: anywhere;
         transition: opacity 0.5s ease, text-shadow 0.5s ease;
       }
       .word.spoken { opacity: 0.52; }  /* already performed: stays legible */
@@ -138,7 +141,7 @@
         text-shadow: 0 0 16px rgba(233, 230, 220, 0.55), 0 0 3px rgba(233, 230, 220, 0.6);
         animation: bloom 0.5s ease-out;
       }
-      .word.stage { font-style: italic; font-size: 12px; opacity: 0.3; }
+      .word.stage { font-style: italic; font-size: clamp(11px, 1.3vw, 19px); opacity: 0.3; }
       @keyframes bloom {
         0% { transform: translateY(0.5px); text-shadow: 0 0 26px rgba(233,230,220,0.9); }
         100% { transform: translateY(0); }
@@ -147,12 +150,12 @@
       /* ---- caption ---- */
       .caption {
         padding: 9px 20px 6px;
-        font-size: 10px;
+        font-size: clamp(9px, 1.1vw, 14px);
         font-style: italic;
         color: rgba(233, 230, 220, 0.4);
         text-align: center;
         border-top: 1px solid var(--rule);
-        margin: 0 10px;
+        margin: 0 clamp(8px, 1vw, 18px);
       }
 
       /* ---- transport (quiet, literary) ---- */
@@ -217,7 +220,11 @@
         <div class="trow">
           <button class="btn primary" id="play">▷ Perform</button>
           <button class="btn" id="restart">↺ Restart</button>
-          <button class="btn" id="silent">Silent</button>
+          <div class="seg" id="sound">
+            <button data-m="voice" class="on">Voices</button>
+            <button data-m="tone">Tones</button>
+            <button data-m="off">Silent</button>
+          </div>
         </div>
         <div class="trow">
           <div class="seg" id="sections">
@@ -310,11 +317,73 @@
       }
 
       // ---- audio ----
+      // Two sound sources, switchable at runtime:
+      //   'voice' — real speech via the Web Speech API (browser-native neural TTS). Default.
+      //   'tone'  — the Web Audio pitch stack (fallback / percussive reading).
+      let silent = false;
+      let soundMode = 'voice';
+
+      // -- source A: real voices (Web Speech API) --
+      const synth = window.speechSynthesis || null;
+      // Per-$VOICE_CHANNEL character. `prefer` biases voice picking; pitch/rate keep the four
+      // distinct even when the OS only exposes one or two real voices.
+      const VOX = {
+        FIRST_WOMAN: { pitch: 1.5, rate: 1.0, prefer: ['samantha', 'victoria', 'karen', 'moira', 'tessa', 'fiona', 'zira', 'female'] },
+        SECOND_WOMAN: { pitch: 1.2, rate: 1.06, prefer: ['victoria', 'allison', 'ava', 'karen', 'moira', 'female'] },
+        GLASS: { pitch: 0.7, rate: 0.9, prefer: ['daniel', 'alex', 'oliver', 'rishi', 'aaron', 'male'] },
+        BAKER: { pitch: 0.88, rate: 1.0, prefer: ['fred', 'tom', 'reed', 'alex', 'daniel', 'male'] },
+      };
+      const VOICE_ASSIGN = {};
+      function loadVoices() {
+        if (!synth) return;
+        const all = synth.getVoices() || [];
+        if (!all.length) return;
+        const en = all.filter((v) => /en(-|_|$)/i.test(v.lang));
+        const pool = en.length ? en : all;
+        const used = new Set();
+        for (const ch of CH) {
+          let pick = null;
+          for (const h of VOX[ch].prefer) {
+            pick = pool.find((v) => !used.has(v.name) && v.name.toLowerCase().includes(h));
+            if (pick) break;
+          }
+          if (!pick) pick = pool.find((v) => !used.has(v.name)) || pool[0];
+          if (pick) {
+            VOICE_ASSIGN[ch] = pick;
+            used.add(pick.name);
+          }
+        }
+      }
+      if (synth) {
+        loadVoices();
+        synth.addEventListener('voiceschanged', loadVoices);
+      }
+      function speak(events) {
+        if (!synth) return false;
+        // Same word struck by several channels on one row (unison) -> one clear utterance.
+        const seen = new Map();
+        for (const ev of events) if (!seen.has(ev.text)) seen.set(ev.text, ev.channel);
+        // Track the playhead: never let a backlog build (Chrome also pauses if left idle).
+        synth.resume();
+        if (synth.pending) synth.cancel();
+        for (const [text, ch] of seen) {
+          const u = new SpeechSynthesisUtterance(text);
+          const v = VOICE_ASSIGN[ch];
+          if (v) u.voice = v;
+          const spec = VOX[ch];
+          u.pitch = spec.pitch;
+          // Speak faster as tempo rises so words land on the beat.
+          u.rate = Math.min(2.2, spec.rate * Math.max(1, rps / 3));
+          u.volume = 1;
+          synth.speak(u);
+        }
+        return true;
+      }
+
+      // -- source B: Web Audio tone stack (fallback) --
       let ctx = null;
       let master = null;
-      let silent = false;
       function ensureCtx() {
-        if (silent) return false;
         if (ctx) return true;
         try {
           const C = window.AudioContext || window.webkitAudioContext;
@@ -348,8 +417,13 @@
           env.disconnect();
         };
       }
+
       function voice(events) {
-        if (silent || !ensureCtx() || !ctx) return;
+        if (silent || !events || !events.length) return;
+        if (soundMode === 'voice' && synth) {
+          if (speak(events)) return;
+        }
+        if (!ensureCtx() || !ctx) return;
         const now = ctx.currentTime;
         for (const ev of events) tone(ev.channel, now);
       }
@@ -474,14 +548,20 @@
       }
       function play() {
         if (playing) return;
+        // Prime the active sound source on the gesture (autoplay/TTS both require it).
+        if (!silent) {
+          if (soundMode === 'voice' && synth) {
+            loadVoices();
+            synth.resume();
+          } else {
+            ensureCtx();
+            if (ctx && ctx.state === 'suspended') ctx.resume();
+          }
+        }
         const [s, e] = range();
         if (currentRow < s || currentRow >= e) {
           clearPerformed();
           advance(s);
-        }
-        if (!silent) {
-          ensureCtx();
-          if (ctx && ctx.state === 'suspended') ctx.resume();
         }
         playing = true;
         playBtn.classList.add('on');
@@ -494,6 +574,7 @@
         playing = false;
         playBtn.classList.remove('on');
         playBtn.textContent = '▷ Perform';
+        if (synth) synth.cancel();
         if (rafId !== null) {
           cancelAnimationFrame(rafId);
           rafId = null;
@@ -502,7 +583,7 @@
 
       const playBtn = document.getElementById('play');
       const restartBtn = document.getElementById('restart');
-      const silentBtn = document.getElementById('silent');
+      const soundSeg = document.getElementById('sound');
       const tempo = document.getElementById('tempo');
       const sections = document.getElementById('sections');
 
@@ -513,11 +594,23 @@
         clearPerformed();
         advance(s);
       });
-      silentBtn.addEventListener('click', () => {
-        silent = !silent;
-        silentBtn.classList.toggle('on', silent);
-        if (silent && ctx && ctx.state === 'running') ctx.suspend();
-        else if (!silent && playing) {
+      soundSeg.addEventListener('click', (e) => {
+        const b = e.target.closest('button');
+        if (!b) return;
+        const m = b.dataset.m;
+        for (const btn of soundSeg.children) btn.classList.toggle('on', btn === b);
+        if (m === 'off') {
+          silent = true;
+          if (synth) synth.cancel();
+          if (ctx && ctx.state === 'running') ctx.suspend();
+          return;
+        }
+        silent = false;
+        soundMode = m;
+        if (m === 'voice' && synth) {
+          loadVoices();
+          synth.resume();
+        } else if (m === 'tone') {
           ensureCtx();
           if (ctx && ctx.state === 'suspended') ctx.resume();
         }
