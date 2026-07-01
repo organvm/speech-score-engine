@@ -22,6 +22,13 @@ export interface ScoreEvent {
   text: string;
   section?: string;
   stage?: boolean;
+  // L6 audio craft — per-clip shaping honored by the engine's playSample (all optional, seconds
+  // except gain which is a level multiplier). Absent → the clip plays untouched.
+  gain?: number;
+  fadeIn?: number;
+  fadeOut?: number;
+  trimStart?: number;
+  trimEnd?: number;
 }
 
 export interface Score {

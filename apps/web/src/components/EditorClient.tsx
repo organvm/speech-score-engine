@@ -1,6 +1,8 @@
 'use client';
 
+import { ClipWaveform } from '@/components/ClipWaveform';
 import { loadScript } from '@/lib/loadScript';
+import { ENGINE_SCRIPT, SCORE_SCRIPTS } from '@/lib/scoreScripts';
 import { VOICE_CATALOG } from '@/lib/voiceCatalog';
 import type { Lane, Score } from '@/types/sse';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -26,18 +28,18 @@ const C = {
   bandAlt: 'rgba(255, 255, 255, 0.04)',
 };
 
-const SCORE_SCRIPTS = [
-  '/prototypes/scores/philip-glass.js',
-  '/prototypes/scores/richard-and-anne.js',
-  '/prototypes/scores/earnest-duet.js',
-];
-
 interface EditEvent {
   id: string;
   row: number;
   lane: string;
   text: string;
   stage?: boolean;
+  // L6 audio craft (optional; seconds except gain = level multiplier)
+  gain?: number;
+  fadeIn?: number;
+  fadeOut?: number;
+  trimStart?: number;
+  trimEnd?: number;
 }
 
 interface DragState {
@@ -87,6 +89,8 @@ export function EditorClient() {
   const [selected, setSelected] = useState<string | null>(null);
   const [registry, setRegistry] = useState<Record<string, Score>>({});
   const [performing, setPerforming] = useState(false);
+  const [clips, setClips] = useState<Record<string, string> | null>(null); // neural pack for L6 craft
+  const [clipDur, setClipDur] = useState(0);
 
   const lanesRef = useRef<Lane[]>(lanes);
   lanesRef.current = lanes;
@@ -103,6 +107,11 @@ export function EditorClient() {
         lane: e.lane,
         text: e.text,
         ...(e.stage ? { stage: true } : {}),
+        ...(typeof e.gain === 'number' ? { gain: e.gain } : {}),
+        ...(e.fadeIn ? { fadeIn: e.fadeIn } : {}),
+        ...(e.fadeOut ? { fadeOut: e.fadeOut } : {}),
+        ...(e.trimStart ? { trimStart: e.trimStart } : {}),
+        ...(e.trimEnd ? { trimEnd: e.trimEnd } : {}),
       })),
     );
     seq.current = sc.events.length;
@@ -111,6 +120,26 @@ export function EditorClient() {
     setScoreId(sc.id);
     setSelected(null);
   }, []);
+
+  // Load the neural voice pack for a known library score so audio craft is visible and audible.
+  // Unknown/edited/imported ids have no pack → clips null (craft controls simply show no waveform).
+  useEffect(() => {
+    let cancelled = false;
+    if (!registry[scoreId]) {
+      setClips(null);
+      return;
+    }
+    (async () => {
+      await loadScript(`/prototypes/voices/${scoreId}.js`);
+      if (cancelled) return;
+      setClips(window.SSE_VOICES?.[scoreId]?.clips ?? null);
+    })().catch(() => {
+      if (!cancelled) setClips(null);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [scoreId, registry]);
 
   // Load the score registry (for the "start from" picker), and any ?score= starting point.
   useEffect(() => {
@@ -249,6 +278,11 @@ export function EditorClient() {
           lane: e.lane,
           text: e.text,
           ...(e.stage ? { stage: true } : {}),
+          ...(typeof e.gain === 'number' && e.gain !== 1 ? { gain: e.gain } : {}),
+          ...(e.fadeIn ? { fadeIn: e.fadeIn } : {}),
+          ...(e.fadeOut ? { fadeOut: e.fadeOut } : {}),
+          ...(e.trimStart ? { trimStart: e.trimStart } : {}),
+          ...(e.trimEnd ? { trimEnd: e.trimEnd } : {}),
         })),
     };
   }, [events, lanes, tempo, title, scoreId]);
@@ -279,20 +313,27 @@ export function EditorClient() {
     let handle: { destroy: () => void } | null = null;
     let cancelled = false;
     (async () => {
-      await loadScript('/prototypes/tracker-engine.js');
+      await loadScript(ENGINE_SCRIPT);
       const el = performRef.current;
       const engine = window.SSEEngine;
       if (cancelled || !el || !engine) return;
       const score = toScore();
-      handle = engine.mount(el, { score, clips: null, scores: [score] });
+      // Perform with the real neural clips when we have them, so audio craft is audible; else the
+      // engine falls back to Web Speech (edited/new lines with no rendered clip do too).
+      handle = engine.mount(el, { score, clips, scores: [score] });
     })().catch((err) => console.error(err));
     return () => {
       cancelled = true;
       if (handle) handle.destroy();
     };
-  }, [performing, toScore]);
+  }, [performing, toScore, clips]);
 
   const selectedEv = events.find((e) => e.id === selected) ?? null;
+  const selLane = selectedEv ? (lanes.find((l) => l.id === selectedEv.lane) ?? null) : null;
+  const selIsAi = !!selLane && selLane.performer !== 'human';
+  const selB64 = selectedEv ? (clips?.[`${selectedEv.lane}|${selectedEv.text}`] ?? null) : null;
+  const durMax = clipDur > 0 ? clipDur : 4;
+  const fadeMax = Math.min(1.5, durMax / 2);
   const maxRow = events.reduce((m, e) => Math.max(m, e.row), 0);
   const timelineW = (maxRow + 10) * PX_PER_ROW;
   const timelineH = lanes.length * LANE_H;
@@ -313,6 +354,38 @@ export function EditorClient() {
     color: C.ink,
     border: `1px solid ${C.rule}`,
     borderRadius: 3,
+  };
+  type CraftKey = 'gain' | 'fadeIn' | 'fadeOut' | 'trimStart' | 'trimEnd';
+  const craftCtl = (
+    label: string,
+    key: CraftKey,
+    min: number,
+    max: number,
+    step: number,
+    def: number,
+  ) => {
+    const val = (selectedEv?.[key] as number | undefined) ?? def;
+    return (
+      <label
+        style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: C.faint }}
+      >
+        <span style={{ width: 58 }}>{label}</span>
+        <input
+          aria-label={label}
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={val}
+          onChange={(e) =>
+            patchClip({ [key]: Number.parseFloat(e.target.value) } as Partial<EditEvent>)
+          }
+        />
+        <span style={{ width: 42, textAlign: 'right', color: C.ink }}>
+          {key === 'gain' ? `${val.toFixed(2)}×` : `${val.toFixed(2)}s`}
+        </span>
+      </label>
+    );
   };
 
   return (
@@ -550,58 +623,99 @@ export function EditorClient() {
       <div
         style={{
           display: 'flex',
+          flexDirection: 'column',
           gap: 8,
-          alignItems: 'center',
-          flexWrap: 'wrap',
           padding: '8px 12px',
           borderTop: `1px solid ${C.rule}`,
-          minHeight: 46,
         }}
       >
-        {selectedEv ? (
-          <>
-            <input
-              aria-label="Clip text"
-              style={{ ...field, flex: 1, minWidth: 200 }}
-              value={selectedEv.text}
-              onChange={(e) => patchClip({ text: e.target.value })}
-            />
-            <select
-              aria-label="Clip lane"
-              style={field}
-              value={selectedEv.lane}
-              onChange={(e) => patchClip({ lane: e.target.value })}
-            >
-              {lanes.map((l) => (
-                <option key={l.id} value={l.id}>
-                  {l.name ?? l.id}
-                </option>
-              ))}
-            </select>
-            <label style={{ fontSize: 11, color: C.faint }}>
-              Row{' '}
+        <div
+          style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', minHeight: 46 }}
+        >
+          {selectedEv ? (
+            <>
               <input
-                aria-label="Clip row"
-                type="number"
-                min={0}
-                style={{ ...field, width: 64 }}
-                value={selectedEv.row}
-                onChange={(e) =>
-                  patchClip({ row: Math.max(0, Number.parseInt(e.target.value, 10) || 0) })
-                }
+                aria-label="Clip text"
+                style={{ ...field, flex: 1, minWidth: 200 }}
+                value={selectedEv.text}
+                onChange={(e) => patchClip({ text: e.target.value })}
               />
-            </label>
-            <button type="button" style={btn} onClick={duplicateClip}>
-              Duplicate
-            </button>
-            <button type="button" style={{ ...btn, color: '#e0a0a0' }} onClick={deleteClip}>
-              Delete
-            </button>
-          </>
-        ) : (
-          <span style={{ fontSize: 12, color: C.faint }}>
-            Drag clips to retime (⇄) or recast across lanes (↕). Click a clip to edit it.
-          </span>
+              <select
+                aria-label="Clip lane"
+                style={field}
+                value={selectedEv.lane}
+                onChange={(e) => patchClip({ lane: e.target.value })}
+              >
+                {lanes.map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.name ?? l.id}
+                  </option>
+                ))}
+              </select>
+              <label style={{ fontSize: 11, color: C.faint }}>
+                Row{' '}
+                <input
+                  aria-label="Clip row"
+                  type="number"
+                  min={0}
+                  style={{ ...field, width: 64 }}
+                  value={selectedEv.row}
+                  onChange={(e) =>
+                    patchClip({ row: Math.max(0, Number.parseInt(e.target.value, 10) || 0) })
+                  }
+                />
+              </label>
+              <button type="button" style={btn} onClick={duplicateClip}>
+                Duplicate
+              </button>
+              <button type="button" style={{ ...btn, color: '#e0a0a0' }} onClick={deleteClip}>
+                Delete
+              </button>
+            </>
+          ) : (
+            <span style={{ fontSize: 12, color: C.faint }}>
+              Drag clips to retime (⇄) or recast across lanes (↕). Click a clip to edit it.
+            </span>
+          )}
+        </div>
+
+        {/* L6 audio craft — shape the selected AI clip: trim, gain, fades (live waveform) */}
+        {selectedEv && selIsAi && (
+          <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+            <div style={{ flex: '0 1 480px', minWidth: 240 }}>
+              <ClipWaveform
+                base64={selB64}
+                gain={selectedEv.gain ?? 1}
+                fadeIn={selectedEv.fadeIn ?? 0}
+                fadeOut={selectedEv.fadeOut ?? 0}
+                trimStart={selectedEv.trimStart ?? 0}
+                trimEnd={selectedEv.trimEnd ?? 0}
+                onDuration={setClipDur}
+              />
+              {!selB64 && (
+                <span style={{ fontSize: 11, color: C.faint }}>
+                  No rendered clip for this line (edited or unvoiced) — shaping still exports;
+                  render to hear it.
+                </span>
+              )}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              {craftCtl('Gain', 'gain', 0, 2, 0.05, 1)}
+              {craftCtl('Fade in', 'fadeIn', 0, fadeMax, 0.02, 0)}
+              {craftCtl('Fade out', 'fadeOut', 0, fadeMax, 0.02, 0)}
+              {craftCtl('Trim head', 'trimStart', 0, durMax, 0.02, 0)}
+              {craftCtl('Trim tail', 'trimEnd', 0, durMax, 0.02, 0)}
+              <button
+                type="button"
+                style={{ ...btn, fontSize: 11, alignSelf: 'flex-start' }}
+                onClick={() =>
+                  patchClip({ gain: 1, fadeIn: 0, fadeOut: 0, trimStart: 0, trimEnd: 0 })
+                }
+              >
+                Reset audio
+              </button>
+            </div>
+          </div>
         )}
       </div>
 

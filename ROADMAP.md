@@ -59,9 +59,14 @@ model that can't hold it — data model first, then surface, then persistence, t
   **footswitch** support (Space / arrows / PageUp-Down, so any BT page-turner pedal drives it) +
   best-effort **Web MIDI** (note-on or sustain pedal advances a line, requested on cue entry).
 
-- **L6 — Audio craft.** Waveform-level editing per clip (trim, gain, fades), time-warp to the grid,
-  and the phoneme-recomposition tier (granular reassembly of recorded consonants/vowels). "Actually
-  edit the audio."
+- **L6 — Audio craft.** ◐ *v1 shipped.* Per-clip shaping in the editor's inspector — **trim**
+  (head/tail), **gain**, **fade in/out** — over a **live waveform** (decoded peaks; trim window,
+  fade ramps and gain drawn as you drag). Honored by the engine's `playSample` straight from the
+  score event, and **audible**: the editor now performs with the real neural clips (falling back to
+  Web Speech only for edited/unvoiced lines). Persists in the portable SCORE and round-trips through
+  export/import. *Next (L6.2): time-warp to the grid, drag-handle trim on the waveform, and the
+  phoneme-recomposition tier (granular reassembly of recorded consonants/vowels).* "Actually edit
+  the audio."
 
 ## Cross-cutting
 

@@ -223,17 +223,38 @@
       SAMP.loading = false;
       return SAMP.ready;
     };
-    // Play one line on one lane: that character's own neural clip, humanized + panned.
-    const playSample = (channel, text, when) => {
-      const clip = SAMP.buf.get(`${channel}|${text}`) || SAMP.buf.get(text);
+    // Play one line on one lane: that character's own neural clip, humanized + panned. Per-clip
+    // AUDIO CRAFT (L6) is honored straight from the event: trimStart/trimEnd (seconds off head/tail),
+    // gain (level multiplier), fadeIn/fadeOut (seconds). Absent params → the original behaviour.
+    const playSample = (ev, when) => {
+      const channel = ev.lane;
+      const clip = SAMP.buf.get(`${channel}|${ev.text}`) || SAMP.buf.get(ev.text);
       if (!clip || !ctx || !master) return false;
       const spec = CHVOX[channel] || { pan: 0, rate: 1, gain: 1 };
       const src = ctx.createBufferSource();
       src.buffer = clip.buffer;
       src.playbackRate.value = spec.rate * rand(0.997, 1.003);
       if (src.detune) src.detune.value = rand(-8, 8);
+      // trim window within the buffer, and the audible portion that remains
+      const dur = clip.buffer.duration;
+      const start = Math.max(0, (clip.offset || 0) + (ev.trimStart || 0));
+      const playDur = Math.max(0.02, dur - start - (ev.trimEnd || 0));
+      const level = spec.gain * (typeof ev.gain === 'number' ? ev.gain : 1) * rand(0.88, 1.0);
+      const fin = Math.min(ev.fadeIn || 0, playDur / 2);
+      const fout = Math.min(ev.fadeOut || 0, playDur / 2);
       const g = ctx.createGain();
-      g.gain.value = spec.gain * rand(0.88, 1.0);
+      const t = Math.max(when, ctx.currentTime);
+      // gain envelope: (fade in) → hold at level → (fade out). Scheduled in ctx time (rate ≈ 1).
+      if (fin > 0) {
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.linearRampToValueAtTime(level, t + fin);
+      } else {
+        g.gain.setValueAtTime(level, t);
+      }
+      if (fout > 0) {
+        g.gain.setValueAtTime(level, t + Math.max(fin, playDur - fout));
+        g.gain.linearRampToValueAtTime(0.0001, t + playDur);
+      }
       // subtle pitch LFO — the "low-frequency oscillation"; kept small so speech stays natural
       let lfo = null;
       let lfoGain = null;
@@ -261,9 +282,8 @@
         g.connect(master);
       }
       if (lfoGain) tail = tail.concat([lfoGain]);
-      const t = Math.max(when, ctx.currentTime);
       src.onended = cleanup(tail);
-      src.start(t, clip.offset || 0);
+      src.start(t, start, playDur);
       if (lfo) lfo.start(t);
       return true;
     };
@@ -283,7 +303,7 @@
             const base = ctx.currentTime + 0.015;
             let any = false;
             for (const ev of audible) {
-              if (playSample(ev.lane, ev.text, base + rand(0, 0.028))) any = true;
+              if (playSample(ev, base + rand(0, 0.028))) any = true;
             }
             if (any) return;
             // a clip pack is loaded but none matched (e.g. text edited in the editor) -> speak it
