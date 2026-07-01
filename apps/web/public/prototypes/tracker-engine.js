@@ -101,6 +101,7 @@
     let soundMode = 'voice';
     let rps = SC.tempo || 3;
     const muted = new Set(); // lanes silenced via a header click (still illuminate)
+    const soloed = new Set(); // lanes soloed via ⌥/Alt-click — when any is set, only these sound
 
     // -- source A: Web Speech API (fallback when no neural clips are present) --
     const synth = window.speechSynthesis || null;
@@ -269,7 +270,12 @@
 
     const voice = (events) => {
       if (silent || !events || !events.length) return;
-      const audible = events.filter((ev) => !isHuman(ev.lane) && !muted.has(ev.lane));
+      // Audibility, one decision: never a human lane; when any lane is soloed only soloed lanes
+      // sound (solo overrides mute, the DAW convention); otherwise everything unmuted sounds.
+      const audible = events.filter((ev) => {
+        if (isHuman(ev.lane)) return false;
+        return soloed.size ? soloed.has(ev.lane) : !muted.has(ev.lane);
+      });
       if (!audible.length) return;
       if (soundMode === 'voice') {
         if (CLIPS) {
@@ -309,7 +315,7 @@
       el.className = `h${isHuman(c) ? ' live' : ''}`;
       el.textContent = HEAD[c];
       el.dataset.lane = c;
-      el.title = 'click to mute this voice';
+      el.title = 'click = mute · ⌥/Alt-click = solo';
       heads.appendChild(el);
     }
 
@@ -387,6 +393,8 @@
     let countin = false; // 3·2·1 pre-roll before a metronome performance
     let counting = false;
     let countTimer = null;
+    let midi = null; // Web MIDI access (lazy — requested on first cue entry; best-effort)
+    let midiInputs = [];
 
     const measure = () => {
       rowH = rowEls[0] ? rowEls[0].offsetHeight : 26;
@@ -530,6 +538,7 @@
     const enterCue = () => {
       pause();
       cued = false;
+      enableMidi();
       const [s] = range();
       clearPerformed();
       currentRow = s;
@@ -559,6 +568,37 @@
         advance(next);
       }
     };
+    // Step BACK to the previous line — rehearsal correction / footswitch back-pedal.
+    const cuePrev = () => {
+      const rows = cueRows();
+      if (!rows.length) return;
+      const prev = [...rows].reverse().find((r) => r < currentRow);
+      if (prev === undefined) return;
+      cued = true;
+      advance(prev);
+    };
+    // Optional real MIDI footswitch / pad. A note-on (with velocity) or a sustain-pedal press
+    // (CC64) strikes the next line. Requested lazily on cue entry so normal browsing never prompts;
+    // unavailable over file:// or without permission — Space and the pedal-keys still drive cue.
+    const onMidi = (msg) => {
+      if (!cue) return;
+      const [status, d1, d2] = msg.data;
+      const type = status & 0xf0;
+      if ((type === 0x90 && d2 > 0) || (type === 0xb0 && d1 === 64 && d2 >= 64)) cueAdvance();
+    };
+    const enableMidi = () => {
+      if (midi || !navigator.requestMIDIAccess) return;
+      navigator.requestMIDIAccess().then(
+        (access) => {
+          midi = access;
+          midiInputs = [...access.inputs.values()];
+          for (const inp of midiInputs) inp.addEventListener('midimessage', onMidi);
+        },
+        () => {
+          /* no MIDI — Space / pedal-keys still drive cue */
+        },
+      );
+    };
 
     const playBtn = q('.t-play');
     const restartBtn = q('.t-restart');
@@ -571,8 +611,8 @@
       const hint = q('.t-hint');
       if (!hint) return;
       hint.textContent = cue
-        ? 'Live cue — press Space (or ▸) to strike the next line. You set the pace; the AI answers.'
-        : 'Pick a section to loop that passage · click a voice header to mute it.';
+        ? 'Live cue — Space / → / pedal strikes the next line, ← steps back. You set the pace; the AI answers.'
+        : 'Loop a section · click a header to mute · ⌥/Alt-click to solo a voice.';
     };
 
     tempo.value = String(rps);
@@ -612,20 +652,46 @@
       countin = !countin;
       countinBtn.classList.toggle('on', countin);
     };
+    // Reflect mute/solo state on every header (and mark the strip as soloing so CSS can dim the rest).
+    const refreshLaneStates = () => {
+      heads.classList.toggle('has-solo', soloed.size > 0);
+      for (const h of heads.children) {
+        const id = h.dataset.lane;
+        if (!id) continue;
+        h.classList.toggle('muted', muted.has(id));
+        h.classList.toggle('solo', soloed.has(id));
+      }
+    };
     const onHeadClick = (e) => {
       const h = e.target.closest('.h');
       if (!h || !h.dataset.lane) return;
       const id = h.dataset.lane;
-      if (muted.has(id)) muted.delete(id);
-      else muted.add(id);
-      h.classList.toggle('muted', muted.has(id));
+      if (e.altKey || e.shiftKey) {
+        // solo — isolate this voice; solo overrides mute for both audio and display
+        if (soloed.has(id)) soloed.delete(id);
+        else soloed.add(id);
+      } else if (muted.has(id)) {
+        muted.delete(id);
+      } else {
+        muted.add(id);
+      }
+      refreshLaneStates();
     };
+    // Footswitch-friendly: BT page-turner pedals emit Space / arrows / PageUp-Down. Forward keys
+    // strike the next line; back keys step to the previous one. Only active in cue mode.
+    const CUE_FWD = new Set(['Space', 'ArrowRight', 'ArrowDown', 'PageDown', 'Enter']);
+    const CUE_BACK = new Set(['ArrowLeft', 'ArrowUp', 'PageUp']);
     const onKey = (e) => {
-      if (e.code !== 'Space' || !cue) return;
+      if (!cue) return;
       const t = e.target;
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
-      e.preventDefault();
-      cueAdvance();
+      if (CUE_FWD.has(e.code)) {
+        e.preventDefault();
+        cueAdvance();
+      } else if (CUE_BACK.has(e.code)) {
+        e.preventDefault();
+        cuePrev();
+      }
     };
     const onSound = (e) => {
       const b = e.target.closest('button');
@@ -689,6 +755,7 @@
         clearCount();
         window.removeEventListener('resize', onResize);
         window.removeEventListener('keydown', onKey);
+        for (const inp of midiInputs) inp.removeEventListener('midimessage', onMidi);
         if (synth) {
           synth.cancel();
           synth.removeEventListener('voiceschanged', loadVoices);
