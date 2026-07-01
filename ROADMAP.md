@@ -63,8 +63,9 @@ model that can't hold it — data model first, then surface, then persistence, t
 
 ## Cross-cutting
 
-Portable score-format spec (JSON) · a library of scores · share / export (screen-record, audio
-bounce) · accessibility.
+Portable score-format spec (JSON) · a library of scores · **share as one file** (`node
+tools/build-standalone.mjs` → `dist/speech-score.html`, everything inlined, opens offline by
+double-click) · share / export (screen-record, audio bounce) · accessibility.
 
 ## Non-goals (until a layer needs them)
 

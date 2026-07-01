@@ -11,9 +11,12 @@ We tend to all of these together at the end.
   - No API keys to hand over: edge-tts is free; cloning runs via the already-authenticated Hugging
     Face session (or a local model). Credentials are never a chat ask.
 
-## Later — sharing beyond your machine (decision, not blocking)
-- How should Chris open it without your laptop running the server?
-  - **Zero-infra (works today):** send him the standalone `philip-glass-tracker.html` — it runs
-    offline by double-click.
-  - **Shareable URL:** host the Next app (Vercel/Firebase). Needs a hosting choice + deploy.
-  - Flag when you want a public link and I'll set it up.
+## Sharing beyond your machine
+- **Zero-infra, works today — SHIPPED.** Run `node tools/build-standalone.mjs`; it writes
+  `dist/speech-score.html` — a single ~900 KB file (engine + styles + all scores + neural audio
+  inlined). Send Chris that one file; he double-clicks it, offline, no folder, no install. The
+  live-cue human+AI duet works from it. *(The bare `philip-glass-tracker.html` alone is NOT enough —
+  it loads 8 sibling files by relative path; use the bundle.)*
+- **Shareable URL (your decision, if/when you want one):** host the Next app (Vercel/Firebase) for a
+  public link. Needs a hosting choice + deploy. Flag it and I'll set it up. Until then the single
+  file covers sharing.
