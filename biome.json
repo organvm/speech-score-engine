@@ -10,6 +10,7 @@
       "node_modules",
       "dist",
       ".next",
+      "apps/web/out",
       ".turbo",
       "dramaturgist-tuning-markdown-archive",
       "infrastructure/docker/data",
