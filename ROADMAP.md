@@ -36,10 +36,14 @@ model that can't hold it — data model first, then surface, then persistence, t
   (`apps/web/src/app/...`) with a shared `core/`, run the full gate matrix (`tsc --noEmit`,
   `next build`), PR → merge. The standalone prototype becomes a component/embed.
 
-- **L3 — The arrangement editor ("Ableton for voice").** ✅ *shipped.* The core creative surface. A timeline you
-  can **touch**: drag a clip in time (retime), drag it across lanes (recast), add / duplicate /
-  delete clips, add / rename / reorder lanes, edit tempo and the arc. Persist to the portable
-  `SCORE` JSON (export / import). Perform from the edited arrangement.
+- **L3 — The arrangement editor ("Ableton for voice").** ✅ *shipped + clip-view.* The core creative
+  surface. A timeline you can **touch**: drag a clip in time (retime), drag it across lanes (recast),
+  add / duplicate / delete clips, add / rename / reorder lanes, edit tempo and the arc. Persist to the
+  portable `SCORE` JSON (export / import). Perform from the edited arrangement. **Clip view "for
+  words":** every line is a clip with a beat position **and a length** — drag the body to move, drag
+  the right edge to resize (how many beats it spans). **Zoom** (px-per-beat) + **Snap** (1 · ½ · ⅓ · ¼
+  · free) place sub-beat, so lanes run at **independent cadences (polyrhythm)**. All dragging is
+  **Pointer-Capture** based, so mouse, touchpad and finger behave identically (desktop + mobile).
 
 - **L4 — Casting & real actors.** ◐ *casting UI shipped; cloning hung on your reference reads
   (see NEEDS-YOU.md).* Per-lane voice assignment UI (cast any lane from the neural catalog) + the
@@ -64,9 +68,12 @@ model that can't hold it — data model first, then surface, then persistence, t
   fade ramps and gain drawn as you drag). Honored by the engine's `playSample` straight from the
   score event, and **audible**: the editor now performs with the real neural clips (falling back to
   Web Speech only for edited/unvoiced lines). Persists in the portable SCORE and round-trips through
-  export/import. *Next (L6.2): time-warp to the grid, drag-handle trim on the waveform, and the
-  phoneme-recomposition tier (granular reassembly of recorded consonants/vowels).* "Actually edit
-  the audio."
+  export/import. **L6.2 warp v1 shipped:** a per-clip **Warp** toggle stretches the audio to fill its
+  beat-length on the grid (`playbackRate` — Ableton's Repitch warp: it repitches as it stretches, the
+  same knob that locks a word to the beat also distorts its natural voice "into madness"); off = play
+  the natural recorded length (place-and-play). *Next: pitch-preserving warp (phase-vocoder),
+  drag-handle trim on the waveform, and the phoneme-recomposition tier (granular reassembly of
+  recorded consonants/vowels).* "Actually edit the audio."
 
 ## Cross-cutting
 
