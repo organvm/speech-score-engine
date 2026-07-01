@@ -8,6 +8,22 @@ export default function HomePage() {
         forms.
       </p>
 
+      <p style={{ marginBottom: '2rem' }}>
+        <a href="/tracker" style={{ color: '#b58900', fontWeight: 600, textDecoration: 'none' }}>
+          ▶ Open the tracker →
+        </a>{' '}
+        <span style={{ color: '#888' }}>
+          — perform Philip Glass, Richard &amp; Anne, or a human+AI duet.
+        </span>
+      </p>
+
+      <p style={{ marginBottom: '2rem' }}>
+        <a href="/editor" style={{ color: '#b58900', fontWeight: 600, textDecoration: 'none' }}>
+          ✎ Open the editor →
+        </a>{' '}
+        <span style={{ color: '#888' }}>— arrange a score: drag clips across lanes and time.</span>
+      </p>
+
       <section>
         <h2>Status</h2>
         <p>

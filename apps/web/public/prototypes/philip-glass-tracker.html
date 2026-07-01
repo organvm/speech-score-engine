@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Philip Glass Buys a Loaf of Bread — Speech-Score</title>
+    <!--
+      Self-contained speech-score tracker. No build, no network. Opens offline (file://).
+      Thin shell over the SHARED engine core (tracker-engine.js + tracker.css) — the exact same
+      engine the Next route (/tracker) loads. Renders any registered SCORE (window.SSE_SCORES):
+      Philip Glass (4 lanes), Richard & Anne (2), Earnest — a duet (human + AI). Voices are
+      pre-rendered neural clips (window.SSE_VOICES) played as polyphonic, zero-latency Web Audio.
+      Provenance: dramaturgist-tuning-markdown-archive/source-attachments/ (the 7 genesis screenshots).
+    -->
+    <link rel="stylesheet" href="tracker.css" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: #101012;
+        overflow: hidden;
+      }
+      #root {
+        width: 100vw;
+        height: 100dvh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- Score data + neural voice packs (generated). Classic <script> so they load over file://
+         (fetch/ESM are blocked for local files). Add a play = add scores/<id>.js + voices/<id>.js. -->
+    <script src="scores/philip-glass.js"></script>
+    <script src="scores/richard-and-anne.js"></script>
+    <script src="scores/earnest-duet.js"></script>
+    <script src="voices/philip-glass.js"></script>
+    <script src="voices/richard-and-anne.js"></script>
+    <script src="voices/earnest-duet.js"></script>
+    <!-- Shared engine core (identical file the Next route injects). -->
+    <script src="tracker-engine.js"></script>
+    <script>
+      (function () {
+        var SCORES = window.SSE_SCORES || {};
+        var params = new URLSearchParams(location.search);
+        var wanted = params.get('score');
+        var id = wanted && SCORES[wanted] ? wanted : SCORES['philip-glass'] ? 'philip-glass' : Object.keys(SCORES)[0];
+        var voices = (window.SSE_VOICES || {})[id] || {};
+        window.SSEEngine.mount(document.getElementById('root'), {
+          score: SCORES[id],
+          clips: voices.clips || null,
+          scores: Object.values(SCORES),
+        });
+      })();
+    </script>
+  </body>
+</html>
