@@ -1,8 +1,8 @@
 'use client';
 
 import { ClipWaveform } from '@/components/ClipWaveform';
-import { loadScript } from '@/lib/loadScript';
-import { ENGINE_SCRIPT, SCORE_SCRIPTS } from '@/lib/scoreScripts';
+import { loadScript, loadStylesheet } from '@/lib/loadScript';
+import { ENGINE_SCRIPT, ENGINE_STYLES, SCORE_SCRIPTS } from '@/lib/scoreScripts';
 import { VOICE_CATALOG } from '@/lib/voiceCatalog';
 import type { Lane, Score } from '@/types/sse';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -385,7 +385,9 @@ export function EditorClient() {
     let handle: { destroy: () => void } | null = null;
     let cancelled = false;
     (async () => {
-      await loadScript(ENGINE_SCRIPT);
+      // The engine's DOM is styled entirely by tracker.css (scoped .sse); load it alongside the
+      // engine or the overlay renders as raw, unstyled HTML.
+      await Promise.all([loadStylesheet(ENGINE_STYLES), loadScript(ENGINE_SCRIPT)]);
       const el = performRef.current;
       const engine = window.SSEEngine;
       if (cancelled || !el || !engine) return;
@@ -706,6 +708,7 @@ export function EditorClient() {
               <button
                 type="button"
                 key={ev.id}
+                title={ev.text}
                 onPointerDown={(e) => onClipPointerDown(e, ev)}
                 onPointerMove={onClipPointerMove}
                 onPointerUp={onClipPointerUp}

@@ -10,3 +10,7 @@ export const SCORE_SCRIPTS = [
 ] as const;
 
 export const ENGINE_SCRIPT = '/prototypes/tracker-engine.js';
+// The engine's stylesheet (scoped under .sse). Any surface that mounts the engine must load this,
+// or the tracker renders unstyled. The /tracker route links it in <head>; other mount sites (the
+// editor's Perform overlay) load it at runtime via loadStylesheet.
+export const ENGINE_STYLES = '/prototypes/tracker.css';
