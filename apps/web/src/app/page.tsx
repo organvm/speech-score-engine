@@ -9,12 +9,19 @@ export default function HomePage() {
       </p>
 
       <p style={{ marginBottom: '2rem' }}>
+        <a href="/library" style={{ color: '#b58900', fontWeight: 600, textDecoration: 'none' }}>
+          ▦ Browse the library →
+        </a>{' '}
+        <span style={{ color: '#888' }}>
+          — Philip Glass, Richard &amp; Anne, the Macbeth witches, or a human+AI duet.
+        </span>
+      </p>
+
+      <p style={{ marginBottom: '2rem' }}>
         <a href="/tracker" style={{ color: '#b58900', fontWeight: 600, textDecoration: 'none' }}>
           ▶ Open the tracker →
         </a>{' '}
-        <span style={{ color: '#888' }}>
-          — perform Philip Glass, Richard &amp; Anne, or a human+AI duet.
-        </span>
+        <span style={{ color: '#888' }}>— perform a score: metronome or live-cue, solo, loop.</span>
       </p>
 
       <p style={{ marginBottom: '2rem' }}>
