@@ -36,7 +36,7 @@ model that can't hold it — data model first, then surface, then persistence, t
   (`apps/web/src/app/...`) with a shared `core/`, run the full gate matrix (`tsc --noEmit`,
   `next build`), PR → merge. The standalone prototype becomes a component/embed.
 
-- **L3 — The arrangement editor ("Ableton for voice").** ◀ *this pass.* The core creative surface. A timeline you
+- **L3 — The arrangement editor ("Ableton for voice").** ✅ *shipped.* The core creative surface. A timeline you
   can **touch**: drag a clip in time (retime), drag it across lanes (recast), add / duplicate /
   delete clips, add / rename / reorder lanes, edit tempo and the arc. Persist to the portable
   `SCORE` JSON (export / import). Perform from the edited arrangement.
@@ -48,11 +48,14 @@ model that can't hold it — data model first, then surface, then persistence, t
   or upload a ~10s reference per lane and that lane becomes a *specific real person* (Chatterbox /
   ElevenLabs-grade). On-demand render pipeline (server function) replaces pre-baked blobs.
 
-- **L5 — Live performance: human + AI, simultaneously.** ★ *flagship, actor-validated.* A human
-  actor performs a lane live while AI actors hold the others on the beat: cue-following (spacebar /
-  foot-pedal advance), count-ins, loop-a-passage for practice, latency-tight triggering, mute/solo
-  per lane. Rehearse against an AI scene partner; stage a performance where the human and the AI
-  play against each other. (Chris's pitch: a two-hander between a person and their AI counterpart.)
+- **L5 — Live performance: human + AI, simultaneously.** ★ ✅ *shipped (core).* *Flagship,
+  actor-validated.* A human actor performs a lane live while AI actors hold the others on the beat.
+  Shipped in the shared engine (both surfaces): **Live cue** mode (Space / footswitch-key advances —
+  the human sets the pace, the AI answers on its rows), **count-in** (3·2·1), **loop-a-passage**
+  (select a section), **mute** a voice (click its header), latency-tight neural triggering, and human
+  lanes left silent for the live actor. Rehearse against an AI scene partner or stage the two-hander
+  between a person and their AI counterpart (Chris's pitch). *Follow-up: per-lane solo; MIDI/pedal
+  mapping beyond the spacebar.*
 
 - **L6 — Audio craft.** Waveform-level editing per clip (trim, gain, fades), time-warp to the grid,
   and the phoneme-recomposition tier (granular reassembly of recorded consonants/vowels). "Actually

@@ -32,8 +32,17 @@
     '      <button data-m="off">Silent</button>',
     '    </div>',
     '  </div>',
+    '  <div class="trow">',
+    '    <div class="seg t-mode">',
+    '      <button data-mode="clock" class="on">Metronome</button>',
+    '      <button data-mode="cue">Live cue</button>',
+    '    </div>',
+    '    <button class="btn t-countin">Count-in</button>',
+    '  </div>',
     '  <div class="trow"><div class="seg t-sections"></div></div>',
+    '  <div class="trow"><span class="hint t-hint"></span></div>',
     '</div>',
+    '<div class="count t-count"></div>',
   ].join('\n');
 
   function mount(root, opts) {
@@ -91,6 +100,7 @@
     let silent = false;
     let soundMode = 'voice';
     let rps = SC.tempo || 3;
+    const muted = new Set(); // lanes silenced via a header click (still illuminate)
 
     // -- source A: Web Speech API (fallback when no neural clips are present) --
     const synth = window.speechSynthesis || null;
@@ -259,7 +269,7 @@
 
     const voice = (events) => {
       if (silent || !events || !events.length) return;
-      const audible = events.filter((ev) => !isHuman(ev.lane));
+      const audible = events.filter((ev) => !isHuman(ev.lane) && !muted.has(ev.lane));
       if (!audible.length) return;
       if (soundMode === 'voice') {
         if (CLIPS) {
@@ -298,6 +308,8 @@
       const el = document.createElement('div');
       el.className = `h${isHuman(c) ? ' live' : ''}`;
       el.textContent = HEAD[c];
+      el.dataset.lane = c;
+      el.title = 'click to mute this voice';
       heads.appendChild(el);
     }
 
@@ -369,6 +381,12 @@
     let visibleRows = 24;
     let hereEl = null;
     let nowWords = [];
+    // L5 — live human+AI performance
+    let cue = false; // cue mode: a human drives the pace (Space advances), AI answers on its rows
+    let cued = false; // has the first line been struck since (re)entering cue mode
+    let countin = false; // 3·2·1 pre-roll before a metronome performance
+    let counting = false;
+    let countTimer = null;
 
     const measure = () => {
       rowH = rowEls[0] ? rowEls[0].offsetHeight : 26;
@@ -430,24 +448,20 @@
       }
       rafId = requestAnimationFrame(loop);
     };
-    const play = () => {
-      if (playing) return;
-      if (!silent) {
-        ensureCtx();
-        if (ctx && ctx.state === 'suspended') ctx.resume();
-        if (soundMode === 'voice') {
-          if (CLIPS) loadSamples();
-          else if (synth) {
-            loadVoices();
-            synth.resume();
-          }
+    // Prime the active sound source on a user gesture (autoplay/TTS both require it).
+    const primeAudio = () => {
+      if (silent) return;
+      ensureCtx();
+      if (ctx && ctx.state === 'suspended') ctx.resume();
+      if (soundMode === 'voice') {
+        if (CLIPS) loadSamples();
+        else if (synth) {
+          loadVoices();
+          synth.resume();
         }
       }
-      const [s, e] = range();
-      if (currentRow < s || currentRow >= e) {
-        clearPerformed();
-        advance(s);
-      }
+    };
+    const beginPlaying = () => {
       playing = true;
       playBtn.classList.add('on');
       playBtn.textContent = '❚❚ Pause';
@@ -455,29 +469,155 @@
       acc = 0;
       rafId = requestAnimationFrame(loop);
     };
+    const clearCount = () => {
+      if (countTimer !== null) {
+        clearTimeout(countTimer);
+        countTimer = null;
+      }
+      counting = false;
+      const cnt = q('.t-count');
+      if (cnt) {
+        cnt.classList.remove('show');
+        cnt.textContent = '';
+      }
+    };
+    const runCountIn = (from, done) => {
+      const cnt = q('.t-count');
+      let n = from;
+      const beat = () => {
+        if (n <= 0) {
+          clearCount();
+          done();
+          return;
+        }
+        if (cnt) {
+          cnt.textContent = String(n);
+          cnt.classList.add('show');
+        }
+        n -= 1;
+        countTimer = window.setTimeout(beat, Math.max(320, 1000 / Math.max(1, rps)));
+      };
+      beat();
+    };
+    const play = () => {
+      if (playing || counting) return;
+      primeAudio();
+      const [s, e] = range();
+      if (currentRow < s || currentRow >= e) {
+        clearPerformed();
+        advance(s);
+      }
+      if (countin && !silent) {
+        counting = true;
+        runCountIn(3, beginPlaying);
+      } else {
+        beginPlaying();
+      }
+    };
     const pause = () => {
       playing = false;
+      clearCount();
       playBtn.classList.remove('on');
-      playBtn.textContent = '▷ Perform';
+      playBtn.textContent = cue ? 'Cue ▸ (Space)' : '▷ Perform';
       if (synth) synth.cancel();
       if (rafId !== null) {
         cancelAnimationFrame(rafId);
         rafId = null;
       }
     };
+    // Cue mode: the human sets the pace. Each cue strikes the next line; AI voices answer on their
+    // own rows; a human lane stays silent for the live actor. Wraps at the passage end (drill loop).
+    const enterCue = () => {
+      pause();
+      cued = false;
+      const [s] = range();
+      clearPerformed();
+      currentRow = s;
+      renderRow(s);
+    };
+    const cueAdvance = () => {
+      primeAudio();
+      const [s, e] = range();
+      if (!cued) {
+        cued = true;
+        clearPerformed();
+        advance(s);
+        return;
+      }
+      if (currentRow >= e) {
+        clearPerformed();
+        advance(s);
+      } else {
+        advance(currentRow + 1);
+      }
+    };
 
     const playBtn = q('.t-play');
     const restartBtn = q('.t-restart');
     const soundSeg = q('.t-sound');
+    const modeSeg = q('.t-mode');
+    const countinBtn = q('.t-countin');
     const tempo = q('.t-tempo');
 
+    const updateHint = () => {
+      const hint = q('.t-hint');
+      if (!hint) return;
+      hint.textContent = cue
+        ? 'Live cue — press Space (or ▸) to strike the next line. You set the pace; the AI answers.'
+        : 'Pick a section to loop that passage · click a voice header to mute it.';
+    };
+
     tempo.value = String(rps);
-    const onPlay = () => (playing ? pause() : play());
+    const onPlay = () => {
+      if (cue) {
+        cueAdvance();
+        return;
+      }
+      if (playing) pause();
+      else play();
+    };
     const onRestart = () => {
+      if (cue) {
+        enterCue();
+        return;
+      }
       const [s] = range();
       acc = 0;
       clearPerformed();
       advance(s);
+    };
+    const onMode = (e) => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      cue = b.dataset.mode === 'cue';
+      for (const btn of modeSeg.children) btn.classList.toggle('on', btn === b);
+      updateHint();
+      if (cue) {
+        enterCue();
+        playBtn.textContent = 'Cue ▸ (Space)';
+      } else {
+        pause();
+        playBtn.textContent = '▷ Perform';
+      }
+    };
+    const onCountin = () => {
+      countin = !countin;
+      countinBtn.classList.toggle('on', countin);
+    };
+    const onHeadClick = (e) => {
+      const h = e.target.closest('.h');
+      if (!h || !h.dataset.lane) return;
+      const id = h.dataset.lane;
+      if (muted.has(id)) muted.delete(id);
+      else muted.add(id);
+      h.classList.toggle('muted', muted.has(id));
+    };
+    const onKey = (e) => {
+      if (e.code !== 'Space' || !cue) return;
+      const t = e.target;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+      e.preventDefault();
+      cueAdvance();
     };
     const onSound = (e) => {
       const b = e.target.closest('button');
@@ -523,17 +663,24 @@
     playBtn.addEventListener('click', onPlay);
     restartBtn.addEventListener('click', onRestart);
     soundSeg.addEventListener('click', onSound);
+    modeSeg.addEventListener('click', onMode);
+    countinBtn.addEventListener('click', onCountin);
+    heads.addEventListener('click', onHeadClick);
     tempo.addEventListener('input', onTempo);
     sections.addEventListener('click', onSections);
     window.addEventListener('resize', onResize);
+    window.addEventListener('keydown', onKey);
 
+    updateHint();
     measure();
     advance(0);
 
     return {
       destroy: () => {
         if (rafId !== null) cancelAnimationFrame(rafId);
+        clearCount();
         window.removeEventListener('resize', onResize);
+        window.removeEventListener('keydown', onKey);
         if (synth) {
           synth.cancel();
           synth.removeEventListener('voiceschanged', loadVoices);

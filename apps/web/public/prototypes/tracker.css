@@ -89,6 +89,39 @@
   font-size: 0.7em;
   vertical-align: middle;
 }
+/* a muted lane (click a voice header to toggle): still illuminates, but is silent */
+.sse .heads .h[data-lane] {
+  cursor: pointer;
+}
+.sse .heads .h.muted {
+  opacity: 0.32;
+  text-decoration: line-through;
+}
+
+/* count-in overlay (3·2·1 before a metronome performance) */
+.sse .count {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+  font-size: clamp(60px, 18vw, 220px);
+  font-variant: small-caps;
+  color: var(--accent);
+  text-shadow: 0 0 40px rgba(205, 191, 154, 0.4);
+}
+.sse .count.show {
+  display: flex;
+}
+
+/* transport hint line */
+.sse .hint {
+  font-size: clamp(9px, 1vw, 12px);
+  font-style: italic;
+  color: rgba(233, 230, 220, 0.4);
+}
 
 /* ---- score viewport ---- */
 .sse .viewport {
