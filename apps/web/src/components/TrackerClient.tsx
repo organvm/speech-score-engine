@@ -1,5 +1,6 @@
 'use client';
 
+import { loadScript } from '@/lib/loadScript';
 import type { Score, TrackerHandle } from '@/types/sse';
 import { useEffect, useRef } from 'react';
 
@@ -11,22 +12,6 @@ const CORE_SCRIPTS = [
   '/prototypes/scores/earnest-duet.js',
   '/prototypes/tracker-engine.js',
 ];
-
-function loadScript(src: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (document.querySelector(`script[data-sse="${src}"]`)) {
-      resolve();
-      return;
-    }
-    const el = document.createElement('script');
-    el.src = src;
-    el.async = false;
-    el.dataset.sse = src;
-    el.addEventListener('load', () => resolve());
-    el.addEventListener('error', () => reject(new Error(`failed to load ${src}`)));
-    document.head.appendChild(el);
-  });
-}
 
 function pickId(scores: Record<string, Score>): string | undefined {
   const wanted = new URLSearchParams(window.location.search).get('score');

@@ -270,6 +270,8 @@
               if (playSample(ev.lane, ev.text, base + rand(0, 0.028))) any = true;
             }
             if (any) return;
+            // a clip pack is loaded but none matched (e.g. text edited in the editor) -> speak it
+            if (synth && speak(audible)) return;
           } else {
             loadSamples();
             return;

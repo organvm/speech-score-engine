@@ -25,18 +25,18 @@ model that can't hold it — data model first, then surface, then persistence, t
   voices (Microsoft Edge TTS), polyphonic + zero-latency playback as Web Audio buffers, descending
   playhead, per-trigger humanization (detune / timing jitter / gain / LFO). Read-only.
 
-- **L1 — Engine + score-as-data** ◀ *this pass.* Separate the **score (data)** from the **engine
+- **L1 — Engine + score-as-data** ✅ *shipped.* Separate the **score (data)** from the **engine
   (player)**. Lanes, voices, panning, sections, tempo — all derive from a portable `SCORE` object.
   Any play, **any number of lanes.** Proven by shipping three scores on one engine: Philip Glass
   (4 lanes), a Shakespeare stichomythia (2 lanes, different rhythm), and a **duet** where one lane
   is human and one is AI (first taste of L5). Generator renders any score's clips from its lane
   casting. `?score=<id>` + an in-app score picker.
 
-- **L2 — Product surface (Next route).** Port the engine into the real app
+- **L2 — Product surface (Next route).** ✅ *shipped.* Port the engine into the real app
   (`apps/web/src/app/...`) with a shared `core/`, run the full gate matrix (`tsc --noEmit`,
   `next build`), PR → merge. The standalone prototype becomes a component/embed.
 
-- **L3 — The arrangement editor ("Ableton for voice").** The core creative surface. A timeline you
+- **L3 — The arrangement editor ("Ableton for voice").** ◀ *this pass.* The core creative surface. A timeline you
   can **touch**: drag a clip in time (retime), drag it across lanes (recast), add / duplicate /
   delete clips, add / rename / reorder lanes, edit tempo and the arc. Persist to the portable
   `SCORE` JSON (export / import). Perform from the edited arrangement.

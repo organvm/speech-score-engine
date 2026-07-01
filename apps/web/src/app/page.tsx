@@ -17,6 +17,13 @@ export default function HomePage() {
         </span>
       </p>
 
+      <p style={{ marginBottom: '2rem' }}>
+        <a href="/editor" style={{ color: '#b58900', fontWeight: 600, textDecoration: 'none' }}>
+          ✎ Open the editor →
+        </a>{' '}
+        <span style={{ color: '#888' }}>— arrange a score: drag clips across lanes and time.</span>
+      </p>
+
       <section>
         <h2>Status</h2>
         <p>
