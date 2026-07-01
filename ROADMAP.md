@@ -54,8 +54,10 @@ model that can't hold it — data model first, then surface, then persistence, t
   the human sets the pace, the AI answers on its rows), **count-in** (3·2·1), **loop-a-passage**
   (select a section), **mute** a voice (click its header), latency-tight neural triggering, and human
   lanes left silent for the live actor. Rehearse against an AI scene partner or stage the two-hander
-  between a person and their AI counterpart (Chris's pitch). *Follow-up: per-lane solo; MIDI/pedal
-  mapping beyond the spacebar.*
+  between a person and their AI counterpart (Chris's pitch). **Follow-ups shipped:** per-lane
+  **solo** (⌥/Alt-click a header — solo overrides mute), cue **back-step** (← / PageUp),
+  **footswitch** support (Space / arrows / PageUp-Down, so any BT page-turner pedal drives it) +
+  best-effort **Web MIDI** (note-on or sustain pedal advances a line, requested on cue entry).
 
 - **L6 — Audio craft.** Waveform-level editing per clip (trim, gain, fades), time-warp to the grid,
   and the phoneme-recomposition tier (granular reassembly of recorded consonants/vowels). "Actually

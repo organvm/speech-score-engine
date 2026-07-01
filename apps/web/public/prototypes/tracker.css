@@ -97,6 +97,21 @@
   opacity: 0.32;
   text-decoration: line-through;
 }
+/* a soloed lane (⌥/Alt-click a header): only soloed lanes sound; the rest dim while soloing.
+   placed after .muted so solo wins on equal specificity — solo overrides mute visually too. */
+.sse .heads .h.solo {
+  color: var(--accent);
+  opacity: 1;
+  text-decoration: none;
+}
+.sse .heads .h.solo::before {
+  content: "S ";
+  font-size: 0.72em;
+  opacity: 0.85;
+}
+.sse .heads.has-solo .h[data-lane]:not(.solo) {
+  opacity: 0.26;
+}
 
 /* count-in overlay (3·2·1 before a metronome performance) */
 .sse .count {
