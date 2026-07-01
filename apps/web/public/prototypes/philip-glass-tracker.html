@@ -238,6 +238,9 @@
       </div>
     </div>
 
+    <!-- Neural voice clips (generated): window.SSE_VOICES. Loads over file:// via a script tag
+         (fetch is blocked for local files). Absent -> the player falls back to Web Speech. -->
+    <script src="philip-glass-voices.js"></script>
     <script>
       const CH = ['FIRST_WOMAN', 'SECOND_WOMAN', 'GLASS', 'BAKER'];
       const HEAD = { FIRST_WOMAN: 'First Woman', SECOND_WOMAN: 'Second Woman', GLASS: 'Glass', BAKER: 'Baker' };
@@ -317,11 +320,25 @@
       }
 
       // ---- audio ----
-      // Two sound sources, switchable at runtime:
-      //   'voice' — real speech via the Web Speech API (browser-native neural TTS). Default.
-      //   'tone'  — the Web Audio pitch stack (fallback / percussive reading).
+      // Sound sources, best-first:
+      //   'voice' — pre-rendered NEURAL clips (window.SSE_VOICES, Resemble AI Chatterbox) played
+      //             as Web Audio buffers: polyphonic (many at once) + zero-latency. One clip per
+      //             unique line; per-channel pan/register + per-trigger humanization (detune,
+      //             timing jitter, gain, LFO vibrato) make it four voices, human, never identical.
+      //             If no neural clips are present, falls back to the Web Speech API.
+      //   'tone'  — the Web Audio pitch stack (percussive reading).
       let silent = false;
       let soundMode = 'voice';
+
+      // Each channel is a tracker lane placed across the stereo field. The clips are already four
+      // distinct neural actors, so no pitch-register trick is needed — just position + humanization.
+      const CHVOX = {
+        FIRST_WOMAN: { pan: -0.5, rate: 1.0, gain: 0.98 },
+        SECOND_WOMAN: { pan: -0.17, rate: 1.0, gain: 0.98 },
+        GLASS: { pan: 0.17, rate: 1.0, gain: 1.0 },
+        BAKER: { pan: 0.5, rate: 1.0, gain: 0.95 },
+      };
+      const rand = (a, b) => a + Math.random() * (b - a);
 
       // -- source A: real voices (Web Speech API) --
       const synth = window.speechSynthesis || null;
@@ -390,7 +407,7 @@
           if (!C) return false;
           ctx = new C();
           master = ctx.createGain();
-          master.gain.value = 0.22;
+          master.gain.value = 0.9;
           master.connect(ctx.destination);
           return true;
         } catch (err) {
@@ -406,7 +423,7 @@
         osc.type = spec.t;
         osc.frequency.setValueAtTime(spec.f, when);
         env.gain.setValueAtTime(0.0001, when);
-        env.gain.exponentialRampToValueAtTime(0.85, when + 0.015);
+        env.gain.exponentialRampToValueAtTime(0.2, when + 0.015);
         env.gain.exponentialRampToValueAtTime(0.0001, when + 0.34);
         osc.connect(env);
         env.connect(master);
@@ -418,12 +435,106 @@
         };
       }
 
+      // -- source 0: pre-rendered neural clips (window.SSE_VOICES) as Web Audio buffers --
+      const SAMP = { buf: new Map(), ready: false, loading: false };
+      function b64ToBuf(b64) {
+        const bin = atob(b64);
+        const u8 = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i += 1) u8[i] = bin.charCodeAt(i);
+        return u8.buffer;
+      }
+      // Seconds of leading near-silence to skip so a trigger speaks immediately (no pre-roll lag).
+      function leadOffset(buffer) {
+        const d = buffer.getChannelData(0);
+        const thresh = 0.012;
+        let i = 0;
+        for (; i < d.length; i += 1) if (Math.abs(d[i]) > thresh) break;
+        const off = i / buffer.sampleRate - 0.02; // back off 20ms so the onset isn't clipped
+        return off > 0 ? off : 0;
+      }
+      async function loadSamples() {
+        if (SAMP.ready || SAMP.loading) return SAMP.ready;
+        if (!window.SSE_VOICES || !ensureCtx() || !ctx) return false;
+        SAMP.loading = true;
+        const clips = window.SSE_VOICES.clips || {};
+        await Promise.all(
+          Object.entries(clips).map(async ([key, b64]) => {
+            try {
+              const buffer = await ctx.decodeAudioData(b64ToBuf(b64));
+              SAMP.buf.set(key, { buffer, offset: leadOffset(buffer) });
+            } catch (err) {
+              /* skip an undecodable clip */
+            }
+          }),
+        );
+        SAMP.ready = SAMP.buf.size > 0;
+        SAMP.loading = false;
+        return SAMP.ready;
+      }
+      // Play one line on one channel: the character's own neural clip, humanized + panned.
+      function playSample(channel, text, when) {
+        const clip = SAMP.buf.get(`${channel}|${text}`) || SAMP.buf.get(text);
+        if (!clip || !ctx || !master) return false;
+        const spec = CHVOX[channel] || { pan: 0, rate: 1, gain: 1 };
+        const src = ctx.createBufferSource();
+        src.buffer = clip.buffer;
+        src.playbackRate.value = spec.rate * rand(0.997, 1.003); // micro tempo/pitch drift
+        if (src.detune) src.detune.value = rand(-8, 8); // cents of humanized detune
+        const g = ctx.createGain();
+        g.gain.value = spec.gain * rand(0.88, 1.0); // velocity variation
+        // subtle pitch LFO — the "low-frequency oscillation"; kept small so speech stays natural
+        let lfo = null;
+        let lfoGain = null;
+        if (src.detune) {
+          lfo = ctx.createOscillator();
+          lfo.type = 'sine';
+          lfo.frequency.value = rand(4.5, 6.5);
+          lfoGain = ctx.createGain();
+          lfoGain.gain.value = rand(1.5, 4); // cents — barely-there life, not a warble
+          lfo.connect(lfoGain).connect(src.detune);
+        }
+        const cleanup = (nodes) => () => {
+          for (const n of nodes) n.disconnect();
+          if (lfo) lfo.stop();
+        };
+        src.connect(g);
+        let tail = [src, g];
+        if (ctx.createStereoPanner) {
+          const p = ctx.createStereoPanner();
+          p.pan.value = spec.pan;
+          g.connect(p);
+          p.connect(master);
+          tail = [src, g, p];
+        } else {
+          g.connect(master);
+        }
+        if (lfoGain) tail = tail.concat([lfoGain]);
+        const t = Math.max(when, ctx.currentTime);
+        src.onended = cleanup(tail);
+        src.start(t, clip.offset || 0);
+        if (lfo) lfo.start(t);
+        return true;
+      }
+
       function voice(events) {
         if (silent || !events || !events.length) return;
-        if (soundMode === 'voice' && synth) {
-          if (speak(events)) return;
+        if (soundMode === 'voice') {
+          if (window.SSE_VOICES) {
+            if (SAMP.ready) {
+              const base = ctx.currentTime + 0.015;
+              let any = false;
+              // per-event timing jitter so voices don't lock to a machine grid
+              for (const ev of events) if (playSample(ev.channel, ev.text, base + rand(0, 0.028))) any = true;
+              if (any) return;
+            } else {
+              loadSamples(); // still decoding — skip this row rather than beep robotically
+              return;
+            }
+          } else if (synth && speak(events)) {
+            return; // no neural clips available -> Web Speech
+          }
         }
-        if (!ensureCtx() || !ctx) return;
+        if (!ensureCtx() || !ctx) return; // 'tone' mode, or final fallback
         const now = ctx.currentTime;
         for (const ev of events) tone(ev.channel, now);
       }
@@ -550,12 +661,14 @@
         if (playing) return;
         // Prime the active sound source on the gesture (autoplay/TTS both require it).
         if (!silent) {
-          if (soundMode === 'voice' && synth) {
-            loadVoices();
-            synth.resume();
-          } else {
-            ensureCtx();
-            if (ctx && ctx.state === 'suspended') ctx.resume();
+          ensureCtx();
+          if (ctx && ctx.state === 'suspended') ctx.resume();
+          if (soundMode === 'voice') {
+            if (window.SSE_VOICES) loadSamples();
+            else if (synth) {
+              loadVoices();
+              synth.resume();
+            }
           }
         }
         const [s, e] = range();
@@ -607,12 +720,14 @@
         }
         silent = false;
         soundMode = m;
-        if (m === 'voice' && synth) {
-          loadVoices();
-          synth.resume();
-        } else if (m === 'tone') {
-          ensureCtx();
-          if (ctx && ctx.state === 'suspended') ctx.resume();
+        ensureCtx();
+        if (ctx && ctx.state === 'suspended') ctx.resume();
+        if (m === 'voice') {
+          if (window.SSE_VOICES) loadSamples();
+          else if (synth) {
+            loadVoices();
+            synth.resume();
+          }
         }
       });
       tempo.addEventListener('input', () => {

@@ -12,7 +12,9 @@
       ".next",
       ".turbo",
       "dramaturgist-tuning-markdown-archive",
-      "infrastructure/docker/data"
+      "infrastructure/docker/data",
+      "apps/web/public/prototypes/philip-glass-voices.js",
+      "tools"
     ]
   },
   "formatter": {
