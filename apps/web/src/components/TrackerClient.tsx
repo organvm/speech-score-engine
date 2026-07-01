@@ -1,17 +1,13 @@
 'use client';
 
 import { loadScript } from '@/lib/loadScript';
+import { ENGINE_SCRIPT, SCORE_SCRIPTS } from '@/lib/scoreScripts';
 import type { Score, TrackerHandle } from '@/types/sse';
 import { useEffect, useRef } from 'react';
 
 // The shared engine + all score data (for the picker), loaded once from /public. The active
 // score's voice pack is loaded lazily afterwards. Same files the standalone HTML uses.
-const CORE_SCRIPTS = [
-  '/prototypes/scores/philip-glass.js',
-  '/prototypes/scores/richard-and-anne.js',
-  '/prototypes/scores/earnest-duet.js',
-  '/prototypes/tracker-engine.js',
-];
+const CORE_SCRIPTS = [...SCORE_SCRIPTS, ENGINE_SCRIPT];
 
 function pickId(scores: Record<string, Score>): string | undefined {
   const wanted = new URLSearchParams(window.location.search).get('score');
