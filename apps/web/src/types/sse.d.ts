@@ -22,6 +22,12 @@ export interface ScoreEvent {
   text: string;
   section?: string;
   stage?: boolean;
+  // Timing model — Ableton clip-view "for words". A clip has a beat position and a length; the
+  // engine still steps a uniform grid, deriving the finest subdivision that lands every start on a
+  // whole tick (all-integer scores → subdivision 1 → identical legacy playback).
+  start?: number; // beat position (fractional allowed); defaults to `row`
+  beats?: number; // clip length in beats; defaults to 1
+  warp?: boolean; // stretch the audio to fill `beats` on the grid (vs. its natural recorded length)
   // L6 audio craft — per-clip shaping honored by the engine's playSample (all optional, seconds
   // except gain which is a level multiplier). Absent → the clip plays untouched.
   gain?: number;

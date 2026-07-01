@@ -81,25 +81,49 @@
       VOX[l.id] = l.speech || { pitch: 1.0, rate: 1.0, prefer: [] };
     }
     const EV = SC.events;
-    const SECTIONS = SC.sections || {};
-    const TOTAL = SC.total;
     const rand = (a, b) => a + Math.random() * (b - a);
+
+    // ---- timing model: fractional beat positions + clip lengths ("Ableton clip view for words") ----
+    // Each event carries a beat position (`start`, default = its integer `row`) and a length in beats
+    // (`beats`, default 1). The transport still steps a uniform integer grid, so we derive the finest
+    // subdivision (ticks per beat) that lands every start on a whole tick. SUBDIV=1 when all starts are
+    // whole numbers — legacy integer scores stay byte-identical. Sub-beat starts (2.5, triplets, …)
+    // raise SUBDIV so lanes can run at independent cadences (polyrhythm / multiple rhythms).
+    const evStartBeats = (ev) => (typeof ev.start === 'number' ? ev.start : ev.row);
+    const evBeats = (ev) => (typeof ev.beats === 'number' && ev.beats > 0 ? ev.beats : 1);
+    const deriveSubdiv = (vals) => {
+      for (const s of [1, 2, 3, 4, 6, 8, 12, 16]) {
+        if (vals.every((x) => Math.abs(x * s - Math.round(x * s)) < 1e-6)) return s;
+      }
+      return 16;
+    };
+    const SUBDIV = deriveSubdiv(EV.map(evStartBeats));
+    for (const ev of EV) ev.tick = Math.round(evStartBeats(ev) * SUBDIV);
+    const SECTIONS = {};
+    for (const [k, span] of Object.entries(SC.sections || {})) {
+      SECTIONS[k] = [Math.round(span[0] * SUBDIV), Math.round(span[1] * SUBDIV)];
+    }
+    const maxTick = EV.length
+      ? Math.max(...EV.map((ev) => ev.tick + Math.max(1, Math.round(evBeats(ev) * SUBDIV))))
+      : 0;
+    const TOTAL = Math.max(Math.round((SC.total || 0) * SUBDIV), maxTick + SUBDIV);
 
     root.style.setProperty('--lanes', `repeat(${CH.length}, minmax(0, 1fr))`);
     q('.t-title').textContent = SC.title;
     q('.t-byline').textContent = SC.byline || '';
     q('.t-caption').textContent = SC.caption || '';
 
-    const eventsByRow = new Map();
+    const eventsByRow = new Map(); // keyed by grid tick (integer), not raw beat
     for (const ev of EV) {
-      if (!eventsByRow.has(ev.row)) eventsByRow.set(ev.row, []);
-      eventsByRow.get(ev.row).push(ev);
+      if (!eventsByRow.has(ev.tick)) eventsByRow.set(ev.tick, []);
+      eventsByRow.get(ev.tick).push(ev);
     }
 
     // ---- audio ----
     let silent = false;
     let soundMode = 'voice';
-    let rps = SC.tempo || 3;
+    let tempoBps = SC.tempo || 3; // musical tempo — beats per second (what the Tempo slider sets)
+    let rps = tempoBps * SUBDIV; // transport grid steps (ticks) per second = tempo × subdivision
     const muted = new Set(); // lanes silenced via a header click (still illuminate)
     const soloed = new Set(); // lanes soloed via ⌥/Alt-click — when any is set, only these sound
 
@@ -143,7 +167,7 @@
         if (v) u.voice = v;
         const spec = VOX[ch];
         u.pitch = spec.pitch;
-        u.rate = Math.min(2.2, spec.rate * Math.max(1, rps / 3));
+        u.rate = Math.min(2.2, spec.rate * Math.max(1, tempoBps / 3));
         u.volume = 1;
         synth.speak(u);
       }
@@ -233,18 +257,32 @@
       const spec = CHVOX[channel] || { pan: 0, rate: 1, gain: 1 };
       const src = ctx.createBufferSource();
       src.buffer = clip.buffer;
-      src.playbackRate.value = spec.rate * rand(0.997, 1.003);
       if (src.detune) src.detune.value = rand(-8, 8);
-      // trim window within the buffer, and the audible portion that remains
+      // trim window within the buffer, and the audible portion (in BUFFER seconds) that remains
       const dur = clip.buffer.duration;
       const start = Math.max(0, (clip.offset || 0) + (ev.trimStart || 0));
-      const playDur = Math.max(0.02, dur - start - (ev.trimEnd || 0));
+      const srcDur = Math.max(0.02, dur - start - (ev.trimEnd || 0));
+      // WARP: stretch the clip to fill its beat-length on the grid. `warp` off → play the recorded
+      // length at natural pitch (place-and-play). `warp` on → the same knob that locks a word to the
+      // beat also, pushed far, distorts its natural voice "into madness": playbackRate repitches as
+      // it stretches (Ableton's Repitch warp). Pitch-preserving warp is a later tier.
+      const beatsPerSec = SUBDIV ? rps / SUBDIV : rps;
+      let rate = spec.rate * rand(0.997, 1.003);
+      let outDur = srcDur / rate; // wall-clock output seconds (place-and-play)
+      if (ev.warp && beatsPerSec > 0) {
+        const target = Math.max(0.05, evBeats(ev) / beatsPerSec);
+        rate = Math.min(8, Math.max(0.1, srcDur / target));
+        outDur = target;
+      }
+      src.playbackRate.value = rate;
+      const playDur = srcDur; // buffer seconds to consume (start() duration is in source time)
       const level = spec.gain * (typeof ev.gain === 'number' ? ev.gain : 1) * rand(0.88, 1.0);
-      const fin = Math.min(ev.fadeIn || 0, playDur / 2);
-      const fout = Math.min(ev.fadeOut || 0, playDur / 2);
+      const fin = Math.min(ev.fadeIn || 0, outDur / 2);
+      const fout = Math.min(ev.fadeOut || 0, outDur / 2);
       const g = ctx.createGain();
       const t = Math.max(when, ctx.currentTime);
-      // gain envelope: (fade in) → hold at level → (fade out). Scheduled in ctx time (rate ≈ 1).
+      // gain envelope: (fade in) → hold at level → (fade out). Scheduled in ctx time against the
+      // wall-clock output duration, so fades stay correct whether or not the clip is warped.
       if (fin > 0) {
         g.gain.setValueAtTime(0.0001, t);
         g.gain.linearRampToValueAtTime(level, t + fin);
@@ -252,8 +290,8 @@
         g.gain.setValueAtTime(level, t);
       }
       if (fout > 0) {
-        g.gain.setValueAtTime(level, t + Math.max(fin, playDur - fout));
-        g.gain.linearRampToValueAtTime(0.0001, t + playDur);
+        g.gain.setValueAtTime(level, t + Math.max(fin, outDur - fout));
+        g.gain.linearRampToValueAtTime(0.0001, t + outDur);
       }
       // subtle pitch LFO — the "low-frequency oscillation"; kept small so speech stays natural
       let lfo = null;
@@ -346,7 +384,9 @@
       row.style.position = 'relative';
       const num = document.createElement('div');
       num.className = 'rownum';
-      num.textContent = r % 4 === 0 ? String(r).padStart(2, '0') : '';
+      // label whole beats, every 4th one (identical to the legacy `r % 4` cadence when SUBDIV=1)
+      num.textContent =
+        r % SUBDIV === 0 && (r / SUBDIV) % 4 === 0 ? String(r / SUBDIV).padStart(2, '0') : '';
       row.appendChild(num);
       for (const c of CH) {
         const cell = document.createElement('div');
@@ -358,7 +398,7 @@
       rowEls.push(row);
     }
     for (const ev of EV) {
-      const cell = cellRef.get(`${ev.row}:${ev.lane}`);
+      const cell = cellRef.get(`${ev.tick}:${ev.lane}`);
       if (!cell) continue;
       const span = document.createElement('span');
       span.className = `word${ev.stage ? ' stage' : ''}${isHuman(ev.lane) ? ' live' : ''}`;
@@ -523,7 +563,7 @@
           cnt.classList.add('show');
         }
         n -= 1;
-        countTimer = window.setTimeout(beat, Math.max(320, 1000 / Math.max(1, rps)));
+        countTimer = window.setTimeout(beat, Math.max(320, 1000 / Math.max(1, tempoBps)));
       };
       beat();
     };
@@ -635,7 +675,7 @@
         : 'Loop a section · click a header to mute · ⌥/Alt-click to solo a voice.';
     };
 
-    tempo.value = String(rps);
+    tempo.value = String(tempoBps);
     const onPlay = () => {
       if (cue) {
         cueAdvance();
@@ -737,7 +777,8 @@
       }
     };
     const onTempo = () => {
-      rps = Number.parseFloat(tempo.value);
+      tempoBps = Number.parseFloat(tempo.value);
+      rps = tempoBps * SUBDIV;
     };
     const onSections = (e) => {
       const b = e.target.closest('button');
